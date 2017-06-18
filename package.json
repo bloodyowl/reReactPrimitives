@@ -1,0 +1,27 @@
+{
+  "name": "primitives",
+  "private": true,
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "bsb -make-world -w",
+    "build": "webpack -w",
+    "clean": "bsb -clean-world",
+    "js-post-build": "node scripts/js-post-build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bs-webapi": "git://github.com/bloodyowl/bs-webapi-incubator.git",
+    "react": "16.0.0-alpha.13",
+    "react-dom": "16.0.0-alpha.13",
+    "reason-react": ">=0.1.4"
+  },
+  "devDependencies": {
+    "bs-platform": "^1.7.5",
+    "webpack": "^1.14.0"
+  }
+}
