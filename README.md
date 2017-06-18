@@ -16,7 +16,7 @@
 - [x] `TouchableOpacity`
 - [x] `View`
 - [ ] `TimePicker`
-- [ ] `DatePickerPicker`
+- [ ] `DatePicker`
 - [ ] `ScrollView`
 - [ ] `LayerManager`
 - [ ] `Picker` (needs `LayerManager` impl)
