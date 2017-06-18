@@ -14,7 +14,7 @@
 - [x] `TextInput`
 - [x] `TouchableHighlight`
 - [x] `TouchableOpacity`
-- [ ] `View`
+- [x] `View`
 - [ ] `TimePicker`
 - [ ] `DatePickerPicker`
 - [ ] `ScrollView`
