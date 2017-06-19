@@ -1,6 +1,6 @@
 let component = ReasonReact.statelessComponent "Button";
 
-let make ::onPress ::color ::title _children => {
+let make ::onPress ::color ::title ::round=true _children => {
   ...component,
   render: fun () _self =>
     <TouchableOpacity
@@ -9,7 +9,7 @@ let make ::onPress ::color ::title _children => {
         ReactDOMRe.Style.make
           fontSize::"14px"
           padding::"8px"
-          borderRadius::"3px"
+          borderRadius::(round ? "3px" : "")
           backgroundColor::color
           color::"#fff"
           display::"inline-flex"

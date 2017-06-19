@@ -13,6 +13,7 @@ module.exports = {
     sectionedListViewDemo: "./lib/js/src/demos/sectionedListViewDemo",
     tabbedViewDemo: "./lib/js/src/demos/tabbedViewDemo",
     timePickerDemo: "./lib/js/src/demos/timePickerDemo",
+    dialogDemo: "./lib/js/src/demos/dialogDemo",
     fixedCollectionViewDemo: "./lib/js/src/demos/fixedCollectionViewDemo"
   },
   output: {
