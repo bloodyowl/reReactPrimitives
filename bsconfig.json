@@ -3,7 +3,7 @@
   comma. If this screws with your editor highlighting, please tell us by filing
   an issue! */
 {
-  "name": "primitives",
+  "name": "reason-react-primitives",
   "reason": {
     "react-jsx": 2
   },
@@ -14,7 +14,9 @@
   "sources": [
     {
       "dir": "src",
-      "subdirs": ["demos"]
+      "subdirs": [
+        "demos"
+      ]
     }
   ],
 }
