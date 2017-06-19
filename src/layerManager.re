@@ -20,7 +20,7 @@ type behavior =
   | Fixed;
 
 module type LayerManagerImpl = {
-  let make: behavior => layer;
+  let make: behavior => Js.Promise.t layer;
   let render: layer => ReasonReact.reactElement => unit;
   let remove: layer => unit;
 };
@@ -129,7 +129,7 @@ module DefaultImpl = {
     let layer = !currentLayer + 1;
     currentLayer := layer;
     map := LayerMap.add (string_of_int !currentLayer) root !map;
-    string_of_int layer
+    Js.Promise.resolve (string_of_int layer)
   };
   let render layer element =>
     try {

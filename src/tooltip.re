@@ -78,10 +78,8 @@ let getArrowStyle (alignTo: LayerManager.align) =>
       ()
   };
 
-let make ::style=emptyStyle ::message ::alignTo children => {
-  let showTooltip event _state _self => {
-    let layer =
-      TooltipLayerManager.make (Contextualized (ReactEventRe.Mouse.target event) alignTo);
+let make ::style=emptyStyle ::message alignTo::(alignTo: LayerManager.align) children => {
+  let whenLayerReady layer _state _self => {
     TooltipLayerManager.render
       layer
       <div
@@ -91,7 +89,7 @@ let make ::style=emptyStyle ::message ::alignTo children => {
             backgroundColor::"#000"
             position::"relative"
             color::"#fff"
-            padding::"5px"
+            padding::"10px"
             fontSize::"12px"
             margin::(
               switch alignTo {
@@ -106,6 +104,21 @@ let make ::style=emptyStyle ::message ::alignTo children => {
         (ReasonReact.stringToElement message)
       </div>;
     ReasonReact.SilentUpdate (Some layer)
+  };
+  let showTooltip event _state self => {
+    let layer =
+      TooltipLayerManager.make (Contextualized (ReactEventRe.Mouse.target event) alignTo);
+    ignore (
+      Js.Promise.then_
+        (
+          fun layer => {
+            self.ReasonReact.update whenLayerReady layer;
+            Js.Promise.resolve ()
+          }
+        )
+        layer
+    );
+    ReasonReact.NoUpdate
   };
   let hideTooltip _event state _self =>
     switch state {
