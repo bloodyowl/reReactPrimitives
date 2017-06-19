@@ -4,7 +4,7 @@ type state =
 
 let component = ReasonReact.statefulComponent "TouchableOpacity";
 
-let make ::onPress ::style=? ::tag="div" child => {
+let make ::onPress ::style=? children => {
   let handleMouseDown _event _self _state => ReasonReact.Update Depressed;
   let handleMouseUp _event _self _state => ReasonReact.Update Idle;
   let handleClick _event _self _state => {
@@ -27,23 +27,19 @@ let make ::onPress ::style=? ::tag="div" child => {
             }
           )
           ();
-      ReactDOMRe.createElement
-        tag
-        props::(
-          ReactDOMRe.props
-            role::"button"
-            style::(
-              switch style {
-              | None => opacityStyle
-              | Some style => ReactDOMRe.Style.combine style opacityStyle
-              }
-            )
-            onMouseDown::(self.update handleMouseDown)
-            onMouseUp::(self.update handleMouseUp)
-            onClick::(self.update handleClick)
-            ()
+      <div
+        role="button"
+        style=(
+          switch style {
+          | None => opacityStyle
+          | Some style => ReactDOMRe.Style.combine style opacityStyle
+          }
         )
-        [|ReasonReact.arrayToElement child|]
+        onMouseDown=(self.update handleMouseDown)
+        onMouseUp=(self.update handleMouseUp)
+        onClick=(self.update handleClick)>
+        (children |> ReasonReact.arrayToElement)
+      </div>
     }
   }
 };

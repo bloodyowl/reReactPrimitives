@@ -1,7 +1,7 @@
 module MyLayerManager = LayerManager.Make LayerManager.DefaultImpl;
 
 let openDialog _ => {
-  let layer = MyLayerManager.make Absolute;
+  let layer = MyLayerManager.make FullViewport;
   MyLayerManager.render
     layer
     <Dialog

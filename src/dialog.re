@@ -8,7 +8,8 @@ module Styles = {
       alignItems::"center"
       justifyContent::"flex-start"
       padding::"40px 10px"
-      flexGrow::"1"
+      width::"100vw"
+      height::"100vh"
       ();
   let container =
     ReactDOMRe.Style.make

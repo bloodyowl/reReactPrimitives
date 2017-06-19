@@ -6,7 +6,7 @@ ReactDOMRe.renderToElementWithId
     <br />
     <p>
       (ReasonReact.stringToElement "Can be inlined")
-      <TouchableOpacity tag="span" onPress=(fun () => ())>
+      <TouchableOpacity style=(ReactDOMRe.Style.make display::"inline" ()) onPress=(fun () => ())>
         (ReasonReact.stringToElement "click me!")
       </TouchableOpacity>
       (ReasonReact.stringToElement "like this")

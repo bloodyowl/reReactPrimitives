@@ -4,8 +4,19 @@
  */
 type layer = string;
 
+type align =
+  | TopLeft
+  | TopRight
+  | BottomLeft
+  | BottomRight
+  | Left
+  | Right
+  | Top
+  | Bottom;
+
 type behavior =
-  | Absolute
+  | FullViewport
+  | Contextualized DomRe.Element.t align
   | Fixed;
 
 module type LayerManagerImpl = {
@@ -23,24 +34,93 @@ module DefaultImpl = {
   let make behavior => {
     let root = DomRe.Document.createElement "div" DomRe.document;
     let style = getStyle root;
-    CssStyleDeclarationRe.setProperty
-      "position"
-      (
-        switch behavior {
-        | Absolute => "absolute"
-        | Fixed => "fixed"
-        }
-      )
-      ""
-      style;
-    CssStyleDeclarationRe.setProperty "left" "0" "" style;
-    CssStyleDeclarationRe.setProperty "top" "0" "" style;
-    CssStyleDeclarationRe.setProperty "width" "100vw" "" style;
-    CssStyleDeclarationRe.setProperty "height" "100vh" "" style;
-    CssStyleDeclarationRe.setProperty "display" "flex" "" style;
-    CssStyleDeclarationRe.setProperty "flex-direction" "column" "" style;
-    CssStyleDeclarationRe.setProperty "align-items" "center" "" style;
-    CssStyleDeclarationRe.setProperty "justify-content" "flex-start" "" style;
+    switch behavior {
+    | FullViewport =>
+      CssStyleDeclarationRe.setProperty "position" "absolute" "" style;
+      CssStyleDeclarationRe.setProperty
+        "left" (string_of_int (WindowRe.pageXOffset DomRe.window) ^ "px") "" style;
+      CssStyleDeclarationRe.setProperty
+        "top" (string_of_int (WindowRe.pageYOffset DomRe.window) ^ "px") "" style
+    | Contextualized element align =>
+      let pageXOffset = WindowRe.pageXOffset DomRe.window;
+      let pageYOffset = WindowRe.pageYOffset DomRe.window;
+      let innerWidth = WindowRe.innerWidth DomRe.window;
+      let innerHeight = WindowRe.innerHeight DomRe.window;
+      let boundaries = DomRe.Element.getBoundingClientRect element;
+      CssStyleDeclarationRe.setProperty "position" "absolute" "" style;
+      switch align {
+      | TopLeft =>
+        CssStyleDeclarationRe.setProperty
+          "bottom"
+          (string_of_int (innerHeight + pageYOffset - DomRectRe.top boundaries) ^ "px")
+          ""
+          style;
+        CssStyleDeclarationRe.setProperty
+          "left" (string_of_int (pageXOffset + DomRectRe.left boundaries) ^ "px") "" style
+      | TopRight =>
+        CssStyleDeclarationRe.setProperty
+          "bottom"
+          (string_of_int (innerHeight + pageYOffset - DomRectRe.top boundaries) ^ "px")
+          ""
+          style;
+        CssStyleDeclarationRe.setProperty
+          "right"
+          (string_of_int (innerWidth + pageXOffset - DomRectRe.right boundaries) ^ "px")
+          ""
+          style
+      | BottomLeft =>
+        CssStyleDeclarationRe.setProperty
+          "top" (string_of_int (pageYOffset + DomRectRe.bottom boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "left" (string_of_int (pageXOffset + DomRectRe.left boundaries) ^ "px") "" style
+      | BottomRight =>
+        CssStyleDeclarationRe.setProperty
+          "top" (string_of_int (pageYOffset + DomRectRe.bottom boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "right"
+          (string_of_int (innerWidth + pageXOffset - DomRectRe.right boundaries) ^ "px")
+          ""
+          style
+      | Left =>
+        CssStyleDeclarationRe.setProperty
+          "top" (string_of_int (pageYOffset + DomRectRe.top boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "right"
+          (string_of_int (innerWidth + pageXOffset - DomRectRe.left boundaries) ^ "px")
+          ""
+          style;
+        CssStyleDeclarationRe.setProperty
+          "height" (string_of_int (DomRectRe.height boundaries) ^ "px") "" style
+      | Right =>
+        CssStyleDeclarationRe.setProperty
+          "top" (string_of_int (pageYOffset + DomRectRe.top boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "left" (string_of_int (pageXOffset + DomRectRe.right boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "height" (string_of_int (DomRectRe.height boundaries) ^ "px") "" style
+      | Top =>
+        CssStyleDeclarationRe.setProperty
+          "bottom"
+          (string_of_int (innerHeight + pageYOffset - DomRectRe.top boundaries) ^ "px")
+          ""
+          style;
+        CssStyleDeclarationRe.setProperty
+          "left" (string_of_int (pageXOffset + DomRectRe.left boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "min-width" (string_of_int (DomRectRe.width boundaries) ^ "px") "" style
+      | Bottom =>
+        CssStyleDeclarationRe.setProperty
+          "top" (string_of_int (pageYOffset + DomRectRe.bottom boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "left" (string_of_int (pageXOffset + DomRectRe.left boundaries) ^ "px") "" style;
+        CssStyleDeclarationRe.setProperty
+          "min-width" (string_of_int (DomRectRe.width boundaries) ^ "px") "" style
+      }
+    | Fixed =>
+      CssStyleDeclarationRe.setProperty "position" "fixed" "" style;
+      CssStyleDeclarationRe.setProperty "left" "0" "" style;
+      CssStyleDeclarationRe.setProperty "top" "0" "" style
+    };
     let body = DomRe.Document.querySelector "body" DomRe.document;
     switch body {
     | Some body => DomRe.Element.appendChild root body
