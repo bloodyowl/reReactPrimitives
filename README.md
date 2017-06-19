@@ -17,7 +17,7 @@
 - [x] `View`
 - [x] `LayerManager`
 - [x] `Tooltip`
+- [x] `ScrollView`
+- [x] `Picker`
 - [ ] `TimePicker`
 - [ ] `DatePicker`
-- [ ] `ScrollView`
-- [ ] `Picker` (needs `LayerManager` impl)
