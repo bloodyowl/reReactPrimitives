@@ -5,12 +5,11 @@ type state =
 let component = ReasonReact.statefulComponent "TouchableHighlight";
 
 module Styles = {
-  let container =
-    ReactDOMRe.Style.make position::"relative" cursor::"pointer" ();
+  let container = ReactDOMRe.Style.make position::"relative" cursor::"pointer" ();
   let contents = ReactDOMRe.Style.make position::"relative" ();
 };
 
-let make ::onPress ::underlayColor="rgba(0, 0, 0, 0.2)" ::style=? child => {
+let make ::onPress ::underlayColor="rgba(0, 0, 0, 0.2)" ::style=? children => {
   let handleMouseDown _event _self _state => ReasonReact.Update Depressed;
   let handleMouseUp _event _self _state => ReasonReact.Update Idle;
   let handleClick _event _self _state => {
@@ -50,7 +49,7 @@ let make ::onPress ::underlayColor="rgba(0, 0, 0, 0.2)" ::style=? child => {
           | Idle => ReasonReact.nullElement
           }
         )
-        <div style=Styles.contents> (ReasonReact.arrayToElement child) </div>
+        <div style=Styles.contents> children.(0) </div>
       </div>
   }
 };

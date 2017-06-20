@@ -38,7 +38,7 @@ let make ::onPress ::style=? children => {
         onMouseDown=(self.update handleMouseDown)
         onMouseUp=(self.update handleMouseUp)
         onClick=(self.update handleClick)>
-        (children |> ReasonReact.arrayToElement)
+        children.(0)
       </div>
     }
   }

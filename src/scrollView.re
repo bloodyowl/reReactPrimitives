@@ -28,7 +28,7 @@ let make ::onEndReached ::offset=0 children => {
         ref=(self.update setContainerRef)
         style=(ReactDOMRe.Style.make overflow::"auto" flexGrow::"1" ())
         onScroll=(self.update handleScroll)>
-        (children |> ReasonReact.arrayToElement)
+        children.(0)
       </div>
   }
 };

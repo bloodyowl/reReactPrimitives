@@ -10,6 +10,7 @@ let make ::initiallyOpenedTab=0 ::mode=Vertical ::tabs _children => {
   let setActiveTab index _ _state _self => ReasonReact.Update index;
   let renderTab state self index (tabTitle, _renderChild) =>
     <TouchableOpacity
+      key=(string_of_int index)
       style=(
         ReactDOMRe.Style.make
           color::(index === state ? "#4990E2" : "rgba(0, 0, 0, 0.6)")
@@ -69,9 +70,7 @@ let make ::initiallyOpenedTab=0 ::mode=Vertical ::tabs _children => {
               )
               ()
           )>
-          (
-            tabs |> Array.mapi (renderTab state self) |> ReasonReact.arrayToElement
-          )
+          (tabs |> Array.mapi (renderTab state self) |> ReasonReact.arrayToElement)
         </div>
         <div style=(ReactDOMRe.Style.make flexGrow::"1" ())>
           {

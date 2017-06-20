@@ -9,6 +9,8 @@ let buttonGroupStyle =
     overflow::"hidden"
     ();
 
+let addKey index item => <div key=(string_of_int index)> item </div>;
+
 let make ::style=? children => {
   ...component,
   render: fun () _self =>
@@ -19,6 +21,6 @@ let make ::style=? children => {
         | None => buttonGroupStyle
         }
       )>
-      (children |> ReasonReact.arrayToElement)
+      (children |> Array.mapi addKey |> ReasonReact.arrayToElement)
     </div>
 };

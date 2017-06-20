@@ -132,7 +132,7 @@ let make ::style=emptyStyle ::message alignTo::(alignTo: LayerManager.align) chi
     initialState: fun () => None,
     render: fun _state self =>
       <div style onMouseEnter=(self.update showTooltip) onMouseLeave=(self.update hideTooltip)>
-        (ReasonReact.arrayToElement children)
+        children.(0)
       </div>
   }
 };

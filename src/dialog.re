@@ -86,7 +86,7 @@ let make
             <span style=Styles.closeIcon> (ReasonReact.stringToElement {js|✖️|js}) </span>
           </TouchableOpacity>
         </div>
-        <div> (children |> ReasonReact.arrayToElement) </div>
+        <div> children.(0) </div>
       </div>
     </div>
 };

@@ -12,8 +12,9 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange _childr
       ReasonReact.SilentUpdate None
     | None => ReasonReact.NoUpdate
     };
-  let renderOptionWithEvent _state self item =>
+  let renderOptionWithEvent _state self index item =>
     <TouchableHighlight
+      key=(string_of_int index)
       onPress=(
         fun _ => {
           onValueChange (Some item);
@@ -37,7 +38,7 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange _childr
             ()
         )>
         (
-          options |> List.map (renderOptionWithEvent state self) |> Array.of_list |> ReasonReact.arrayToElement
+          options |> List.mapi (renderOptionWithEvent state self) |> Array.of_list |> ReasonReact.arrayToElement
         )
       </div>;
     ReasonReact.SilentUpdate (Some layer)
