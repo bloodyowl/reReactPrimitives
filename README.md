@@ -1,4 +1,4 @@
-# ReReactPrimitives
+<img src="assets/logo.png" width="322" height="27" alt="ReReactPrimitives"/>
 
 > Primitive components to build UI on the web with ReasonReact
 
