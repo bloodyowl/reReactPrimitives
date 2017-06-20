@@ -4,8 +4,6 @@ let component = ReasonReact.statefulComponent "Tooltip";
 
 module TooltipLayerManager = LayerManager.Make LayerManager.DefaultImpl;
 
-let emptyStyle = ReactDOMRe.Style.make ();
-
 let getArrowStyle (alignTo: LayerManager.align) =>
   switch alignTo {
   | TopLeft
@@ -78,7 +76,7 @@ let getArrowStyle (alignTo: LayerManager.align) =>
       ()
   };
 
-let make ::style=emptyStyle ::message alignTo::(alignTo: LayerManager.align) children => {
+let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => {
   let whenLayerReady layer _state _self => {
     TooltipLayerManager.render
       layer
@@ -131,7 +129,8 @@ let make ::style=emptyStyle ::message alignTo::(alignTo: LayerManager.align) chi
     ...component,
     initialState: fun () => None,
     render: fun _state self =>
-      <div style onMouseEnter=(self.update showTooltip) onMouseLeave=(self.update hideTooltip)>
+      <div
+        style=?style onMouseEnter=(self.update showTooltip) onMouseLeave=(self.update hideTooltip)>
         children.(0)
       </div>
   }

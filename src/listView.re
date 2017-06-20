@@ -3,10 +3,10 @@ let component = ReasonReact.statelessComponent "ListView";
 let defaultRenderSeparator () =>
   <div style=(ReactDOMRe.Style.make borderBottom::"1px solid rgba(0, 0, 0, 0.1)" ()) />;
 
-let make ::items ::renderItem ::renderSeparator=defaultRenderSeparator _children => {
+let make ::style=? ::items ::renderItem ::renderSeparator=defaultRenderSeparator _children => {
   ...component,
   render: fun () _self =>
-    <div>
+    <div style=?style>
       (
         items |>
         List.fold_left (fun acc item => List.append acc [renderSeparator (), renderItem item]) [] |> List.tl |>

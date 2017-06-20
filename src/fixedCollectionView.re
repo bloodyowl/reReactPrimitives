@@ -1,7 +1,5 @@
 module type FixedCollectionViewRowType = {let name: string; type t;};
 
-let emptyStyle = ReactDOMRe.Style.make ();
-
 type column 't = {
   headerLabel: string,
   style: option ReactDOMRe.Style.t,
@@ -17,9 +15,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
     containerRef: option Dom.element
   };
   let component =
-    ReasonReact.statefulComponent (
-      "FixedCollectionView[" ^ FixedCollectionViewRow.name ^ "]"
-    );
+    ReasonReact.statefulComponent ("FixedCollectionView[" ^ FixedCollectionViewRow.name ^ "]");
   let make
       data::(data: array t)
       ::onEndReached=?
@@ -30,8 +26,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       _children => {
     let setContainerRef containerRef state _self =>
       switch (Js.Null.to_opt containerRef) {
-      | Some containerRef =>
-        ReasonReact.SilentUpdate {...state, containerRef: Some containerRef}
+      | Some containerRef => ReasonReact.SilentUpdate {...state, containerRef: Some containerRef}
       | None => ReasonReact.NoUpdate
       };
     let measureContainer () state _self =>
@@ -39,8 +34,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       | Some container =>
         ReasonReact.Update {
           ...state,
-          containerHeight:
-            Some (DomRe.Element.clientHeight container - headerHeight)
+          containerHeight: Some (DomRe.Element.clientHeight container - headerHeight)
         }
       | _ => ReasonReact.NoUpdate
       };
@@ -66,8 +60,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       };
       ReasonReact.Update {
         ...state,
-        scrollTop:
-          DomRe.Element.scrollTop (ReactEventRe.Synthetic.target event)
+        scrollTop: DomRe.Element.scrollTop (ReactEventRe.Synthetic.target event)
       }
     };
     let renderRow startIndex index (rowData: t) =>
@@ -90,14 +83,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           columns |>
           List.mapi (
             fun index column =>
-              <div
-                key=(string_of_int index)
-                style=(
-                  switch column.style {
-                  | Some style => style
-                  | None => emptyStyle
-                  }
-                )>
+              <div key=(string_of_int index) style=?column.style>
                 (column.renderCell rowData)
               </div>
           ) |> Array.of_list |> ReasonReact.arrayToElement
@@ -117,14 +103,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           columns |>
           List.mapi (
             fun index column =>
-              <div
-                key=(string_of_int index)
-                style=(
-                  switch column.style {
-                  | Some style => style
-                  | None => emptyStyle
-                  }
-                )>
+              <div key=(string_of_int index) style=?column.style>
                 (column.renderHeader column)
               </div>
           ) |> Array.of_list |> ReasonReact.arrayToElement
@@ -132,11 +111,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       </div>;
     {
       ...component,
-      initialState: fun () => {
-        containerHeight: None,
-        scrollTop: 0,
-        containerRef: None
-      },
+      initialState: fun () => {containerHeight: None, scrollTop: 0, containerRef: None},
       didMount: fun state self => {
         measureContainerAtNextFrame state self;
         ReasonReact.NoUpdate
@@ -155,8 +130,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                 height::(
                   switch state.containerHeight {
                   | None => "auto"
-                  | Some containerHeight =>
-                    string_of_int containerHeight ^ "px"
+                  | Some containerHeight => string_of_int containerHeight ^ "px"
                   }
                 )
                 ()
@@ -169,21 +143,15 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                 <div
                   style=(
                     ReactDOMRe.Style.make
-                      height::(
-                        string_of_int (Array.length data * rowHeight) ^ "px"
-                      )
+                      height::(string_of_int (Array.length data * rowHeight) ^ "px")
                       position::"relative"
                       ()
                   )>
                   {
-                    let startIndex =
-                      max ((state.scrollTop - scrollOffset) / rowHeight) 0;
+                    let startIndex = max ((state.scrollTop - scrollOffset) / rowHeight) 0;
                     let renderableCount =
-                      min
-                        ((containerHeight + scrollOffset * 2) / rowHeight)
-                        (Array.length data);
-                    Array.sub data startIndex renderableCount |>
-                    Array.mapi (renderRow startIndex) |> ReactRe.arrayToElement
+                      min ((containerHeight + scrollOffset * 2) / rowHeight) (Array.length data);
+                    Array.sub data startIndex renderableCount |> Array.mapi (renderRow startIndex) |> ReactRe.arrayToElement
                   }
                 </div>
               }
