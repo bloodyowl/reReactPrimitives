@@ -15,6 +15,7 @@ module.exports = {
     tabbedViewDemo: './lib/js/src/demos/tabbedViewDemo',
     timePickerDemo: './lib/js/src/demos/timePickerDemo',
     dialogDemo: './lib/js/src/demos/dialogDemo',
+    listViewDemo: './lib/js/src/demos/listViewDemo',
     tooltipDemo: './lib/js/src/demos/tooltipDemo',
     fixedCollectionViewDemo: './lib/js/src/demos/fixedCollectionViewDemo',
   },
