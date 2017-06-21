@@ -15,6 +15,7 @@ let make
     ::value
     ::style=?
     ::onTextChange
+    ::placeholder=""
     ::rows=1
     _children => {
   let setInputRef inputRef state _self =>
@@ -78,6 +79,7 @@ let make
             )
             onChange::(self.update handleChange)
             ::value
+            ::placeholder
             ()
         )
         [||]
