@@ -8,6 +8,8 @@ module Dialog = Dialog;
 
 module FixedCollectionView = FixedCollectionView;
 
+module HorizontalSeparator = HorizontalSeparator;
+
 module Image = Image;
 
 module LayerManager = LayerManager;
