@@ -5,8 +5,7 @@ type state = {
 
 let component = ReasonReact.statefulComponent "TextInput";
 
-external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration =
-  "style" [@@bs.get];
+external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style" [@@bs.get];
 
 /* TODO: manage types and local validation */
 let make
@@ -15,6 +14,7 @@ let make
     ::value
     ::style=?
     ::onTextChange
+    ::onKeyDown=?
     ::placeholder=""
     ::rows=1
     _children => {
@@ -42,9 +42,7 @@ let make
       onTextChange value;
       /* don't bother trigger a measurement if using an input */
       if (multiline && autoSize) {
-        Bs_webapi.requestAnimationFrame (
-          self.ReasonReact.update measureAndSetHeight
-        )
+        Bs_webapi.requestAnimationFrame (self.ReasonReact.update measureAndSetHeight)
       };
       ReasonReact.NoUpdate
     | None => ReasonReact.NoUpdate
@@ -78,6 +76,7 @@ let make
               }
             )
             onChange::(self.update handleChange)
+            ::?onKeyDown
             ::value
             ::placeholder
             ()
