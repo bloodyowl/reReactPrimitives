@@ -11,6 +11,7 @@ external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style" [@@bs.g
 let make
     ::multiline=false
     ::autoSize=false
+    ::autoFocus=false
     ::value
     ::style=?
     ::onTextChange
@@ -79,6 +80,7 @@ let make
             ::?onKeyDown
             ::value
             ::placeholder
+            autoFocus::(Js.Boolean.to_js_boolean autoFocus)
             ()
         )
         [||]
