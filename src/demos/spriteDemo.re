@@ -1,5 +1,5 @@
 module DemoSpriteSheet = {
-  let url = "/demos/assets/sprite.png";
+  let url = "./assets/sprite.png";
   let width = 150;
   let height = 300;
 };
