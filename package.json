@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "bsb -make-world -w",
     "build": "webpack -w",
+    "demos": "bsb -make-world && webpack && gh-pages -d demos",
     "clean": "bsb -clean-world",
     "js-post-build": "node scripts/js-post-build"
   },
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "bs-platform": "^1.7.5",
+    "gh-pages": "^1.0.0",
     "webpack": "^1.14.0"
   }
 }
