@@ -20,7 +20,7 @@ module.exports = {
     fixedCollectionViewDemo: './lib/js/src/demos/fixedCollectionViewDemo',
   },
   output: {
-    path: path.join(__dirname, 'bundledOutputs'),
+    path: path.join(__dirname, 'demos/bundledOutputs'),
     filename: '[name].js',
   },
 };
