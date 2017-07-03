@@ -37,6 +37,7 @@ module DefaultImpl = {
     switch behavior {
     | FullViewport =>
       CssStyleDeclarationRe.setProperty "position" "absolute" "" style;
+      CssStyleDeclarationRe.setProperty "z-index"  "2147483647" "" style;
       CssStyleDeclarationRe.setProperty
         "left" (string_of_int (WindowRe.pageXOffset DomRe.window) ^ "px") "" style;
       CssStyleDeclarationRe.setProperty
@@ -48,6 +49,7 @@ module DefaultImpl = {
       let innerHeight = WindowRe.innerHeight DomRe.window;
       let boundaries = DomRe.Element.getBoundingClientRect element;
       CssStyleDeclarationRe.setProperty "position" "absolute" "" style;
+      CssStyleDeclarationRe.setProperty "z-index"  "2147483647" "" style;
       switch align {
       | TopLeft =>
         CssStyleDeclarationRe.setProperty
@@ -118,6 +120,7 @@ module DefaultImpl = {
       }
     | Fixed =>
       CssStyleDeclarationRe.setProperty "position" "fixed" "" style;
+      CssStyleDeclarationRe.setProperty "z-index"  "2147483647" "" style;
       CssStyleDeclarationRe.setProperty "left" "0" "" style;
       CssStyleDeclarationRe.setProperty "top" "0" "" style
     };
