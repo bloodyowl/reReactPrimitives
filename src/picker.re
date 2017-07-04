@@ -28,18 +28,33 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange _childr
   let whenLayerReady layer state self => {
     PickerLayerManager.render
       layer
-      <div
-        style=(
-          ReactDOMRe.Style.make
-            backgroundColor::"#fff"
-            borderBottomLeftRadius::"3px"
-            borderBottomRightRadius::"3px"
-            boxShadow::"0 2px 4px rgba(0, 0, 0, 0.16"
-            ()
-        )>
-        (
-          options |> List.mapi (renderOptionWithEvent state self) |> Array.of_list |> ReasonReact.arrayToElement
-        )
+      <div>
+        <div
+          onClick=(fun _ => self.ReasonReact.update hideOptions ())
+          style=(
+            ReactDOMRe.Style.make
+              position::"fixed"
+              top::"0"
+              left::"0"
+              right::"0"
+              bottom::"0"
+              ()
+          )
+        />
+        <div
+          style=(
+            ReactDOMRe.Style.make
+              position::"relative"
+              backgroundColor::"#fff"
+              borderBottomLeftRadius::"3px"
+              borderBottomRightRadius::"3px"
+              boxShadow::"0 2px 4px rgba(0, 0, 0, 0.16"
+              ()
+          )>
+          (
+            options |> List.mapi (renderOptionWithEvent state self) |> Array.of_list |> ReasonReact.arrayToElement
+          )
+        </div>
       </div>;
     ReasonReact.SilentUpdate (Some layer)
   };
