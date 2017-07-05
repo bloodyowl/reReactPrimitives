@@ -4,7 +4,7 @@ let component = ReasonReact.statefulComponent "Picker";
 
 module PickerLayerManager = LayerManager.Make LayerManager.DefaultImpl;
 
-let make ::options ::renderPicker ::renderOption ::value ::onValueChange _children => {
+let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::padding="10px" _children => {
   let hideOptions _ state _self =>
     switch state {
     | Some layer =>
@@ -81,7 +81,7 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange _childr
     initialState: fun () => None,
     render: fun _state self =>
       <div
-        style=(ReactDOMRe.Style.make padding::"10px" cursor::"pointer" ())
+        style=(ReactDOMRe.Style.make ::padding cursor::"pointer" ())
         onClick=(self.update showOptions)>
         (renderPicker value)
       </div>
