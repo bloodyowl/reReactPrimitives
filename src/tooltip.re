@@ -77,7 +77,7 @@ let getArrowStyle (alignTo: LayerManager.align) =>
   };
 
 let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => {
-  let whenLayerReady layer _state _self => {
+  let whenLayerReady layer _self => {
     TooltipLayerManager.render
       layer
       <div
@@ -103,7 +103,7 @@ let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => 
       </div>;
     ReasonReact.SilentUpdate (Some layer)
   };
-  let showTooltip event _state self => {
+  let showTooltip event self => {
     let layer =
       TooltipLayerManager.make (Contextualized (ReactEventRe.Mouse.target event) alignTo);
     ignore (
@@ -118,7 +118,7 @@ let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => 
     );
     ReasonReact.NoUpdate
   };
-  let hideTooltip _event state _self =>
+  let hideTooltip _event {ReasonReact.state} =>
     switch state {
     | Some layer =>
       TooltipLayerManager.remove layer;
@@ -128,7 +128,7 @@ let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => 
   {
     ...component,
     initialState: fun () => None,
-    render: fun _state self =>
+    render: fun self =>
       <div
         style=?style onMouseEnter=(self.update showTooltip) onMouseLeave=(self.update hideTooltip)>
         children.(0)

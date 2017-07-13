@@ -13,7 +13,7 @@ let make ::value ::onValueChange _children => {
   };
   {
     ...component,
-    render: fun () _self =>
+    render: fun _self =>
       <div
         onClick=handleChange
         style=(
@@ -59,7 +59,7 @@ let make ::value ::onValueChange _children => {
           )>
           (
             switch value {
-            | (Idle, _) => ReactRe.nullElement
+            | (Idle, _) => ReasonReact.nullElement
             | (Updating, _) =>
               <ActivityIndicator size=14.0 color=(200, 200, 200) />
             }

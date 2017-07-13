@@ -13,7 +13,7 @@ let addKey index item => <div key=(string_of_int index)> item </div>;
 
 let make ::style=? children => {
   ...component,
-  render: fun () _self =>
+  render: fun _self =>
     <div
       style=(
         switch style {

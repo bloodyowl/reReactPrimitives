@@ -18,6 +18,7 @@ module.exports = {
     listViewDemo: './lib/js/src/demos/listViewDemo',
     tooltipDemo: './lib/js/src/demos/tooltipDemo',
     fixedCollectionViewDemo: './lib/js/src/demos/fixedCollectionViewDemo',
+    overlayLinkDemo: './lib/js/src/demos/overlayLinkDemo',
   },
   output: {
     path: path.join(__dirname, 'demos/bundledOutputs'),

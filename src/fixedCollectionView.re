@@ -24,12 +24,12 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       ::headerHeight
       columns::(columns: list (column t))
       _children => {
-    let setContainerRef containerRef state _self =>
+    let setContainerRef containerRef {ReasonReact.state: state} =>
       switch (Js.Null.to_opt containerRef) {
       | Some containerRef => ReasonReact.SilentUpdate {...state, containerRef: Some containerRef}
       | None => ReasonReact.NoUpdate
       };
-    let measureContainer () state _self =>
+    let measureContainer () {ReasonReact.state: state} =>
       switch state.containerRef {
       | Some container =>
         ReasonReact.Update {
@@ -45,7 +45,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           ()
         }
       );
-    let setScrollTop event state _self => {
+    let setScrollTop event {ReasonReact.state: state} => {
       switch onEndReached {
       | Some onEndReached =>
         if (
@@ -112,11 +112,11 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
     {
       ...component,
       initialState: fun () => {containerHeight: None, scrollTop: 0, containerRef: None},
-      didMount: fun state self => {
+      didMount: fun ({state} as self) => {
         measureContainerAtNextFrame state self;
         ReasonReact.NoUpdate
       },
-      render: fun state self =>
+      render: fun ({state} as self) =>
         <div
           style=(ReactDOMRe.Style.make flexGrow::"1" width::"100%" ())
           ref=(self.update setContainerRef)>
@@ -138,7 +138,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
             onScroll=(self.update setScrollTop)>
             (
               switch state.containerHeight {
-              | None => ReactRe.nullElement
+              | None => ReasonReact.nullElement
               | Some containerHeight =>
                 <div
                   style=(
@@ -151,7 +151,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                     let startIndex = max ((state.scrollTop - scrollOffset) / rowHeight) 0;
                     let renderableCount =
                       min ((containerHeight + scrollOffset * 2) / rowHeight) (Array.length data);
-                    Array.sub data startIndex renderableCount |> Array.mapi (renderRow startIndex) |> ReactRe.arrayToElement
+                    Array.sub data startIndex renderableCount |> Array.mapi (renderRow startIndex) |> ReasonReact.arrayToElement
                   }
                 </div>
               }

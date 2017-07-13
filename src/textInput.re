@@ -19,14 +19,14 @@ let make
     ::placeholder=""
     ::rows=1
     _children => {
-  let setInputRef inputRef state _self =>
+  let setInputRef inputRef {ReasonReact.state} =>
     ReasonReact.SilentUpdate (
       switch (Js.Null.to_opt inputRef) {
       | Some inputRef => {...state, inputRef: Some inputRef}
       | None => state
       }
     );
-  let measureAndSetHeight _ state _self =>
+  let measureAndSetHeight _ {ReasonReact.state} =>
     switch state.inputRef {
     | Some element =>
       CssStyleDeclarationRe.setProperty "height" "0" "" (getStyle element);
@@ -36,7 +36,7 @@ let make
       ReasonReact.Update {...state, height: Some height}
     | None => ReasonReact.NoUpdate
     };
-  let handleChange _event state self =>
+  let handleChange _event ({ReasonReact.state} as self) =>
     switch state.inputRef {
     | Some element =>
       let value = (ReactDOMRe.domElementToObj element)##value;
@@ -51,7 +51,7 @@ let make
   {
     ...component,
     initialState: fun () => {height: None, inputRef: None},
-    render: fun state self => {
+    render: fun ({state} as self) => {
       let sizingStyle =
         ReactDOMRe.Style.make
           resize::"none"

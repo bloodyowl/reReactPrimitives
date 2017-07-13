@@ -10,16 +10,16 @@ module Styles = {
 };
 
 let make ::onPress ::underlayColor="rgba(0, 0, 0, 0.2)" ::style=? children => {
-  let handleMouseDown _event _self _state => ReasonReact.Update Depressed;
-  let handleMouseUp _event _self _state => ReasonReact.Update Idle;
-  let handleClick _event _self _state => {
+  let handleMouseDown _event _ => ReasonReact.Update Depressed;
+  let handleMouseUp _event _ => ReasonReact.Update Idle;
+  let handleClick _event _ => {
     onPress ();
     ReasonReact.NoUpdate
   };
   {
     ...component,
     initialState: fun _ => Idle,
-    render: fun state self =>
+    render: fun ({state} as self) =>
       <div
         role="button"
         style=(

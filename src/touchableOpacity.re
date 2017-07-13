@@ -5,16 +5,16 @@ type state =
 let component = ReasonReact.statefulComponent "TouchableOpacity";
 
 let make ::onPress ::style=? children => {
-  let handleMouseDown _event _self _state => ReasonReact.Update Depressed;
-  let handleMouseUp _event _self _state => ReasonReact.Update Idle;
-  let handleClick _event _self _state => {
+  let handleMouseDown _event _ => ReasonReact.Update Depressed;
+  let handleMouseUp _event _ => ReasonReact.Update Idle;
+  let handleClick _event _ => {
     onPress ();
     ReasonReact.NoUpdate
   };
   {
     ...component,
     initialState: fun _ => Idle,
-    render: fun state self => {
+    render: fun ({state} as self) => {
       let opacityStyle =
         ReactDOMRe.Style.make
           transition::"100ms linear opacity"

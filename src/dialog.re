@@ -48,7 +48,7 @@ let make
     ::underlayColor="rgba(0, 0, 0, 0.3)"
     children => {
   ...component,
-  render: fun () _self =>
+  render: fun _self =>
     <div style=Styles.root>
       <div
         onClick=(fun _ => onPressClose ())

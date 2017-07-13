@@ -19,7 +19,7 @@
     "bs-webapi": "git://github.com/bloodyowl/bs-webapi-incubator.git",
     "react": "16.0.0-alpha.13",
     "react-dom": "16.0.0-alpha.13",
-    "reason-react": ">=0.1.4"
+    "reason-react": ">=0.2.3"
   },
   "devDependencies": {
     "bs-platform": "^1.7.5",

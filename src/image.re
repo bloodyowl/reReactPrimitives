@@ -17,8 +17,8 @@ let make
     _children => {
   ...component,
   initialState: fun _ => {isReady: false},
-  didMount: fun _state _self => ReasonReact.Update {isReady: true},
-  render: fun state _self =>
+  didMount: fun _self => ReasonReact.Update {isReady: true},
+  render: fun {state} =>
     <div
       style=(
         ReactDOMRe.Style.make

@@ -16,7 +16,7 @@ module Styles = {
 let make ::value ::timezone="GMT" _children => {
   ...component,
   initialState: fun () => None,
-  render: fun state _self => {
+  render: fun {state} => {
     let (hours, minutes) = value;
     <div>
       <TextInput

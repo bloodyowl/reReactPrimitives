@@ -2,7 +2,7 @@ let component = ReasonReact.statelessComponent "Button";
 
 let make ::onPress ::color ::title ::round=true _children => {
   ...component,
-  render: fun () _self =>
+  render: fun _self =>
     <TouchableOpacity
       onPress
       style=(

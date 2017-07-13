@@ -5,7 +5,7 @@ let defaultRenderSeparator () =>
 
 let make ::style=? ::items ::renderItem ::renderSeparator=defaultRenderSeparator _children => {
   ...component,
-  render: fun () _self =>
+  render: fun _self =>
     <div style=?style>
       (
         items |>

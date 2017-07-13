@@ -19,7 +19,7 @@ let renderSection index (section, contents) =>
 
 let make ::sections _children => {
   ...component,
-  render: fun () _self =>
+  render: fun _self =>
     <div style=Styles.container>
       (sections |> List.mapi renderSection |> Array.of_list |> ReasonReact.arrayToElement)
     </div>
