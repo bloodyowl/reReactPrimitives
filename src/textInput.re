@@ -16,6 +16,7 @@ let make
     ::style=?
     ::onTextChange
     ::onKeyDown=?
+    ::onPaste=?
     ::placeholder=""
     ::rows=1
     _children => {
@@ -78,6 +79,7 @@ let make
             )
             onChange::(self.update handleChange)
             ::?onKeyDown
+            ::?onPaste
             ::value
             ::placeholder
             autoFocus::(Js.Boolean.to_js_boolean autoFocus)
