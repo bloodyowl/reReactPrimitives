@@ -10,6 +10,7 @@ module Styles = {
       padding::"40px 10px"
       width::"100vw"
       height::"100vh"
+      boxSizing::"border-box"
       ();
   let container =
     ReactDOMRe.Style.make
