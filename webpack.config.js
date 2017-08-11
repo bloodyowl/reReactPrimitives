@@ -13,12 +13,10 @@ module.exports = {
     switchDemo: './lib/js/src/demos/switchDemo',
     sectionedListViewDemo: './lib/js/src/demos/sectionedListViewDemo',
     tabbedViewDemo: './lib/js/src/demos/tabbedViewDemo',
-    timePickerDemo: './lib/js/src/demos/timePickerDemo',
     dialogDemo: './lib/js/src/demos/dialogDemo',
     listViewDemo: './lib/js/src/demos/listViewDemo',
     tooltipDemo: './lib/js/src/demos/tooltipDemo',
     fixedCollectionViewDemo: './lib/js/src/demos/fixedCollectionViewDemo',
-    overlayLinkDemo: './lib/js/src/demos/overlayLinkDemo',
     segmentedControlDemo: './lib/js/src/demos/segmentedControlDemo'
   },
   output: {

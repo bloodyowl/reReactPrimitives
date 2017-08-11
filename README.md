@@ -2,22 +2,33 @@
 
 > Primitive components to build UI on the web with ReasonReact
 
-- [x] `ActivityIndicator`
-- [x] `Button`
-- [x] `FixedCollectionView` (functor that takes the data module type)
-- [x] `Image`
-- [x] `SectionedListView`
-- [x] `Sprite`
-- [x] `Switch`
-- [x] `TabbedView`
-- [x] `Text`
-- [x] `TextInput`
-- [x] `TouchableHighlight`
-- [x] `TouchableOpacity`
-- [x] `View`
-- [x] `LayerManager`
-- [x] `Tooltip`
-- [x] `ScrollView`
-- [x] `Picker`
-- [ ] `TimePicker`
-- [ ] `DatePicker`
+## Installation
+
+```console
+$ npm install --save reason-react-primitives
+```
+
+## Components
+
+- `ActivityIndicator`
+- `Button`
+- `ButtonGroup`
+- `Dialog`
+- `FixedCollectionView(CollectionType)`
+- `HorizontalSeparator`
+- `Image`
+- `LayerManger(Implentation)`
+- `ListView`
+- `Picker`
+- `ScreenReaderContent`
+- `ScrollView`
+- `SectionnedListView`
+- `SegmentedControl`
+- `Sprite(SpriteSheet)`
+- `Switch`
+- `Text`
+- `TextInput`
+- `Tooltip`
+- `TouchableHighlight`
+- `TouchableOpacity`
+- `View`

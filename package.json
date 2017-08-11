@@ -1,7 +1,7 @@
 {
   "name": "reason-react-primitives",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.1.1",
+  "description": "Primitive components to build UI on the web with ReasonReact",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,17 +12,21 @@
     "js-post-build": "node scripts/js-post-build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bs-webapi": "git://github.com/bloodyowl/bs-webapi-incubator.git",
-    "react": "16.0.0-alpha.13",
-    "react-dom": "16.0.0-alpha.13",
+  "author": "bloodyowl <mlbli@me.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "bs-webapi": "*",
+    "react": ">=15.0.0",
+    "react-dom": ">=15.0.0",
     "reason-react": ">=0.2.3"
   },
   "devDependencies": {
     "bs-platform": "^1.7.5",
     "gh-pages": "^1.0.0",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "bs-webapi": "git://github.com/bloodyowl/bs-webapi-incubator.git",
+    "react": "16.0.0-alpha.13",
+    "react-dom": "16.0.0-alpha.13",
+    "reason-react": ">=0.2.3"
   }
 }
