@@ -2,15 +2,15 @@ type state = {containerRef: option Dom.element};
 
 let component = ReasonReact.statefulComponent "ScrollView";
 
-let make ::onEndReached ::offset=0 children => {
+let make ::onEndReached=? ::offset=0 children => {
   let setContainerRef containerRef _self =>
     switch (Js.Null.to_opt containerRef) {
     | Some containerRef => ReasonReact.SilentUpdate {containerRef: Some containerRef}
     | None => ReasonReact.NoUpdate
     };
-  let handleScroll _event {ReasonReact.state} =>
-    switch state.containerRef {
-    | Some element =>
+  let handleScroll _event {ReasonReact.state: state} =>
+    switch (state.containerRef, onEndReached) {
+    | (Some element, Some onEndReached) =>
       let scrollHeight = DomRe.Element.scrollHeight element;
       let scrollTop = DomRe.Element.scrollTop element;
       let clientHeight = DomRe.Element.clientHeight element;
@@ -18,7 +18,7 @@ let make ::onEndReached ::offset=0 children => {
         onEndReached ()
       };
       ReasonReact.NoUpdate
-    | None => ReasonReact.NoUpdate
+    | _ => ReasonReact.NoUpdate
     };
   {
     ...component,
