@@ -14,6 +14,7 @@ let make
     ::height
     ::backgroundColor
     ::round=false
+    ::alternativeText=?
     _children => {
   ...component,
   initialState: fun _ => {isReady: false},
@@ -35,10 +36,14 @@ let make
           backgroundPosition::"50% 50%"
           ::backgroundColor
           backgroundImage::(state.isReady ? "url(" ^ source ^ ")" : "")
-          borderRadius::(
-            round ? string_of_int (min width height) ^ "px" : "0px"
-          )
+          borderRadius::(round ? string_of_int (min width height) ^ "px" : "0px")
           ()
+      )>
+      (
+        switch alternativeText {
+        | Some text => <ScreenReaderContent text />
+        | None => ReasonReact.nullElement
+        }
       )
-    />
+    </div>
 };

@@ -118,7 +118,7 @@ let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => 
     );
     ReasonReact.NoUpdate
   };
-  let hideTooltip _event {ReasonReact.state} =>
+  let hideTooltip _event {ReasonReact.state: state} =>
     switch state {
     | Some layer =>
       TooltipLayerManager.remove layer;

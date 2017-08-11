@@ -6,6 +6,7 @@ ReactDOMRe.renderToElementWithId
       width=100
       height=100
       backgroundColor="#ccc"
+      alternativeText="400 x 450 placeholder image"
     />
     <br />
     <Image
@@ -15,6 +16,7 @@ ReactDOMRe.renderToElementWithId
       height=300
       backgroundColor="#000"
       round=true
+      alternativeText="200 x 300 placeholder image"
     />
   </div>
   "root";

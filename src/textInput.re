@@ -20,14 +20,14 @@ let make
     ::placeholder=""
     ::rows=1
     _children => {
-  let setInputRef inputRef {ReasonReact.state} =>
+  let setInputRef inputRef {ReasonReact.state: state} =>
     ReasonReact.SilentUpdate (
       switch (Js.Null.to_opt inputRef) {
       | Some inputRef => {...state, inputRef: Some inputRef}
       | None => state
       }
     );
-  let measureAndSetHeight _ {ReasonReact.state} =>
+  let measureAndSetHeight _ {ReasonReact.state: state} =>
     switch state.inputRef {
     | Some element =>
       CssStyleDeclarationRe.setProperty "height" "0" "" (getStyle element);
@@ -37,7 +37,7 @@ let make
       ReasonReact.Update {...state, height: Some height}
     | None => ReasonReact.NoUpdate
     };
-  let handleChange _event ({ReasonReact.state} as self) =>
+  let handleChange _event ({ReasonReact.state: state} as self) =>
     switch state.inputRef {
     | Some element =>
       let value = (ReactDOMRe.domElementToObj element)##value;

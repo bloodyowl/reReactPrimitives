@@ -1,8 +1,4 @@
-module type SpriteSheetType = {
-  let width: int;
-  let height: int;
-  let url: string;
-};
+module type SpriteSheetType = {let width: int; let height: int; let url: string;};
 
 module Make (SpriteSheet: SpriteSheetType) => {
   let basename = {
@@ -22,15 +18,10 @@ module Make (SpriteSheet: SpriteSheetType) => {
             width::(string_of_int width ^ "px")
             height::(string_of_int height ^ "px")
             backgroundSize::(
-              string_of_int SpriteSheet.width ^
-              "px " ^ string_of_int SpriteSheet.height ^ "px"
+              string_of_int SpriteSheet.width ^ "px " ^ string_of_int SpriteSheet.height ^ "px"
             )
-            backgroundPosition::(
-              "-" ^ string_of_int x ^ "px " ^ "-" ^ string_of_int y ^ "px"
-            )
-            backgroundImage::(
-              state.isReady ? "url(" ^ SpriteSheet.url ^ ")" : ""
-            )
+            backgroundPosition::("-" ^ string_of_int x ^ "px " ^ "-" ^ string_of_int y ^ "px")
+            backgroundImage::(state.isReady ? "url(" ^ SpriteSheet.url ^ ")" : "")
             ()
         )
       />

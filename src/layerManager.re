@@ -27,17 +27,26 @@ module type LayerManagerImpl = {
 
 external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style" [@@bs.get];
 
+external getActiveElement : DomRe.Document.t => Js.Null.t DomRe.Element.t =
+  "activeElement" [@@bs.get];
+
+external focus : unit = "" [@@bs.send.pipe : DomRe.Element.t];
+
 module DefaultImpl = {
   module LayerMap = Map.Make String;
   let currentLayer = ref 0;
   let map = ref LayerMap.empty;
+  let activeElement = ref None;
   let make behavior => {
     let root = DomRe.Document.createElement "div" DomRe.document;
+    DomRe.Element.setAttribute "role" "dialog" root;
+    DomRe.Element.setAttribute "tabindex" "0" root;
+    activeElement := Js.Null.to_opt (getActiveElement DomRe.document);
     let style = getStyle root;
     switch behavior {
     | FullViewport =>
       CssStyleDeclarationRe.setProperty "position" "absolute" "" style;
-      CssStyleDeclarationRe.setProperty "z-index"  "2147483647" "" style;
+      CssStyleDeclarationRe.setProperty "z-index" "2147483647" "" style;
       CssStyleDeclarationRe.setProperty
         "left" (string_of_int (WindowRe.pageXOffset DomRe.window) ^ "px") "" style;
       CssStyleDeclarationRe.setProperty
@@ -49,7 +58,7 @@ module DefaultImpl = {
       let innerHeight = WindowRe.innerHeight DomRe.window;
       let boundaries = DomRe.Element.getBoundingClientRect element;
       CssStyleDeclarationRe.setProperty "position" "absolute" "" style;
-      CssStyleDeclarationRe.setProperty "z-index"  "2147483647" "" style;
+      CssStyleDeclarationRe.setProperty "z-index" "2147483647" "" style;
       switch align {
       | TopLeft =>
         CssStyleDeclarationRe.setProperty
@@ -120,13 +129,15 @@ module DefaultImpl = {
       }
     | Fixed =>
       CssStyleDeclarationRe.setProperty "position" "fixed" "" style;
-      CssStyleDeclarationRe.setProperty "z-index"  "2147483647" "" style;
+      CssStyleDeclarationRe.setProperty "z-index" "2147483647" "" style;
       CssStyleDeclarationRe.setProperty "left" "0" "" style;
       CssStyleDeclarationRe.setProperty "top" "0" "" style
     };
     let body = DomRe.Document.querySelector "body" DomRe.document;
     switch body {
-    | Some body => DomRe.Element.appendChild root body
+    | Some body =>
+      DomRe.Element.appendChild root body;
+      focus root
     | None => ()
     };
     let layer = !currentLayer + 1;
@@ -146,7 +157,11 @@ module DefaultImpl = {
       let layerNode = LayerMap.find layer !map;
       ReactDOMRe.unmountComponentAtNode layerNode;
       DomRe.Element.remove layerNode;
-      map := LayerMap.remove layer !map
+      map := LayerMap.remove layer !map;
+      switch !activeElement {
+      | Some element => focus element
+      | None => ()
+      }
     } {
     | Not_found => ()
     };
