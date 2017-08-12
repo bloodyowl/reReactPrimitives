@@ -25,15 +25,27 @@ let make
     ::onKeyPress=?
     ::onKeyDown=?
     ::onKeyUp=?
+    ::onFocus=?
+    ::onBlur=?
     ::style=?
     children => {
-  let handleFocus _event {ReasonReact.state: state} =>
+  let handleFocus event {ReasonReact.state: state} => {
+    switch onFocus {
+    | Some onFocus => onFocus event
+    | None => ()
+    };
     switch state.focus {
     | FocusedFromMouse => ReasonReact.NoUpdate
     | _ => ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+    }
+  };
+  let handleBlur event {ReasonReact.state: state} => {
+    switch onBlur {
+    | Some onBlur => onBlur event
+    | None => ()
     };
-  let handleBlur _event {ReasonReact.state: state} =>
-    ReasonReact.Update {...state, focus: NotFocused};
+    ReasonReact.Update {...state, focus: NotFocused}
+  };
   let handleMouseDown _event {ReasonReact.state: _state} =>
     ReasonReact.Update {focus: FocusedFromMouse, pressed: Depressed};
   let handleMouseUp _event {ReasonReact.state: state} =>
@@ -92,12 +104,6 @@ let make
             (
               ReactDOMRe.Style.combine
                 (
-                  switch style {
-                  | None => Styles.container
-                  | Some style => ReactDOMRe.Style.combine style Styles.container
-                  }
-                )
-                (
                   ReactDOMRe.Style.make
                     outline::(
                       switch self.state.focus {
@@ -106,6 +112,12 @@ let make
                       }
                     )
                     ()
+                )
+                (
+                  switch style {
+                  | None => Styles.container
+                  | Some style => ReactDOMRe.Style.combine Styles.container style
+                  }
                 )
             )
             "WebkitTapHighlightColor"

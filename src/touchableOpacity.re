@@ -14,14 +14,32 @@ type state = {
 
 let component = ReasonReact.statefulComponent "TouchableOpacity";
 
-let make ::onPress ::style=? ::onKeyPress=? ::onKeyDown=? ::onKeyUp=? children => {
-  let handleFocus _event {ReasonReact.state: state} =>
+let make
+    ::onPress
+    ::style=?
+    ::onKeyPress=?
+    ::onKeyDown=?
+    ::onKeyUp=?
+    ::onFocus=?
+    ::onBlur=?
+    children => {
+  let handleFocus event {ReasonReact.state: state} => {
+    switch onFocus {
+    | Some onFocus => onFocus event
+    | None => ()
+    };
     switch state.focus {
     | FocusedFromMouse => ReasonReact.NoUpdate
     | _ => ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+    }
+  };
+  let handleBlur event {ReasonReact.state: state} => {
+    switch onBlur {
+    | Some onBlur => onBlur event
+    | None => ()
     };
-  let handleBlur _event {ReasonReact.state: state} =>
-    ReasonReact.Update {...state, focus: NotFocused};
+    ReasonReact.Update {...state, focus: NotFocused}
+  };
   let handleMouseDown _event {ReasonReact.state: _state} =>
     ReasonReact.Update {focus: FocusedFromMouse, pressed: Depressed};
   let handleMouseUp _event {ReasonReact.state: state} =>
@@ -92,12 +110,6 @@ let make ::onPress ::style=? ::onKeyPress=? ::onKeyDown=? ::onKeyUp=? children =
             (
               ReactDOMRe.Style.combine
                 (
-                  switch style {
-                  | None => opacityStyle
-                  | Some style => ReactDOMRe.Style.combine style opacityStyle
-                  }
-                )
-                (
                   ReactDOMRe.Style.make
                     outline::(
                       switch self.state.focus {
@@ -106,6 +118,12 @@ let make ::onPress ::style=? ::onKeyPress=? ::onKeyDown=? ::onKeyUp=? children =
                       }
                     )
                     ()
+                )
+                (
+                  switch style {
+                  | None => opacityStyle
+                  | Some style => ReactDOMRe.Style.combine opacityStyle style
+                  }
                 )
             )
             "WebkitTapHighlightColor"

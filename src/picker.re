@@ -14,37 +14,6 @@ module PickerLayerManager = LayerManager.Make LayerManager.DefaultImpl;
 
 external focus : unit = "" [@@bs.send.pipe : DomRe.Element.t];
 
-let moveFocus event =>
-  switch (ReactEventRe.Keyboard.keyCode event) {
-  | 38 =>
-    switch (ReactEventRe.Keyboard.target event |> DomRe.Element.previousElementSibling) {
-    | Some element => focus element
-    | None =>
-      switch (ReactEventRe.Keyboard.target event |> DomRe.Element.parentElement) {
-      | Some element =>
-        switch (element |> DomRe.Element.lastElementChild) {
-        | Some element => focus element
-        | None => ()
-        }
-      | None => ()
-      }
-    }
-  | 40 =>
-    switch (ReactEventRe.Keyboard.target event |> DomRe.Element.nextElementSibling) {
-    | Some element => focus element
-    | None =>
-      switch (ReactEventRe.Keyboard.target event |> DomRe.Element.parentElement) {
-      | Some element =>
-        switch (element |> DomRe.Element.firstElementChild) {
-        | Some element => focus element
-        | None => ()
-        }
-      | None => ()
-      }
-    }
-  | _ => ()
-  };
-
 let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::padding="10px" _children => {
   let handleFocus _event {ReasonReact.state: state} =>
     switch state.focus {
@@ -61,6 +30,44 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
       PickerLayerManager.remove layer;
       ReasonReact.SilentUpdate {...state, layer: None}
     | None => ReasonReact.NoUpdate
+    };
+  let moveFocus event {ReasonReact.state: state} =>
+    switch (ReactEventRe.Keyboard.keyCode event) {
+    | 38 =>
+      switch (ReactEventRe.Keyboard.target event |> DomRe.Element.previousElementSibling) {
+      | Some element =>
+        focus element;
+        ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+      | None =>
+        switch (ReactEventRe.Keyboard.target event |> DomRe.Element.parentElement) {
+        | Some element =>
+          switch (element |> DomRe.Element.lastElementChild) {
+          | Some element =>
+            focus element;
+            ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+          | None => ReasonReact.NoUpdate
+          }
+        | None => ReasonReact.NoUpdate
+        }
+      }
+    | 40 =>
+      switch (ReactEventRe.Keyboard.target event |> DomRe.Element.nextElementSibling) {
+      | Some element =>
+        focus element;
+        ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+      | None =>
+        switch (ReactEventRe.Keyboard.target event |> DomRe.Element.parentElement) {
+        | Some element =>
+          switch (element |> DomRe.Element.firstElementChild) {
+          | Some element =>
+            focus element;
+            ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+          | None => ReasonReact.NoUpdate
+          }
+        | None => ReasonReact.NoUpdate
+        }
+      }
+    | _ => ReasonReact.NoUpdate
     };
   let renderOptionWithEvent self index item =>
     <TouchableHighlight
@@ -80,8 +87,19 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
           self.ReasonReact.update hideOptions ()
         }
       )
-      onKeyUp=moveFocus
-      style=(ReactDOMRe.Style.make cursor::"pointer" ())
+      onKeyUp=(self.update moveFocus)
+      onBlur=(self.update handleBlur)
+      style=(
+        ReactDOMRe.Style.make
+          cursor::"pointer"
+          outline::(
+            switch self.state.focus {
+            | FocusedFromMouse => "none"
+            | _ => ""
+            }
+          )
+          ()
+      )
       underlayColor="rgba(0, 0, 0, 0.05)">
       (renderOption item value)
     </TouchableHighlight>;
@@ -158,7 +176,7 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
           )
           layer
       );
-      ReasonReact.NoUpdate
+      ReasonReact.Update {...state, focus: FocusedFromMouse}
     };
   {
     ...component,
