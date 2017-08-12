@@ -4,8 +4,41 @@ let component = ReasonReact.statefulComponent "Picker";
 
 module PickerLayerManager = LayerManager.Make LayerManager.DefaultImpl;
 
+external focus : unit = "" [@@bs.send.pipe : DomRe.Element.t];
+
+let moveFocus event =>
+  switch (ReactEventRe.Keyboard.keyCode event) {
+  | 38 =>
+    switch (ReactEventRe.Keyboard.target event |> DomRe.Element.previousElementSibling) {
+    | Some element => focus element
+    | None =>
+      switch (ReactEventRe.Keyboard.target event |> DomRe.Element.parentElement) {
+      | Some element =>
+        switch (element |> DomRe.Element.lastElementChild) {
+        | Some element => focus element
+        | None => ()
+        }
+      | None => ()
+      }
+    }
+  | 40 =>
+    switch (ReactEventRe.Keyboard.target event |> DomRe.Element.nextElementSibling) {
+    | Some element => focus element
+    | None =>
+      switch (ReactEventRe.Keyboard.target event |> DomRe.Element.parentElement) {
+      | Some element =>
+        switch (element |> DomRe.Element.firstElementChild) {
+        | Some element => focus element
+        | None => ()
+        }
+      | None => ()
+      }
+    }
+  | _ => ()
+  };
+
 let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::padding="10px" _children => {
-  let hideOptions _ {ReasonReact.state} =>
+  let hideOptions _ {ReasonReact.state: state} =>
     switch state {
     | Some layer =>
       PickerLayerManager.remove layer;
@@ -15,12 +48,22 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
   let renderOptionWithEvent self index item =>
     <TouchableHighlight
       key=(string_of_int index)
+      ref=(
+        index == 0 ?
+          fun item =>
+            switch (Js.Null.to_opt item) {
+            | Some item => focus (ReactDOMRe.findDOMNode item)
+            | None => ()
+            } :
+          (fun _ => ())
+      )
       onPress=(
         fun _ => {
           onValueChange (Some item);
           self.ReasonReact.update hideOptions ()
         }
       )
+      onKeyUp=moveFocus
       style=(ReactDOMRe.Style.make cursor::"pointer" ())
       underlayColor="rgba(0, 0, 0, 0.05)">
       (renderOption item value)
@@ -32,13 +75,7 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
         <div
           onClick=(fun _ => self.ReasonReact.update hideOptions ())
           style=(
-            ReactDOMRe.Style.make
-              position::"fixed"
-              top::"0"
-              left::"0"
-              right::"0"
-              bottom::"0"
-              ()
+            ReactDOMRe.Style.make position::"fixed" top::"0" left::"0" right::"0" bottom::"0" ()
           )
         />
         <div
@@ -58,7 +95,33 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
       </div>;
     ReasonReact.SilentUpdate (Some layer)
   };
-  let showOptions event ({ReasonReact.state} as self) =>
+  let handleKeyPress event ({ReasonReact.state: state} as self) =>
+    switch (ReactEventRe.Keyboard.keyCode event, ReactEventRe.Keyboard.charCode event) {
+    | (13, _)
+    | (_, 13)
+    | (32, _)
+    | (_, 32) =>
+      ReactEventRe.Keyboard.preventDefault event;
+      switch state {
+      | Some _layer => hideOptions () self
+      | None =>
+        let layer =
+          PickerLayerManager.make (Contextualized (ReactEventRe.Keyboard.target event) Bottom);
+        ignore (
+          Js.Promise.then_
+            (
+              fun layer => {
+                self.ReasonReact.update whenLayerReady layer;
+                Js.Promise.resolve ()
+              }
+            )
+            layer
+        );
+        ReasonReact.NoUpdate
+      }
+    | _ => ReasonReact.NoUpdate
+    };
+  let showOptions event ({ReasonReact.state: state} as self) =>
     switch state {
     | Some _layer => hideOptions () self
     | None =>
@@ -81,7 +144,15 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
     initialState: fun () => None,
     render: fun self =>
       <div
-        style=(ReactDOMRe.Style.make ::padding cursor::"pointer" ())
+        tabIndex=0
+        role="button"
+        style=(
+          ReactDOMRe.Style.unsafeAddProp
+            (ReactDOMRe.Style.make ::padding cursor::"pointer" ())
+            "WebkitTapHighlightColor"
+            "rgba(0, 0, 0, 0)"
+        )
+        onKeyPress=(self.update handleKeyPress)
         onClick=(self.update showOptions)>
         (renderPicker value)
       </div>
