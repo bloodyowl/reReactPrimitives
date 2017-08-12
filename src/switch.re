@@ -48,28 +48,33 @@ let make ::value ::onValueChange _children => {
           onBlur=(update handleBlur)
           onClick=handleChange
           style=(
-            ReactDOMRe.Style.make
-              width::"35px"
-              height::"14px"
-              borderRadius::"7px"
-              boxShadow::"inset 0 0 0 1px rgba(0, 0, 0, 0.1)"
-              position::"relative"
-              cursor::"pointer"
-              backgroundColor::(
-                switch value {
-                | (Idle, true) => "rgba(74, 144, 226, 1)"
-                | (Idle, false) => "rgba(0, 0, 0, 0.2)"
-                | (Updating, true) => "rgba(74, 144, 226, 0.5)"
-                | (Updating, false) => "rgba(0, 0, 0, 0.1)"
-                }
+            ReactDOMRe.Style.unsafeAddProp
+              (
+                ReactDOMRe.Style.make
+                  width::"35px"
+                  height::"14px"
+                  borderRadius::"7px"
+                  boxShadow::"inset 0 0 0 1px rgba(0, 0, 0, 0.1)"
+                  position::"relative"
+                  cursor::"pointer"
+                  backgroundColor::(
+                    switch value {
+                    | (Idle, true) => "rgba(74, 144, 226, 1)"
+                    | (Idle, false) => "rgba(0, 0, 0, 0.2)"
+                    | (Updating, true) => "rgba(74, 144, 226, 0.5)"
+                    | (Updating, false) => "rgba(0, 0, 0, 0.1)"
+                    }
+                  )
+                  outline::(
+                    switch state {
+                    | FocusedFromMouse => "none"
+                    | _ => ""
+                    }
+                  )
+                  ()
               )
-              outline::(
-                switch state {
-                | FocusedFromMouse => "none"
-                | _ => ""
-                }
-              )
-              ()
+              "WebkitTapHighlightColor"
+              "rgba(0, 0, 0, 0)"
           )>
           <div
             style=(

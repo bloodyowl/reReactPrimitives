@@ -19,31 +19,64 @@ module Styles = {
   let contents = ReactDOMRe.Style.make position::"relative" ();
 };
 
-let make ::onPress ::underlayColor="rgba(0, 0, 0, 0.2)" ::style=? children => {
-  let handleFocus _event {ReasonReact.state: state} =>
+let make
+    ::onPress
+    ::underlayColor="rgba(0, 0, 0, 0.2)"
+    ::onKeyPress=?
+    ::onKeyDown=?
+    ::onKeyUp=?
+    ::onFocus=?
+    ::onBlur=?
+    ::style=?
+    children => {
+  let handleFocus event {ReasonReact.state: state} => {
+    switch onFocus {
+    | Some onFocus => onFocus event
+    | None => ()
+    };
     switch state.focus {
     | FocusedFromMouse => ReasonReact.NoUpdate
     | _ => ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+    }
+  };
+  let handleBlur event {ReasonReact.state: state} => {
+    switch onBlur {
+    | Some onBlur => onBlur event
+    | None => ()
     };
-  let handleBlur _event {ReasonReact.state: state} =>
-    ReasonReact.Update {...state, focus: NotFocused};
+    ReasonReact.Update {...state, focus: NotFocused}
+  };
   let handleMouseDown _event {ReasonReact.state: _state} =>
     ReasonReact.Update {focus: FocusedFromMouse, pressed: Depressed};
   let handleMouseUp _event {ReasonReact.state: state} =>
     ReasonReact.Update {...state, pressed: Idle};
-  let handleKeyDown event {ReasonReact.state: state} =>
+  let handleKeyDown event {ReasonReact.state: state} => {
+    switch onKeyDown {
+    | Some onKeyDown => onKeyDown event
+    | None => ()
+    };
     switch (ReactEventRe.Keyboard.keyCode event) {
     | 13
     | 32 => ReasonReact.Update {...state, pressed: Depressed}
     | _ => ReasonReact.NoUpdate
+    }
+  };
+  let handleKeyUp event {ReasonReact.state: state} => {
+    switch onKeyUp {
+    | Some onKeyUp => onKeyUp event
+    | None => ()
     };
-  let handleKeyUp event {ReasonReact.state: state} =>
     switch (ReactEventRe.Keyboard.keyCode event) {
     | 13
     | 32 => ReasonReact.Update {...state, pressed: Idle}
     | _ => ReasonReact.NoUpdate
+    }
+  };
+  let handleKeyPress event _ => {
+    switch onKeyPress {
+    | Some onKeyPress => onKeyPress event
+    | None => ()
     };
-  let handleKeyPress event _ =>
     switch (ReactEventRe.Keyboard.keyCode event, ReactEventRe.Keyboard.charCode event) {
     | (13, _)
     | (_, 13)
@@ -53,7 +86,8 @@ let make ::onPress ::underlayColor="rgba(0, 0, 0, 0.2)" ::style=? children => {
       onPress ();
       ReasonReact.NoUpdate
     | _ => ReasonReact.NoUpdate
-    };
+    }
+  };
   let handleClick _event _ => {
     onPress ();
     ReasonReact.NoUpdate
@@ -66,28 +100,35 @@ let make ::onPress ::underlayColor="rgba(0, 0, 0, 0.2)" ::style=? children => {
         role="button"
         tabIndex=0
         style=(
-          ReactDOMRe.Style.combine
+          ReactDOMRe.Style.unsafeAddProp
             (
-              switch style {
-              | None => Styles.container
-              | Some style => ReactDOMRe.Style.combine style Styles.container
-              }
-            )
-            (
-              ReactDOMRe.Style.make
-                outline::(
-                  switch self.state.focus {
-                  | FocusedFromMouse => "none"
-                  | _ => ""
+              ReactDOMRe.Style.combine
+                (
+                  ReactDOMRe.Style.make
+                    outline::(
+                      switch self.state.focus {
+                      | FocusedFromMouse => "none"
+                      | _ => ""
+                      }
+                    )
+                    ()
+                )
+                (
+                  switch style {
+                  | None => Styles.container
+                  | Some style => ReactDOMRe.Style.combine Styles.container style
                   }
                 )
-                ()
             )
+            "WebkitTapHighlightColor"
+            "rgba(0, 0, 0, 0)"
         )
         onFocus=(self.update handleFocus)
         onBlur=(self.update handleBlur)
         onMouseDown=(self.update handleMouseDown)
         onMouseUp=(self.update handleMouseUp)
+        onTouchStart=(self.update handleMouseDown)
+        onTouchEnd=(self.update handleMouseUp)
         onKeyDown=(self.update handleKeyDown)
         onKeyUp=(self.update handleKeyUp)
         onKeyPress=(self.update handleKeyPress)
