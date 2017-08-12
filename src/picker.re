@@ -1,4 +1,12 @@
-type state = option LayerManager.layer;
+type focus =
+  | NotFocused
+  | FocusedFromMouse
+  | FocusedFromKeyboard;
+
+type state = {
+  layer: option LayerManager.layer,
+  focus
+};
 
 let component = ReasonReact.statefulComponent "Picker";
 
@@ -38,11 +46,20 @@ let moveFocus event =>
   };
 
 let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::padding="10px" _children => {
+  let handleFocus _event {ReasonReact.state: state} =>
+    switch state.focus {
+    | FocusedFromMouse => ReasonReact.NoUpdate
+    | _ => ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+    };
+  let handleBlur _event {ReasonReact.state: state} =>
+    ReasonReact.Update {...state, focus: NotFocused};
+  let handleMouseDown _event {ReasonReact.state: state} =>
+    ReasonReact.Update {...state, focus: FocusedFromMouse};
   let hideOptions _ {ReasonReact.state: state} =>
-    switch state {
+    switch state.layer {
     | Some layer =>
       PickerLayerManager.remove layer;
-      ReasonReact.SilentUpdate None
+      ReasonReact.SilentUpdate {...state, layer: None}
     | None => ReasonReact.NoUpdate
     };
   let renderOptionWithEvent self index item =>
@@ -93,7 +110,7 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
           )
         </div>
       </div>;
-    ReasonReact.SilentUpdate (Some layer)
+    ReasonReact.SilentUpdate {...self.state, layer: Some layer}
   };
   let handleKeyPress event ({ReasonReact.state: state} as self) =>
     switch (ReactEventRe.Keyboard.keyCode event, ReactEventRe.Keyboard.charCode event) {
@@ -102,8 +119,10 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
     | (32, _)
     | (_, 32) =>
       ReactEventRe.Keyboard.preventDefault event;
-      switch state {
-      | Some _layer => hideOptions () self
+      switch state.layer {
+      | Some _layer =>
+        ignore (hideOptions () self);
+        ReasonReact.NoUpdate
       | None =>
         let layer =
           PickerLayerManager.make (Contextualized (ReactEventRe.Keyboard.target event) Bottom);
@@ -122,8 +141,10 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
     | _ => ReasonReact.NoUpdate
     };
   let showOptions event ({ReasonReact.state: state} as self) =>
-    switch state {
-    | Some _layer => hideOptions () self
+    switch state.layer {
+    | Some _layer =>
+      ignore (hideOptions () self);
+      ReasonReact.NoUpdate
     | None =>
       let layer =
         PickerLayerManager.make (Contextualized (ReactEventRe.Mouse.target event) Bottom);
@@ -141,17 +162,32 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
     };
   {
     ...component,
-    initialState: fun () => None,
+    initialState: fun () => {focus: NotFocused, layer: None},
     render: fun self =>
       <div
         tabIndex=0
         role="button"
         style=(
           ReactDOMRe.Style.unsafeAddProp
-            (ReactDOMRe.Style.make ::padding cursor::"pointer" ())
+            (
+              ReactDOMRe.Style.make
+                ::padding
+                cursor::"pointer"
+                outline::(
+                  switch self.state.focus {
+                  | FocusedFromMouse => "none"
+                  | _ => ""
+                  }
+                )
+                ()
+            )
             "WebkitTapHighlightColor"
             "rgba(0, 0, 0, 0)"
         )
+        onFocus=(self.update handleFocus)
+        onBlur=(self.update handleBlur)
+        onMouseDown=(self.update handleMouseDown)
+        onTouchStart=(self.update handleMouseDown)
         onKeyPress=(self.update handleKeyPress)
         onClick=(self.update showOptions)>
         (renderPicker value)
