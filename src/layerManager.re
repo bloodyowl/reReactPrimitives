@@ -135,15 +135,19 @@ module DefaultImpl = {
     };
     let body = DomRe.Document.querySelector "body" DomRe.document;
     switch body {
-    | Some body =>
-      DomRe.Element.appendChild root body;
-      focus root
+    | Some body => DomRe.Element.appendChild root body
     | None => ()
     };
     let layer = !currentLayer + 1;
     currentLayer := layer;
     map := LayerMap.add (string_of_int !currentLayer) root !map;
-    Js.Promise.resolve (string_of_int layer)
+    Js.Promise.resolve (string_of_int layer) |>
+    Js.Promise.then_ (
+      fun layer => {
+        focus root;
+        Js.Promise.resolve layer
+      }
+    )
   };
   let render layer element =>
     try {
