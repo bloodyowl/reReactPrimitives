@@ -14,6 +14,12 @@ let make ::onPress ::color ::title ::round=true _children => {
           color::"#fff"
           display::"inline-flex"
           ()
+      )
+      focusedFromKeyboardStyle=(
+        ReactDOMRe.Style.make
+          outline::"none"
+          backgroundImage::"linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1))"
+          ()
       )>
       (ReasonReact.stringToElement title)
     </TouchableOpacity>

@@ -28,6 +28,8 @@ let make
     ::onFocus=?
     ::onBlur=?
     ::style=?
+    ::focusedFromKeyboardStyle=?
+    ::focusedFromMouseStyle=?
     children => {
   let handleFocus event {ReasonReact.state: state} => {
     switch onFocus {
@@ -100,28 +102,38 @@ let make
         role="button"
         tabIndex=0
         style=(
-          ReactDOMRe.Style.unsafeAddProp
+          ReactDOMRe.Style.combine
             (
-              ReactDOMRe.Style.combine
+              ReactDOMRe.Style.unsafeAddProp
                 (
-                  ReactDOMRe.Style.make
-                    outline::(
-                      switch self.state.focus {
-                      | FocusedFromMouse => "none"
-                      | _ => ""
+                  ReactDOMRe.Style.combine
+                    (
+                      ReactDOMRe.Style.make
+                        outline::(
+                          switch self.state.focus {
+                          | FocusedFromMouse => "none"
+                          | _ => ""
+                          }
+                        )
+                        ()
+                    )
+                    (
+                      switch style {
+                      | None => Styles.container
+                      | Some style => ReactDOMRe.Style.combine Styles.container style
                       }
                     )
-                    ()
                 )
-                (
-                  switch style {
-                  | None => Styles.container
-                  | Some style => ReactDOMRe.Style.combine Styles.container style
-                  }
-                )
+                "WebkitTapHighlightColor"
+                "rgba(0, 0, 0, 0)"
             )
-            "WebkitTapHighlightColor"
-            "rgba(0, 0, 0, 0)"
+            (
+              switch (self.state.focus, focusedFromKeyboardStyle, focusedFromMouseStyle) {
+              | (FocusedFromKeyboard, Some style, _) => style
+              | (FocusedFromMouse, _, Some style) => style
+              | _ => ReactDOMRe.Style.make ()
+              }
+            )
         )
         onFocus=(self.update handleFocus)
         onBlur=(self.update handleBlur)

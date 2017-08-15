@@ -4,10 +4,16 @@ let renderOption option value =>
       ReactDOMRe.Style.make
         padding::"10px"
         borderBottom::"1px solid rgba(0, 0, 0, 0.1)"
-        fontWeight::(
+        backgroundColor::(
           switch value {
-          | Some value => value == option ? "700" : "400"
-          | _ => "400"
+          | Some value => value == option ? "#4A90E2" : ""
+          | _ => ""
+          }
+        )
+        color::(
+          switch value {
+          | Some value => value == option ? "#fff" : ""
+          | _ => ""
           }
         )
         ()
