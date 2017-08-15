@@ -17,6 +17,8 @@ let component = ReasonReact.statefulComponent "TouchableOpacity";
 let make
     ::onPress
     ::style=?
+    ::focusedFromKeyboardStyle=?
+    ::focusedFromMouseStyle=?
     ::onKeyPress=?
     ::onKeyDown=?
     ::onKeyUp=?
@@ -106,28 +108,38 @@ let make
         role="button"
         tabIndex=0
         style=(
-          ReactDOMRe.Style.unsafeAddProp
+          ReactDOMRe.Style.combine
             (
-              ReactDOMRe.Style.combine
+              ReactDOMRe.Style.unsafeAddProp
                 (
-                  ReactDOMRe.Style.make
-                    outline::(
-                      switch self.state.focus {
-                      | FocusedFromMouse => "none"
-                      | _ => ""
+                  ReactDOMRe.Style.combine
+                    (
+                      ReactDOMRe.Style.make
+                        outline::(
+                          switch self.state.focus {
+                          | FocusedFromMouse => "none"
+                          | _ => ""
+                          }
+                        )
+                        ()
+                    )
+                    (
+                      switch style {
+                      | None => opacityStyle
+                      | Some style => ReactDOMRe.Style.combine opacityStyle style
                       }
                     )
-                    ()
                 )
-                (
-                  switch style {
-                  | None => opacityStyle
-                  | Some style => ReactDOMRe.Style.combine opacityStyle style
-                  }
-                )
+                "WebkitTapHighlightColor"
+                "rgba(0, 0, 0, 0)"
             )
-            "WebkitTapHighlightColor"
-            "rgba(0, 0, 0, 0)"
+            (
+              switch (self.state.focus, focusedFromKeyboardStyle, focusedFromMouseStyle) {
+              | (FocusedFromKeyboard, Some style, _) => style
+              | (FocusedFromMouse, _, Some style) => style
+              | _ => ReactDOMRe.Style.make ()
+              }
+            )
         )
         onFocus=(self.update handleFocus)
         onBlur=(self.update handleBlur)

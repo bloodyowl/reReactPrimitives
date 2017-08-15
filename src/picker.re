@@ -100,6 +100,13 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
           )
           ()
       )
+      focusedFromKeyboardStyle=(
+        ReactDOMRe.Style.make
+          backgroundImage::"linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05))"
+          opacity::"0.8"
+          outline::"none"
+          ()
+      )
       underlayColor="rgba(0, 0, 0, 0.05)">
       (renderOption item value)
     </TouchableHighlight>;
@@ -120,7 +127,9 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
               backgroundColor::"#fff"
               borderBottomLeftRadius::"3px"
               borderBottomRightRadius::"3px"
-              boxShadow::"0 2px 4px rgba(0, 0, 0, 0.16"
+              overflow::"auto"
+              zIndex::"1"
+              boxShadow::"0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.16"
               ()
           )>
           (
