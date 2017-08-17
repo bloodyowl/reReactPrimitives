@@ -1,6 +1,7 @@
 type state = {
   height: option int,
-  inputRef: option Dom.element
+  inputRef: option Dom.element,
+  focused: bool
 };
 
 let component = ReasonReact.statefulComponent "TextInput";
@@ -17,6 +18,9 @@ let make
     ::onTextChange
     ::onKeyDown=?
     ::onPaste=?
+    ::onFocus=?
+    ::onBlur=?
+    ::focusedStyle=?
     ::placeholder=""
     ::rows=1
     _children => {
@@ -49,9 +53,23 @@ let make
       ReasonReact.NoUpdate
     | None => ReasonReact.NoUpdate
     };
+  let handleFocus event {ReasonReact.state: state} => {
+    switch onFocus {
+    | Some onFocus => onFocus event
+    | None => ()
+    };
+    ReasonReact.Update {...state, focused: true}
+  };
+  let handleBlur event {ReasonReact.state: state} => {
+    switch onBlur {
+    | Some onBlur => onBlur event
+    | None => ()
+    };
+    ReasonReact.Update {...state, focused: false}
+  };
   {
     ...component,
-    initialState: fun () => {height: None, inputRef: None},
+    initialState: fun () => {height: None, inputRef: None, focused: false},
     render: fun ({state} as self) => {
       let sizingStyle =
         ReactDOMRe.Style.make
@@ -72,14 +90,25 @@ let make
             ref::(self.update setInputRef)
             ::rows
             style::(
-              switch style {
-              | Some style => ReactDOMRe.Style.combine style sizingStyle
-              | None => sizingStyle
-              }
+              ReactDOMRe.Style.combine
+                (
+                  switch style {
+                  | Some style => ReactDOMRe.Style.combine style sizingStyle
+                  | None => sizingStyle
+                  }
+                )
+                (
+                  switch focusedStyle {
+                  | Some style when self.state.focused == true => style
+                  | _ => ReactDOMRe.Style.make ()
+                  }
+                )
             )
             onChange::(self.update handleChange)
             ::?onKeyDown
             ::?onPaste
+            onFocus::(self.update handleFocus)
+            onBlur::(self.update handleBlur)
             ::value
             ::placeholder
             autoFocus::(Js.Boolean.to_js_boolean autoFocus)
