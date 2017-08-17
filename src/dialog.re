@@ -46,6 +46,7 @@ let make
     ::description=?
     ::onPressClose
     ::minWidth=0
+    ::maxWidth=?
     ::underlayColor="rgba(0, 0, 0, 0.3)"
     children => {
   ...component,
@@ -67,7 +68,18 @@ let make
       <div
         style=(
           ReactDOMRe.Style.combine
-            Styles.container (ReactDOMRe.Style.make minWidth::(string_of_int minWidth ^ "px") ())
+            Styles.container
+            (
+              ReactDOMRe.Style.make
+                minWidth::(string_of_int minWidth ^ "px")
+                maxWidth::(
+                  switch maxWidth {
+                  | Some maxWidth => string_of_int maxWidth ^ "px"
+                  | None => ""
+                  }
+                )
+                ()
+            )
         )
         role="dialog">
         <div style=Styles.header>

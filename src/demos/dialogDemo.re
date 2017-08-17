@@ -11,7 +11,8 @@ let openDialog _ => {
             title="Hello"
             description="This is a dialog"
             onPressClose=(fun _ => MyLayerManager.remove layer)
-            minWidth=300>
+            minWidth=100
+            maxWidth=200>
             <div style=(ReactDOMRe.Style.make padding::"10px" ())>
               (ReasonReact.stringToElement "This is a dialog")
             </div>
