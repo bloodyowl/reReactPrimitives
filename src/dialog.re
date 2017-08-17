@@ -32,11 +32,14 @@ module Styles = {
       display::"flex"
       flexDirection::"column"
       alignItems::"flex-start"
+      minWidth::"0"
       padding::"10px"
       ();
   let headerTitle =
-    ReactDOMRe.Style.make fontSize::"16px" fontWeight::"700" color::"rgba(0, 0, 0, 0.4)" ();
-  let headerDescription = ReactDOMRe.Style.make fontSize::"12px" color::"rgba(0, 0, 0, 0.4)" ();
+    ReactDOMRe.Style.make
+      wordBreak::"break-word" fontSize::"16px" fontWeight::"700" color::"rgba(0, 0, 0, 0.4)" ();
+  let headerDescription =
+    ReactDOMRe.Style.make wordBreak::"break-word" fontSize::"12px" color::"rgba(0, 0, 0, 0.4)" ();
   let close = ReactDOMRe.Style.make padding::"10px" ();
   let closeIcon = ReactDOMRe.Style.make opacity::"0.4" ();
 };
