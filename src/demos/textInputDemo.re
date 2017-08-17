@@ -11,7 +11,8 @@ let rec render state =>
         onTextChange=(fun one => render {...state, one})
         value=state.one
         style=(ReactDOMRe.Style.make fontSize::"20px" color::"#666" ())
-        placeholder=({js|Type your text …|js})
+        focusedStyle=(ReactDOMRe.Style.make outline::"none" backgroundColor::"#fafafa" ())
+        placeholder={js|Type your text …|js}
       />
       <br />
       <TextInput
