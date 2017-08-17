@@ -10,14 +10,10 @@ module User = {
 
 module UserFixedCollectionView = FixedCollectionView.Make User;
 
-let renderUsername rowData =>
-  <div> (ReasonReact.stringToElement rowData.username) </div>;
+let renderUsername rowData => <div> (ReasonReact.stringToElement rowData.username) </div>;
 
 let renderHeader (row: FixedCollectionView.column 'a) =>
-  <div
-    style=(
-      ReactDOMRe.Style.make fontSize::"12px" textTransform::"uppercase" ()
-    )>
+  <div style=(ReactDOMRe.Style.make fontSize::"12px" textTransform::"uppercase" ())>
     (ReasonReact.stringToElement row.headerLabel)
   </div>;
 
@@ -26,13 +22,7 @@ let renderGoToProfile _row =>
 
 let renderAvatar rowData =>
   <div>
-    <Image
-      width=40
-      height=40
-      source=rowData.avatar
-      resizeMode=Contain
-      backgroundColor="#eee"
-    />
+    <Image width=40 height=40 source=rowData.avatar resizeMode=Contain backgroundColor="#eee" />
   </div>;
 
 let rec renderDemo data => {
@@ -44,8 +34,7 @@ let rec renderDemo data => {
           Array.mapi
             (
               fun index _item => {
-                username:
-                  "username " ^ string_of_int (index + Array.length data),
+                username: "username " ^ string_of_int (index + Array.length data),
                 avatar: "https://fakeimg.pl/40x40/"
               }
             )
