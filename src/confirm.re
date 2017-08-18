@@ -69,6 +69,7 @@ let make ::message ::confirmWording ::cancelWording ::onConfirm ::onCancel ::max
         </div>
         <div style=Styles.buttons>
           <Button onPress=onCancel color="#9B9B9B" title=cancelWording />
+          <div style=(ReactDOMRe.Style.make width::"10px" height::"10px" flexShrink::"0" ()) />
           <Button onPress=onConfirm color="#fb5" title=confirmWording />
         </div>
       </div>
