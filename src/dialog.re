@@ -44,13 +44,15 @@ module Styles = {
   let closeIcon = ReactDOMRe.Style.make opacity::"0.4" ();
 };
 
+let defaultUnderlayColor = "rgba(0, 0, 0, 0.3)";
+
 let make
     ::title
     ::description=?
     ::onPressClose
     ::minWidth=0
     ::maxWidth=?
-    ::underlayColor="rgba(0, 0, 0, 0.3)"
+    ::underlayColor=defaultUnderlayColor
     children => {
   ...component,
   render: fun _self =>
@@ -65,6 +67,7 @@ let make
             right::"0"
             bottom::"0"
             backgroundColor::underlayColor
+            transition::"background-color .5s ease-in-out"
             ()
         )
       />
@@ -83,8 +86,7 @@ let make
                 )
                 ()
             )
-        )
-        role="dialog">
+        )>
         <div style=Styles.header>
           <div style=Styles.headerText>
             <Text style=Styles.headerTitle> (ReasonReact.stringToElement title) </Text>
