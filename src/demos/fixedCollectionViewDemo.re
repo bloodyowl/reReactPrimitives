@@ -25,23 +25,32 @@ let renderAvatar rowData =>
     <Image width=40 height=40 source=rowData.avatar resizeMode=Contain backgroundColor="#eee" />
   </div>;
 
-let rec renderDemo data => {
+let rec renderDemo loading data => {
   let appendData () => {
-    renderDemo (
-      Array.append
-        data
+    renderDemo true data;
+    ignore (
+      Js.Global.setTimeout
         (
-          Array.mapi
-            (
-              fun index _item => {
-                username: "username " ^ string_of_int (index + Array.length data),
-                avatar: "https://fakeimg.pl/40x40/"
-              }
-            )
-            (Array.make 50 "")
+          fun () =>
+            renderDemo
+              false
+              (
+                Array.append
+                  data
+                  (
+                    Array.mapi
+                      (
+                        fun index _item => {
+                          username: "username " ^ string_of_int (index + Array.length data),
+                          avatar: "https://fakeimg.pl/40x40/"
+                        }
+                      )
+                      (Array.make 50 "")
+                  )
+              )
         )
-    );
-    ()
+        1000
+    )
   };
   ReactDOMRe.renderToElementWithId
     <div
@@ -61,6 +70,12 @@ let rec renderDemo data => {
         onEndReached=appendData
         headerHeight=30
         rowHeight=60
+        footerHeight=(loading ? 200 : 0)
+        renderFooter=(
+          fun () =>
+            loading ?
+              <ActivityIndicator size=24.0 color=(200, 200, 200) /> : ReasonReact.nullElement
+        )
         columns=[
           {
             headerLabel: "Avatar",
@@ -86,13 +101,15 @@ let rec renderDemo data => {
     "root"
 };
 
-renderDemo (
-  Array.mapi
-    (
-      fun index _item => {
-        username: "username " ^ string_of_int index,
-        avatar: "https://fakeimg.pl/40x40/"
-      }
-    )
-    (Array.make 50 "")
-);
+renderDemo
+  false
+  (
+    Array.mapi
+      (
+        fun index _item => {
+          username: "username " ^ string_of_int index,
+          avatar: "https://fakeimg.pl/40x40/"
+        }
+      )
+      (Array.make 50 "")
+  );

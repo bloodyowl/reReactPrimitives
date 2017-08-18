@@ -22,6 +22,8 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       ::scrollOffset
       ::rowHeight
       ::headerHeight
+      ::renderFooter=?
+      ::footerHeight=0
       columns::(columns: list (column t))
       _children => {
     let setContainerRef containerRef {ReasonReact.state: state} =>
@@ -143,7 +145,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                 <div
                   style=(
                     ReactDOMRe.Style.make
-                      height::(string_of_int (Array.length data * rowHeight) ^ "px")
+                      height::(string_of_int (Array.length data * rowHeight + footerHeight) ^ "px")
                       position::"relative"
                       ()
                   )>
@@ -155,6 +157,28 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                       data startIndex (min renderableCount (Array.length data - startIndex)) |>
                     Array.mapi (renderRow startIndex) |> ReasonReact.arrayToElement
                   }
+                  (
+                    switch renderFooter {
+                    | Some renderFooter =>
+                      <div
+                        style=(
+                          ReactDOMRe.Style.make
+                            height::(string_of_int footerHeight ^ "px")
+                            position::"absolute"
+                            left::"0"
+                            right::"0"
+                            bottom::"0"
+                            display::"flex"
+                            flexDirection::"row"
+                            alignItems::"center"
+                            justifyContent::"center"
+                            ()
+                        )>
+                        (renderFooter ())
+                      </div>
+                    | None => ReasonReact.nullElement
+                    }
+                  )
                 </div>
               }
             )
