@@ -37,6 +37,20 @@ let rec render value =>
         options=["One", "Two", "Three"]
         onValueChange=render
       />
+      <Picker
+        value
+        disabled=true
+        renderPicker=(
+          fun value =>
+            switch value {
+            | Some value => ReasonReact.stringToElement value
+            | None => ReasonReact.stringToElement {js|Select a value …|js}
+            }
+        )
+        renderOption
+        options=["One", "Two", "Three"]
+        onValueChange=render
+      />
     </div>
     "root";
 

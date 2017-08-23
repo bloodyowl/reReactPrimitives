@@ -14,7 +14,15 @@ module PickerLayerManager = LayerManager.Make LayerManager.DefaultImpl;
 
 external focus : unit = "" [@@bs.send.pipe : DomRe.Element.t];
 
-let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::padding="10px" _children => {
+let make
+    ::options
+    ::renderPicker
+    ::renderOption
+    ::value
+    ::onValueChange
+    ::padding="10px"
+    ::disabled=false
+    _children => {
   let handleFocus _event {ReasonReact.state: state} =>
     switch state.focus {
     | FocusedFromMouse => ReasonReact.NoUpdate
@@ -140,84 +148,95 @@ let make ::options ::renderPicker ::renderOption ::value ::onValueChange ::paddi
     ReasonReact.SilentUpdate {...self.state, layer: Some layer}
   };
   let handleKeyPress event ({ReasonReact.state: state} as self) =>
-    switch (ReactEventRe.Keyboard.keyCode event, ReactEventRe.Keyboard.charCode event) {
-    | (13, _)
-    | (_, 13)
-    | (32, _)
-    | (_, 32) =>
-      ReactEventRe.Keyboard.preventDefault event;
-      switch state.layer {
-      | Some _layer =>
-        ignore (hideOptions () self);
-        ReasonReact.NoUpdate
-      | None =>
-        let layer =
-          PickerLayerManager.make (Contextualized (ReactEventRe.Keyboard.target event) Bottom);
-        ignore (
-          Js.Promise.then_
-            (
-              fun layer => {
-                self.ReasonReact.update whenLayerReady layer;
-                Js.Promise.resolve ()
-              }
-            )
-            layer
-        );
-        ReasonReact.NoUpdate
-      }
-    | _ => ReasonReact.NoUpdate
-    };
-  let showOptions event ({ReasonReact.state: state} as self) =>
-    switch state.layer {
-    | Some _layer =>
-      ignore (hideOptions () self);
-      ReasonReact.NoUpdate
-    | None =>
-      let layer =
-        PickerLayerManager.make (Contextualized (ReactEventRe.Mouse.target event) Bottom);
-      ignore (
-        Js.Promise.then_
-          (
-            fun layer => {
-              self.ReasonReact.update whenLayerReady layer;
-              Js.Promise.resolve ()
-            }
-          )
-          layer
+    disabled ?
+      ReasonReact.NoUpdate :
+      (
+        switch (ReactEventRe.Keyboard.keyCode event, ReactEventRe.Keyboard.charCode event) {
+        | (13, _)
+        | (_, 13)
+        | (32, _)
+        | (_, 32) =>
+          ReactEventRe.Keyboard.preventDefault event;
+          switch state.layer {
+          | Some _layer =>
+            ignore (hideOptions () self);
+            ReasonReact.NoUpdate
+          | None =>
+            let layer =
+              PickerLayerManager.make (Contextualized (ReactEventRe.Keyboard.target event) Bottom);
+            ignore (
+              Js.Promise.then_
+                (
+                  fun layer => {
+                    self.ReasonReact.update whenLayerReady layer;
+                    Js.Promise.resolve ()
+                  }
+                )
+                layer
+            );
+            ReasonReact.NoUpdate
+          }
+        | _ => ReasonReact.NoUpdate
+        }
       );
-      ReasonReact.Update {...state, focus: FocusedFromMouse}
-    };
+  let showOptions event ({ReasonReact.state: state} as self) =>
+    disabled ?
+      ReasonReact.NoUpdate :
+      (
+        switch state.layer {
+        | Some _layer =>
+          ignore (hideOptions () self);
+          ReasonReact.NoUpdate
+        | None =>
+          let layer =
+            PickerLayerManager.make (Contextualized (ReactEventRe.Mouse.target event) Bottom);
+          ignore (
+            Js.Promise.then_
+              (
+                fun layer => {
+                  self.ReasonReact.update whenLayerReady layer;
+                  Js.Promise.resolve ()
+                }
+              )
+              layer
+          );
+          ReasonReact.Update {...state, focus: FocusedFromMouse}
+        }
+      );
   {
     ...component,
     initialState: fun () => {focus: NotFocused, layer: None},
     render: fun self =>
-      <div
-        tabIndex=0
-        role="button"
-        style=(
-          ReactDOMRe.Style.unsafeAddProp
-            (
-              ReactDOMRe.Style.make
-                ::padding
-                cursor::"pointer"
-                outline::(
-                  switch self.state.focus {
-                  | FocusedFromMouse => "none"
-                  | _ => ""
-                  }
-                )
-                ()
-            )
-            "WebkitTapHighlightColor"
-            "rgba(0, 0, 0, 0)"
-        )
-        onFocus=(self.update handleFocus)
-        onBlur=(self.update handleBlur)
-        onMouseDown=(self.update handleMouseDown)
-        onTouchStart=(self.update handleMouseDown)
-        onKeyPress=(self.update handleKeyPress)
-        onClick=(self.update showOptions)>
-        (renderPicker value)
-      </div>
+      ReasonReact.cloneElement
+        <div
+          tabIndex=0
+          role="button"
+          style=(
+            ReactDOMRe.Style.unsafeAddProp
+              (
+                ReactDOMRe.Style.make
+                  ::padding
+                  cursor::(disabled ? "default" : "pointer")
+                  outline::(
+                    switch self.state.focus {
+                    | FocusedFromMouse => "none"
+                    | _ => ""
+                    }
+                  )
+                  ()
+              )
+              "WebkitTapHighlightColor"
+              "rgba(0, 0, 0, 0)"
+          )
+          onFocus=(self.update handleFocus)
+          onBlur=(self.update handleBlur)
+          onMouseDown=(self.update handleMouseDown)
+          onTouchStart=(self.update handleMouseDown)
+          onKeyPress=(self.update handleKeyPress)
+          onClick=(self.update showOptions)>
+          (renderPicker value)
+        </div>
+        props::{"aria-disabled": Js.Boolean.to_js_boolean disabled}
+        [||]
   }
 };
