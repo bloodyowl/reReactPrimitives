@@ -72,7 +72,8 @@ let make ::initiallyOpenedTab=0 ::mode=Vertical ::tabs _children => {
           )>
           (tabs |> Array.mapi (renderTab state self) |> ReasonReact.arrayToElement)
         </div>
-        <div style=(ReactDOMRe.Style.make flexGrow::"1" ())>
+        <div
+          style=(ReactDOMRe.Style.make flexGrow::"1" display::"flex" flexDirection::"column" ())>
           {
             let (_activeTab, renderActiveTab) = tabs.(state);
             renderActiveTab ()
