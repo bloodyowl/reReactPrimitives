@@ -53,6 +53,7 @@ let make
     ::minWidth=0
     ::maxWidth=?
     ::underlayColor=defaultUnderlayColor
+    ::underlayStyle=?
     children => {
   ...component,
   render: fun _self =>
@@ -60,15 +61,24 @@ let make
       <div
         onClick=(fun _ => onPressClose ())
         style=(
-          ReactDOMRe.Style.make
-            position::"fixed"
-            top::"0"
-            left::"0"
-            right::"0"
-            bottom::"0"
-            backgroundColor::underlayColor
-            transition::"background-color .5s ease-in-out"
-            ()
+          ReactDOMRe.Style.combine
+            (
+              ReactDOMRe.Style.make
+                position::"fixed"
+                top::"0"
+                left::"0"
+                right::"0"
+                bottom::"0"
+                backgroundColor::underlayColor
+                transition::"background-color .5s ease-in-out"
+                ()
+            )
+            (
+              switch underlayStyle {
+              | Some style => style
+              | None => ReactDOMRe.Style.make ()
+              }
+            )
         )
       />
       <div
