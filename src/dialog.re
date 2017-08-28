@@ -16,6 +16,8 @@ module Styles = {
     ReactDOMRe.Style.make
       backgroundColor::"#fff"
       borderRadius::"4px"
+      overflow::"hidden"
+      zIndex::"0"
       boxShadow::"0 2px 4px rgba(0, 0, 0, 0.16)"
       position::"relative"
       ();
