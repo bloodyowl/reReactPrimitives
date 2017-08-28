@@ -20,6 +20,8 @@ module Styles = {
       zIndex::"0"
       boxShadow::"0 2px 4px rgba(0, 0, 0, 0.16)"
       position::"relative"
+      display::"flex"
+      flexDirection::"column"
       ();
   let header =
     ReactDOMRe.Style.make
@@ -27,6 +29,7 @@ module Styles = {
       flexDirection::"row"
       alignItems::"center"
       borderBottom::"1px solid rgba(0, 0, 0, 0.1)"
+      flexShrink::"0"
       ();
   let headerText =
     ReactDOMRe.Style.make
@@ -44,6 +47,7 @@ module Styles = {
     ReactDOMRe.Style.make wordBreak::"break-word" fontSize::"12px" color::"rgba(0, 0, 0, 0.4)" ();
   let close = ReactDOMRe.Style.make padding::"10px" ();
   let closeIcon = ReactDOMRe.Style.make opacity::"0.4" ();
+  let contents = ReactDOMRe.Style.make display::"flex" flexDirection::"column" flexGrow::"1" ();
 };
 
 let defaultUnderlayColor = "rgba(0, 0, 0, 0.3)";
@@ -116,7 +120,7 @@ let make
             <span style=Styles.closeIcon> (ReasonReact.stringToElement {js|✖️|js}) </span>
           </TouchableOpacity>
         </div>
-        <div> children.(0) </div>
+        <div style=Styles.contents> children.(0) </div>
       </div>
     </div>
 };

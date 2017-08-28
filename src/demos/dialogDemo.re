@@ -45,11 +45,43 @@ let openDialog2 _ => {
     layer
 };
 
+let openDialog3 _ => {
+  let layer = MyLayerManager.make FullViewport;
+  Js.Promise.then_
+    (
+      fun layer => {
+        MyLayerManager.render
+          layer
+          <Dialog
+            title="Hello"
+            description="This is a dialog"
+            onPressClose=(fun _ => MyLayerManager.remove layer)
+            minWidth=100
+            maxWidth=200>
+            <ScrollView>
+              (
+                Array.make
+                  100
+                  <div style=(ReactDOMRe.Style.make padding::"10px" ())>
+                    (ReasonReact.stringToElement "This is a dialog")
+                  </div> |> ReasonReact.arrayToElement
+              )
+            </ScrollView>
+          </Dialog>;
+        Js.Promise.resolve ()
+      }
+    )
+    layer
+};
+
 ReactDOMRe.renderToElementWithId
   <div>
     <Button title="Open dialog (max-width set)" color="#fb5" onPress=openDialog />
     <br />
     <br />
     <Button title="Open dialog (too much text)" color="#fb5" onPress=openDialog2 />
+    <br />
+    <br />
+    <Button title="Open dialog (scrollView)" color="#fb5" onPress=openDialog3 />
   </div>
   "root";
