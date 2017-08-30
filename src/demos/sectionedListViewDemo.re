@@ -1,6 +1,5 @@
 let itemStyle =
-  ReactDOMRe.Style.make
-    padding::"10px" borderBottom::"1px solid rgba(0, 0, 0, 0.1)" ();
+  ReactDOMRe.Style.make padding::"10px" borderBottom::"1px solid rgba(0, 0, 0, 0.1)" ();
 
 let sections = [
   (
@@ -19,4 +18,9 @@ let sections = [
   )
 ];
 
-ReactDOMRe.renderToElementWithId <SectionedListView sections /> "root";
+ReactDOMRe.renderToElementWithId
+  <div style=(ReactDOMRe.Style.make width::"100%" ())>
+    <SectionedListView sections />
+    <SectionedListView sections backgroundColor="#eee" sectionBackgroundColor="#fff" />
+  </div>
+  "root";
