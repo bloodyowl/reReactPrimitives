@@ -154,7 +154,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                     let renderableCount =
                       min ((containerHeight + scrollOffset * 2) / rowHeight) (Array.length data);
                     Array.sub
-                      data startIndex (min renderableCount (Array.length data - startIndex)) |>
+                      data startIndex (min (renderableCount + 1) (Array.length data - startIndex)) |>
                     Array.mapi (renderRow startIndex) |> ReasonReact.arrayToElement
                   }
                   (
