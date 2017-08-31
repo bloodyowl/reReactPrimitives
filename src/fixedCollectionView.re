@@ -124,6 +124,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           ref=(self.update setContainerRef)>
           (renderHeader ())
           <div
+            className="rrp-FixedCollectionViewScrollView"
             style=(
               ReactDOMRe.Style.make
                 flexGrow::"1"
