@@ -65,16 +65,16 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         scrollTop: DomRe.Element.scrollTop (ReactEventRe.Synthetic.target event)
       }
     };
-    let renderRow startIndex index (rowData: t) =>
+    let renderRow startIndex rowIndex (rowData: t) =>
       <div
-        key=(string_of_int (index + startIndex))
+        key=(string_of_int (rowIndex + startIndex))
         style=(
           ReactDOMRe.Style.make
             height::(string_of_int rowHeight ^ "px")
             position::"absolute"
             left::"0px"
             right::"0px"
-            top::(string_of_int ((index + startIndex) * rowHeight) ^ "px")
+            top::(string_of_int ((rowIndex + startIndex) * rowHeight) ^ "px")
             boxShadow::"0 1px rgba(0, 0, 0, 0.1)"
             display::"flex"
             flexDirection::"row"
@@ -86,7 +86,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           List.mapi (
             fun index column =>
               <div key=(string_of_int index) style=?column.style>
-                (column.renderCell index rowData)
+                (column.renderCell (startIndex + rowIndex) rowData)
               </div>
           ) |> Array.of_list |> ReasonReact.arrayToElement
         )
