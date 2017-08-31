@@ -10,17 +10,17 @@ module User = {
 
 module UserFixedCollectionView = FixedCollectionView.Make User;
 
-let renderUsername rowData => <div> (ReasonReact.stringToElement rowData.username) </div>;
+let renderUsername _ rowData => <div> (ReasonReact.stringToElement rowData.username) </div>;
 
 let renderHeader (row: FixedCollectionView.column 'a) =>
   <div style=(ReactDOMRe.Style.make fontSize::"12px" textTransform::"uppercase" ())>
     (ReasonReact.stringToElement row.headerLabel)
   </div>;
 
-let renderGoToProfile _row =>
+let renderGoToProfile _ _row =>
   <div> <a href="#"> (ReasonReact.stringToElement "View more") </a> </div>;
 
-let renderAvatar rowData =>
+let renderAvatar _ rowData =>
   <div>
     <Image width=40 height=40 source=rowData.avatar resizeMode=Contain backgroundColor="#eee" />
   </div>;

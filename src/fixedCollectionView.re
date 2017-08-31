@@ -4,7 +4,7 @@ type column 't = {
   headerLabel: string,
   style: option ReactDOMRe.Style.t,
   renderHeader: column 't => ReasonReact.reactElement,
-  renderCell: 't => ReasonReact.reactElement
+  renderCell: int => 't => ReasonReact.reactElement
 };
 
 module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
@@ -86,7 +86,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           List.mapi (
             fun index column =>
               <div key=(string_of_int index) style=?column.style>
-                (column.renderCell rowData)
+                (column.renderCell index rowData)
               </div>
           ) |> Array.of_list |> ReasonReact.arrayToElement
         )
