@@ -23,12 +23,6 @@ let make ::initiallyOpenTab=0 ::mode=Vertical ::tabs ::color="#4A90E2" _children
       | Some child =>
         let parentRect = DomRe.Element.getBoundingClientRect containerRef;
         let childRect = DomRe.Element.getBoundingClientRect child;
-        Js.log (
-          DomRectRe.left childRect - DomRectRe.left parentRect,
-          DomRectRe.top childRect - DomRectRe.top parentRect,
-          DomRectRe.width childRect,
-          DomRectRe.height childRect
-        );
         ReasonReact.Update {
           ...state,
           activeTabHandleRect:
