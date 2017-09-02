@@ -1,7 +1,7 @@
 type state = {
   openTab: int,
   activeTabHandleRect: option (int, int, int, int),
-  tabContainerRef: option DomRe.Element.t
+  tabContainerRef: ref (option DomRe.Element.t)
 };
 
 let component = ReasonReact.statefulComponent "TabbedView";
@@ -10,13 +10,14 @@ type mode =
   | Horizontal
   | Vertical;
 
+let setTabContainerRef tabContainerRef {ReasonReact.state: state} =>
+  state.tabContainerRef := Js.Null.to_opt tabContainerRef;
+
 let make ::initiallyOpenTab=0 ::mode=Vertical ::tabs ::color="#4A90E2" _children => {
-  let setTabContainerRef tabContainerRef {ReasonReact.state: state} =>
-    ReasonReact.SilentUpdate {...state, tabContainerRef: Js.Null.to_opt tabContainerRef};
   let setActiveTab openTab _ {ReasonReact.state: state} => ReasonReact.Update {...state, openTab};
   let setRect _ {ReasonReact.state: state} =>
     switch state.tabContainerRef {
-    | Some containerRef =>
+    | {contents: Some containerRef} =>
       let children = DomRe.Element.children containerRef;
       let item = DomRe.HtmlCollection.item state.openTab children;
       switch item {
@@ -35,14 +36,14 @@ let make ::initiallyOpenTab=0 ::mode=Vertical ::tabs ::color="#4A90E2" _children
         }
       | None => ReasonReact.NoUpdate
       }
-    | None => ReasonReact.NoUpdate
+    | _ => ReasonReact.NoUpdate
     };
   {
     ...component,
     initialState: fun () => {
       openTab: initiallyOpenTab,
       activeTabHandleRect: None,
-      tabContainerRef: None
+      tabContainerRef: ref None
     },
     didMount: fun {update} => {
       Bs_webapi.requestAnimationFrame (fun _ => update setRect ());
@@ -52,7 +53,7 @@ let make ::initiallyOpenTab=0 ::mode=Vertical ::tabs ::color="#4A90E2" _children
       if (oldSelf.state.openTab !== newSelf.state.openTab) {
         newSelf.update setRect ()
       },
-    render: fun {state, update, enqueue} =>
+    render: fun {state, update, handle} =>
       <div
         style=(
           ReactDOMRe.Style.make
@@ -68,7 +69,7 @@ let make ::initiallyOpenTab=0 ::mode=Vertical ::tabs ::color="#4A90E2" _children
         )>
         <div style=(ReactDOMRe.Style.make position::"relative" display::"flex" flexGrow::"0" ())>
           <div
-            ref=(enqueue setTabContainerRef)
+            ref=(handle setTabContainerRef)
             style=(
               ReactDOMRe.Style.make
                 display::"flex"

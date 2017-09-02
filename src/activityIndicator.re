@@ -1,7 +1,7 @@
 external devicePixelRatio : float = "devicePixelRatio" [@@bs.val];
 
 type state = {
-  context: option ReasonJs.Canvas2d.t,
+  context: ref (option ReasonJs.Canvas2d.t),
   cancelNextFrame: bool
 };
 
@@ -12,17 +12,18 @@ let tupleToColor (r, g, b) alpha =>
   string_of_int r ^
   "," ^ string_of_int g ^ "," ^ string_of_int b ^ "," ^ string_of_float alpha ^ "0)";
 
+let setCanvasRef canvasRef {ReasonReact.state: state} =>
+  state.context := (
+    switch (Js.Null.to_opt canvasRef) {
+    | Some canvas => Some (ReasonJs.CanvasElement.getContext2d canvas)
+    | None => None
+    }
+  );
+
 let make ::size ::color _children => {
-  let setCanvasRef canvasRef {ReasonReact.state: state} =>
-    ReasonReact.SilentUpdate (
-      switch (Js.Null.to_opt canvasRef) {
-      | Some canvas => {...state, context: Some (ReasonJs.CanvasElement.getContext2d canvas)}
-      | None => state
-      }
-    );
   let draw state =>
     switch state.context {
-    | Some context =>
+    | {contents: Some context} =>
       let actualSize = size *. devicePixelRatio;
       ReasonJs.Canvas2d.clearRect x::0.0 y::0.0 w::actualSize h::actualSize context;
       ReasonJs.Canvas2d.translate x::(actualSize /. 2.0) y::(actualSize /. 2.0) context;
@@ -50,7 +51,7 @@ let make ::size ::color _children => {
       ReasonJs.Canvas2d.setFillStyle context Gradient gradient;
       ReasonJs.Canvas2d.fill context;
       ()
-    | None => ()
+    | _ => ()
     };
   let rec tick state => {
     draw state;
@@ -60,7 +61,7 @@ let make ::size ::color _children => {
   };
   {
     ...component,
-    initialState: fun () => {context: None, cancelNextFrame: false},
+    initialState: fun () => {context: ref None, cancelNextFrame: false},
     didMount: fun {state} => {
       tick state;
       ReasonReact.NoUpdate
@@ -69,7 +70,7 @@ let make ::size ::color _children => {
       let sizeAttr = string_of_int (int_of_float size);
       let actualSize = string_of_int (int_of_float (size *. devicePixelRatio));
       <canvas
-        ref=(self.update setCanvasRef)
+        ref=(self.handle setCanvasRef)
         width=actualSize
         height=actualSize
         style=(ReactDOMRe.Style.make width::(sizeAttr ^ "px") height::(sizeAttr ^ "px") ())

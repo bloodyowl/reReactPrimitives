@@ -12,10 +12,12 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
   type state = {
     containerHeight: option int,
     scrollTop: int,
-    containerRef: option Dom.element
+    containerRef: ref (option Dom.element)
   };
   let component =
     ReasonReact.statefulComponent ("FixedCollectionView[" ^ FixedCollectionViewRow.name ^ "]");
+  let setContainerRef containerRef {ReasonReact.state: state} =>
+    state.containerRef := Js.Null.to_opt containerRef;
   let make
       data::(data: array t)
       ::onEndReached=?
@@ -26,14 +28,9 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       ::footerHeight=0
       columns::(columns: list (column t))
       _children => {
-    let setContainerRef containerRef {ReasonReact.state: state} =>
-      switch (Js.Null.to_opt containerRef) {
-      | Some containerRef => ReasonReact.SilentUpdate {...state, containerRef: Some containerRef}
-      | None => ReasonReact.NoUpdate
-      };
     let measureContainer () {ReasonReact.state: state} =>
       switch state.containerRef {
-      | Some container =>
+      | {contents: Some container} =>
         ReasonReact.Update {
           ...state,
           containerHeight: Some (DomRe.Element.clientHeight container - headerHeight)
@@ -113,7 +110,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       </div>;
     {
       ...component,
-      initialState: fun () => {containerHeight: None, scrollTop: 0, containerRef: None},
+      initialState: fun () => {containerHeight: None, scrollTop: 0, containerRef: ref None},
       didMount: fun ({state} as self) => {
         measureContainerAtNextFrame state self;
         ReasonReact.NoUpdate
@@ -121,7 +118,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       render: fun ({state} as self) =>
         <div
           style=(ReactDOMRe.Style.make flexGrow::"1" width::"100%" ())
-          ref=(self.update setContainerRef)>
+          ref=(self.handle setContainerRef)>
           (renderHeader ())
           <div
             className="rrp-FixedCollectionViewScrollView"
