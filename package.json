@@ -22,11 +22,11 @@
   },
   "devDependencies": {
     "bs-platform": "^1.7.5",
-    "gh-pages": "^1.0.0",
-    "webpack": "^1.14.0",
     "bs-webapi": "git://github.com/bloodyowl/bs-webapi-incubator.git",
+    "gh-pages": "^1.0.0",
     "react": "16.0.0-alpha.13",
     "react-dom": "16.0.0-alpha.13",
-    "reason-react": ">=0.2.3"
+    "reason-react": "^0.2.4",
+    "webpack": "^1.14.0"
   }
 }
