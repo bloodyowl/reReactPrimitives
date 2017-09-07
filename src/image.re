@@ -1,6 +1,6 @@
 type state = {isReady: bool};
 
-let component = ReasonReact.statefulComponent "Image";
+let component = ReasonReact.reducerComponent "Image";
 
 type resizeMode =
   | Cover
@@ -18,6 +18,7 @@ let make
     _children => {
   ...component,
   initialState: fun _ => {isReady: false},
+  reducer: fun () _state => ReasonReact.NoUpdate,
   didMount: fun _self => ReasonReact.Update {isReady: true},
   render: fun {state} =>
     <div

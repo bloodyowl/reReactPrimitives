@@ -35,7 +35,10 @@ let make
   render: fun _self =>
     <div style=Styles.container>
       (
-        sections |> List.mapi (renderSection ::backgroundColor ::sectionBackgroundColor) |> Array.of_list |> ReasonReact.arrayToElement
+        sections
+        |> List.mapi (renderSection ::backgroundColor ::sectionBackgroundColor)
+        |> Array.of_list
+        |> ReasonReact.arrayToElement
       )
     </div>
 };

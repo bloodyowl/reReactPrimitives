@@ -8,9 +8,13 @@ let make ::style=? ::items ::renderItem ::renderSeparator=defaultRenderSeparator
   render: fun _self =>
     <div style=?style>
       (
-        items |>
-        List.fold_left (fun acc item => List.append acc [renderSeparator (), renderItem item]) [] |> List.tl |>
-        List.mapi (fun index item => <div key=(string_of_int index)> item </div>) |> Array.of_list |> ReasonReact.arrayToElement
+        items
+        |> List.fold_left
+             (fun acc item => List.append acc [renderSeparator (), renderItem item]) []
+        |> List.tl
+        |> List.mapi (fun index item => <div key=(string_of_int index)> item </div>)
+        |> Array.of_list
+        |> ReasonReact.arrayToElement
       )
     </div>
 };

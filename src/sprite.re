@@ -6,10 +6,11 @@ module Make (SpriteSheet: SpriteSheetType) => {
     String.sub SpriteSheet.url index (String.length SpriteSheet.url - index)
   };
   type state = {isReady: bool};
-  let component = ReasonReact.statefulComponent ("Sprite[" ^ basename ^ "]");
+  let component = ReasonReact.reducerComponent ("Sprite[" ^ basename ^ "]");
   let make ::width ::height ::x ::y _children => {
     ...component,
     initialState: fun _ => {isReady: false},
+    reducer: fun () _state => ReasonReact.NoUpdate,
     didMount: fun _self => ReasonReact.Update {isReady: true},
     render: fun {state} =>
       <div

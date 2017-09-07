@@ -1,6 +1,6 @@
 ReactDOMRe.renderToElementWithId
   <div>
-    <TouchableHighlight onPress=(fun () => ())>
+    <TouchableHighlight onPress=(fun () => Js.log "onPress")>
       (ReasonReact.stringToElement "click me!")
     </TouchableHighlight>
     <br />
@@ -14,7 +14,7 @@ ReactDOMRe.renderToElementWithId
           overflow::"hidden"
           ()
       )
-      onPress=(fun () => ())>
+      onPress=(fun () => Js.log "onPress")>
       (ReasonReact.stringToElement "click me!")
     </TouchableHighlight>
   </div>

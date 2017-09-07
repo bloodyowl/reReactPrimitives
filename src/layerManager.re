@@ -43,6 +43,7 @@ module DefaultImpl = {
     DomRe.Element.setAttribute "tabindex" "0" root;
     activeElement := Js.Null.to_opt (getActiveElement DomRe.document);
     let style = getStyle root;
+    CssStyleDeclarationRe.setProperty "outline" "none" "" style;
     switch behavior {
     | FullViewport =>
       CssStyleDeclarationRe.setProperty "position" "absolute" "" style;
@@ -141,13 +142,13 @@ module DefaultImpl = {
     let layer = !currentLayer + 1;
     currentLayer := layer;
     map := LayerMap.add (string_of_int !currentLayer) root !map;
-    Js.Promise.resolve (string_of_int layer) |>
-    Js.Promise.then_ (
-      fun layer => {
-        focus root;
-        Js.Promise.resolve layer
-      }
-    )
+    Js.Promise.resolve (string_of_int layer)
+    |> Js.Promise.then_ (
+         fun layer => {
+           focus root;
+           Js.Promise.resolve layer
+         }
+       )
   };
   let render layer element =>
     try {
