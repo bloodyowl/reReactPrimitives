@@ -47,10 +47,13 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       switch onEndReached {
       | Some onEndReached =>
         if (
-          Array.length data * rowHeight - (
-            DomRe.Element.scrollTop (ReactEventRe.UI.target event) +
-            DomRe.Element.clientHeight (ReactEventRe.UI.target event)
-          ) <= scrollOffset
+          Array.length data
+          * rowHeight
+          - (
+            DomRe.Element.scrollTop (ReactEventRe.UI.target event)
+            + DomRe.Element.clientHeight (ReactEventRe.UI.target event)
+          )
+          <= scrollOffset
         ) {
           onEndReached ()
         }
@@ -65,26 +68,28 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       <div
         key=(string_of_int (rowIndex + startIndex))
         style=(
-                ReactDOMRe.Style.make
-                  height::(string_of_int rowHeight ^ "px")
-                  position::"absolute"
-                  left::"0px"
-                  right::"0px"
-                  top::(string_of_int ((rowIndex + startIndex) * rowHeight) ^ "px")
-                  boxShadow::"0 1px rgba(0, 0, 0, 0.1)"
-                  display::"flex"
-                  flexDirection::"row"
-                  alignItems::"center"
-                  ()
-              )>
+          ReactDOMRe.Style.make
+            height::(string_of_int rowHeight ^ "px")
+            position::"absolute"
+            left::"0px"
+            right::"0px"
+            top::(string_of_int ((rowIndex + startIndex) * rowHeight) ^ "px")
+            boxShadow::"0 1px rgba(0, 0, 0, 0.1)"
+            display::"flex"
+            flexDirection::"row"
+            alignItems::"center"
+            ()
+        )>
         (
-          columns |>
-          List.mapi (
-            fun index column =>
-              <div key=(string_of_int index) style=?column.style>
-                (column.renderCell (startIndex + rowIndex) rowData)
-              </div>
-          ) |> Array.of_list |> ReasonReact.arrayToElement
+          columns
+          |> List.mapi (
+               fun index column =>
+                 <div key=(string_of_int index) style=?column.style>
+                   (column.renderCell (startIndex + rowIndex) rowData)
+                 </div>
+             )
+          |> Array.of_list
+          |> ReasonReact.arrayToElement
         )
       </div>;
     {
@@ -107,38 +112,40 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           ref=(handle setContainerRef)>
           <div
             style=(
-                    ReactDOMRe.Style.make
-                      display::"flex"
-                      flexDirection::"row"
-                      alignItems::"center"
-                      height::(string_of_int headerHeight ^ "px")
-                      ()
-                  )>
+              ReactDOMRe.Style.make
+                display::"flex"
+                flexDirection::"row"
+                alignItems::"center"
+                height::(string_of_int headerHeight ^ "px")
+                ()
+            )>
             (
-              columns |>
-              List.mapi (
-                fun index column =>
-                  <div key=(string_of_int index) style=?column.style>
-                    (column.renderHeader column)
-                  </div>
-              ) |> Array.of_list |> ReasonReact.arrayToElement
+              columns
+              |> List.mapi (
+                   fun index column =>
+                     <div key=(string_of_int index) style=?column.style>
+                       (column.renderHeader column)
+                     </div>
+                 )
+              |> Array.of_list
+              |> ReasonReact.arrayToElement
             )
           </div>
           <div
             className="rrp-FixedCollectionViewScrollView"
             style=(
-                    ReactDOMRe.Style.make
-                      flexGrow::"1"
-                      overflow::"auto"
-                      width::"100%"
-                      height::(
-                        switch state.containerHeight {
-                        | None => "auto"
-                        | Some containerHeight => string_of_int containerHeight ^ "px"
-                        }
-                      )
-                      ()
-                  )
+              ReactDOMRe.Style.make
+                flexGrow::"1"
+                overflow::"auto"
+                width::"100%"
+                height::(
+                  switch state.containerHeight {
+                  | None => "auto"
+                  | Some containerHeight => string_of_int containerHeight ^ "px"
+                  }
+                )
+                ()
+            )
             onScroll=(reduce (fun event => SetScrollTop event))>
             (
               switch state.containerHeight {
@@ -146,38 +153,37 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
               | Some containerHeight =>
                 <div
                   style=(
-                          ReactDOMRe.Style.make
-                            height::(
-                              string_of_int (Array.length data * rowHeight + footerHeight) ^ "px"
-                            )
-                            position::"relative"
-                            ()
-                        )>
+                    ReactDOMRe.Style.make
+                      height::(string_of_int (Array.length data * rowHeight + footerHeight) ^ "px")
+                      position::"relative"
+                      ()
+                  )>
                   {
                     let startIndex = max ((state.scrollTop - scrollOffset) / rowHeight) 0;
                     let renderableCount =
                       min ((containerHeight + scrollOffset * 2) / rowHeight) (Array.length data);
                     Array.sub
-                      data startIndex (min (renderableCount + 1) (Array.length data - startIndex)) |>
-                    Array.mapi (renderRow startIndex) |> ReasonReact.arrayToElement
+                      data startIndex (min (renderableCount + 1) (Array.length data - startIndex))
+                    |> Array.mapi (renderRow startIndex)
+                    |> ReasonReact.arrayToElement
                   }
                   (
                     switch renderFooter {
                     | Some renderFooter =>
                       <div
                         style=(
-                                ReactDOMRe.Style.make
-                                  height::(string_of_int footerHeight ^ "px")
-                                  position::"absolute"
-                                  left::"0"
-                                  right::"0"
-                                  bottom::"0"
-                                  display::"flex"
-                                  flexDirection::"row"
-                                  alignItems::"center"
-                                  justifyContent::"center"
-                                  ()
-                              )>
+                          ReactDOMRe.Style.make
+                            height::(string_of_int footerHeight ^ "px")
+                            position::"absolute"
+                            left::"0"
+                            right::"0"
+                            bottom::"0"
+                            display::"flex"
+                            flexDirection::"row"
+                            alignItems::"center"
+                            justifyContent::"center"
+                            ()
+                        )>
                         (renderFooter ())
                       </div>
                     | None => ReasonReact.nullElement

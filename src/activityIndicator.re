@@ -1,6 +1,9 @@
 external devicePixelRatio : float = "devicePixelRatio" [@@bs.val];
 
-type state = {context: ref (option ReasonJs.Canvas2d.t), cancelNextFrame: ref bool};
+type state = {
+  context: ref (option ReasonJs.Canvas2d.t),
+  cancelNextFrame: ref bool
+};
 
 type action =
   | Draw;
@@ -8,17 +11,24 @@ type action =
 let component = ReasonReact.reducerComponent "ActivityIndicator";
 
 let tupleToColor (r, g, b) alpha =>
-  "rgba(" ^
-  string_of_int r ^
-  "," ^ string_of_int g ^ "," ^ string_of_int b ^ "," ^ string_of_float alpha ^ "0)";
+  "rgba("
+  ^ string_of_int r
+  ^ ","
+  ^ string_of_int g
+  ^ ","
+  ^ string_of_int b
+  ^ ","
+  ^ string_of_float alpha
+  ^ "0)";
 
 let setCanvasRef canvasRef {ReasonReact.state: state} =>
-  state.context := (
-    switch (Js.Null.to_opt canvasRef) {
-    | Some canvas => Some (ReasonJs.CanvasElement.getContext2d canvas)
-    | None => None
-    }
-  );
+  state.context :=
+    (
+      switch (Js.Null.to_opt canvasRef) {
+      | Some canvas => Some (ReasonJs.CanvasElement.getContext2d canvas)
+      | None => None
+      }
+    );
 
 let draw ::size ::color {ReasonReact.state: state} =>
   switch state.context {

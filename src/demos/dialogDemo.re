@@ -64,7 +64,8 @@ let openDialog3 _ => {
                   100
                   <div style=(ReactDOMRe.Style.make padding::"10px" ())>
                     (ReasonReact.stringToElement "This is a dialog")
-                  </div> |> ReasonReact.arrayToElement
+                  </div>
+                |> ReasonReact.arrayToElement
               )
             </ScrollView>
           </Dialog>;

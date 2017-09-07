@@ -1,6 +1,10 @@
 type state = option LayerManager.layer;
 
-let component = ReasonReact.statefulComponent "Tooltip";
+type action =
+  | SetLayer LayerManager.layer
+  | RemoveLayer;
+
+let component = ReasonReact.reducerComponent "Tooltip";
 
 module TooltipLayerManager = LayerManager.Make LayerManager.DefaultImpl;
 
@@ -76,8 +80,9 @@ let getArrowStyle (alignTo: LayerManager.align) =>
       ()
   };
 
-let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => {
-  let whenLayerReady layer _self => {
+let renderLayer ::message alignTo::(alignTo: LayerManager.align) {ReasonReact.state: state} =>
+  switch state {
+  | Some layer =>
     TooltipLayerManager.render
       layer
       <div
@@ -100,9 +105,11 @@ let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => 
         )>
         <div style=(getArrowStyle alignTo) />
         (ReasonReact.stringToElement message)
-      </div>;
-    ReasonReact.SilentUpdate (Some layer)
+      </div>
+  | None => ()
   };
+
+let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => {
   let showTooltip event self => {
     let layer =
       TooltipLayerManager.make (Contextualized (ReactEventRe.Mouse.target event) alignTo);
@@ -110,27 +117,31 @@ let make ::style=? ::message alignTo::(alignTo: LayerManager.align) children => 
       Js.Promise.then_
         (
           fun layer => {
-            self.ReasonReact.update whenLayerReady layer;
+            self.ReasonReact.reduce (fun layer => SetLayer layer) layer;
             Js.Promise.resolve ()
           }
         )
         layer
-    );
-    ReasonReact.NoUpdate
+    )
   };
-  let hideTooltip _event {ReasonReact.state: state} =>
+  let hideTooltip _event {ReasonReact.state: state, ReasonReact.reduce: reduce} =>
     switch state {
     | Some layer =>
       TooltipLayerManager.remove layer;
-      ReasonReact.SilentUpdate None
-    | None => ReasonReact.NoUpdate
+      reduce (fun () => RemoveLayer) ()
+    | None => ()
     };
   {
     ...component,
     initialState: fun () => None,
-    render: fun self =>
-      <div
-        style=?style onMouseEnter=(self.update showTooltip) onMouseLeave=(self.update hideTooltip)>
+    reducer: fun action _state =>
+      switch action {
+      | SetLayer layer =>
+        ReasonReact.SilentUpdateWithSideEffects (Some layer) (renderLayer ::message ::alignTo)
+      | RemoveLayer => ReasonReact.SilentUpdate None
+      },
+    render: fun {handle} =>
+      <div style=?style onMouseEnter=(handle showTooltip) onMouseLeave=(handle hideTooltip)>
         children.(0)
       </div>
   }

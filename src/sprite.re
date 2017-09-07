@@ -15,19 +15,16 @@ module Make (SpriteSheet: SpriteSheetType) => {
     render: fun {state} =>
       <div
         style=(
-                ReactDOMRe.Style.make
-                  width::(string_of_int width ^ "px")
-                  height::(string_of_int height ^ "px")
-                  backgroundSize::(
-                    string_of_int SpriteSheet.width ^
-                    "px " ^ string_of_int SpriteSheet.height ^ "px"
-                  )
-                  backgroundPosition::(
-                    "-" ^ string_of_int x ^ "px " ^ "-" ^ string_of_int y ^ "px"
-                  )
-                  backgroundImage::(state.isReady ? "url(" ^ SpriteSheet.url ^ ")" : "")
-                  ()
-              )
+          ReactDOMRe.Style.make
+            width::(string_of_int width ^ "px")
+            height::(string_of_int height ^ "px")
+            backgroundSize::(
+              string_of_int SpriteSheet.width ^ "px " ^ string_of_int SpriteSheet.height ^ "px"
+            )
+            backgroundPosition::("-" ^ string_of_int x ^ "px " ^ "-" ^ string_of_int y ^ "px")
+            backgroundImage::(state.isReady ? "url(" ^ SpriteSheet.url ^ ")" : "")
+            ()
+        )
       />
   };
 };
