@@ -1,12 +1,20 @@
 type state = {
   height: option int,
-  inputRef: option Dom.element,
+  inputRef: ref (option Dom.element),
   focused: bool
 };
 
-let component = ReasonReact.statefulComponent "TextInput";
+type action =
+  | Change string
+  | Focus
+  | Blur
+  | SetHeight int;
+
+let component = ReasonReact.reducerComponent "TextInput";
 
 external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style" [@@bs.get];
+
+let setInputRef inputRef {ReasonReact.state: state} => state.inputRef := Js.Null.to_opt inputRef;
 
 /* TODO: manage types and local validation */
 let make
@@ -24,53 +32,39 @@ let make
     ::placeholder=""
     ::rows=1
     _children => {
-  let setInputRef inputRef {ReasonReact.state: state} =>
-    ReasonReact.SilentUpdate (
-      switch (Js.Null.to_opt inputRef) {
-      | Some inputRef => {...state, inputRef: Some inputRef}
-      | None => state
-      }
-    );
-  let measureAndSetHeight _ {ReasonReact.state: state} =>
+  let measureAndSetHeight () {ReasonReact.state: state, ReasonReact.reduce: reduce} =>
     switch state.inputRef {
-    | Some element =>
+    | {contents: Some element} =>
       CssStyleDeclarationRe.setProperty "height" "0" "" (getStyle element);
       let height = DomRe.Element.scrollHeight element;
       CssStyleDeclarationRe.setProperty
         "height" (string_of_int height ^ "px") "" (getStyle element);
-      ReasonReact.Update {...state, height: Some height}
-    | None => ReasonReact.NoUpdate
+      reduce (fun height => SetHeight height) height
+    | _ => ()
     };
-  let handleChange _event ({ReasonReact.state: state} as self) =>
-    switch state.inputRef {
-    | Some element =>
-      let value = (ReactDOMRe.domElementToObj element)##value;
-      onTextChange value;
-      /* don't bother trigger a measurement if using an input */
-      if (multiline && autoSize) {
-        Bs_webapi.requestAnimationFrame (self.ReasonReact.update measureAndSetHeight)
-      };
-      ReasonReact.NoUpdate
-    | None => ReasonReact.NoUpdate
+  let handleResize {ReasonReact.handle: handle} =>
+    if (multiline && autoSize) {
+      Bs_webapi.requestAnimationFrame (fun _ => handle measureAndSetHeight ())
     };
-  let handleFocus event {ReasonReact.state: state} => {
-    switch onFocus {
-    | Some onFocus => onFocus event
-    | None => ()
-    };
-    ReasonReact.Update {...state, focused: true}
-  };
-  let handleBlur event {ReasonReact.state: state} => {
-    switch onBlur {
-    | Some onBlur => onBlur event
-    | None => ()
-    };
-    ReasonReact.Update {...state, focused: false}
+  let handleChange value self => {
+    onTextChange value;
+    handleResize self
   };
   {
     ...component,
-    initialState: fun () => {height: None, inputRef: None, focused: false},
-    render: fun ({state} as self) => {
+    initialState: fun () => {height: None, inputRef: ref None, focused: false},
+    didMount: fun self => {
+      handleResize self;
+      ReasonReact.NoUpdate
+    },
+    reducer: fun action state =>
+      switch action {
+      | Focus => ReasonReact.Update {...state, focused: true}
+      | Blur => ReasonReact.Update {...state, focused: false}
+      | Change value => ReasonReact.SideEffects (handleChange value)
+      | SetHeight height => ReasonReact.Update {...state, height: Some height}
+      },
+    render: fun {reduce, state, handle} => {
       let sizingStyle =
         ReactDOMRe.Style.make
           resize::"none"
@@ -87,7 +81,7 @@ let make
         (multiline ? "textarea" : "input")
         props::(
           ReactDOMRe.props
-            ref::(self.update setInputRef)
+            ref::(handle setInputRef)
             ::rows
             style::(
               ReactDOMRe.Style.combine
@@ -99,16 +93,37 @@ let make
                 )
                 (
                   switch focusedStyle {
-                  | Some style when self.state.focused == true => style
+                  | Some style when state.focused == true => style
                   | _ => ReactDOMRe.Style.make ()
                   }
                 )
             )
-            onChange::(self.update handleChange)
+            onChange::(
+              reduce (
+                fun event =>
+                  Change (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value
+              )
+            )
             ::?onKeyDown
             ::?onPaste
-            onFocus::(self.update handleFocus)
-            onBlur::(self.update handleBlur)
+            onFocus::(
+              fun event => {
+                switch onFocus {
+                | Some onFocus => onFocus event
+                | None => ()
+                };
+                reduce (fun () => Focus) ()
+              }
+            )
+            onBlur::(
+              fun event => {
+                switch onBlur {
+                | Some onBlur => onBlur event
+                | None => ()
+                };
+                reduce (fun () => Blur) ()
+              }
+            )
             ::value
             ::placeholder
             autoFocus::(Js.Boolean.to_js_boolean autoFocus)
