@@ -1,6 +1,6 @@
 {
   "name": "reason-react-primitives",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Primitive components to build UI on the web with ReasonReact",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "bs-webapi": "*",
     "react": ">=15.0.0",
     "react-dom": ">=15.0.0",
-    "reason-react": ">=0.2.3"
+    "reason-react": ">=0.2.4"
   },
   "devDependencies": {
     "bs-platform": "^1.7.5",
