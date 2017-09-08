@@ -13,7 +13,7 @@ type action =
   | Focus
   | Blur
   | MouseDown
-  | KeyPress ReactEventRe.Keyboard.t;
+  | KeyPress (int, int);
 
 let component = ReasonReact.reducerComponent "Switch";
 
@@ -34,8 +34,8 @@ let make ::value ::onValueChange _children => {
         }
       | Blur => ReasonReact.Update NotFocused
       | MouseDown => ReasonReact.Update FocusedFromMouse
-      | KeyPress event =>
-        switch (ReactEventRe.Keyboard.keyCode event, ReactEventRe.Keyboard.charCode event) {
+      | KeyPress keys =>
+        switch keys {
         | (13, _)
         | (_, 13)
         | (32, _)
@@ -49,7 +49,15 @@ let make ::value ::onValueChange _children => {
           role="checkbox"
           tabIndex=0
           onMouseDown=(reduce (fun _ => MouseDown))
-          onKeyPress=(reduce (fun event => KeyPress event))
+          onKeyPress=(
+            reduce (
+              fun event =>
+                KeyPress (
+                  ReactEventRe.Keyboard.keyCode event,
+                  ReactEventRe.Keyboard.charCode event
+                )
+            )
+          )
           onFocus=(reduce (fun _ => Focus))
           onBlur=(reduce (fun _ => Blur))
           onClick=(fun _ => handleChange ())

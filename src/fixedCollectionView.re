@@ -17,7 +17,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
   type action =
     | MeasureContainerAtNextFrame
     | SetContainerHeight int
-    | SetScrollTop ReactEventRe.UI.t;
+    | SetScrollTop (int, int);
   let component =
     ReasonReact.reducerComponent ("FixedCollectionView[" ^ FixedCollectionViewRow.name ^ "]");
   let setContainerRef containerRef {ReasonReact.state: state} =>
@@ -43,26 +43,15 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           | _ => ()
           }
       );
-    let setScrollTop event state => {
+    let setScrollTop (scrollTop, clientHeight) state => {
       switch onEndReached {
       | Some onEndReached =>
-        if (
-          Array.length data
-          * rowHeight
-          - (
-            DomRe.Element.scrollTop (ReactEventRe.UI.target event)
-            + DomRe.Element.clientHeight (ReactEventRe.UI.target event)
-          )
-          <= scrollOffset
-        ) {
+        if (Array.length data * rowHeight - (scrollTop + clientHeight) <= scrollOffset) {
           onEndReached ()
         }
       | None => ()
       };
-      ReasonReact.Update {
-        ...state,
-        scrollTop: DomRe.Element.scrollTop (ReactEventRe.UI.target event)
-      }
+      ReasonReact.Update {...state, scrollTop}
     };
     let renderRow startIndex rowIndex (rowData: t) =>
       <div
@@ -100,7 +89,7 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         | MeasureContainerAtNextFrame => ReasonReact.SideEffects measureContainerAtNextFrame
         | SetContainerHeight containerHeight =>
           ReasonReact.Update {...state, containerHeight: Some containerHeight}
-        | SetScrollTop event => setScrollTop event state
+        | SetScrollTop (scrollTop, clientHeight) => setScrollTop (scrollTop, clientHeight) state
         },
       didMount: fun {reduce} => {
         reduce (fun () => MeasureContainerAtNextFrame) ();
@@ -146,7 +135,15 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                 )
                 ()
             )
-            onScroll=(reduce (fun event => SetScrollTop event))>
+            onScroll=(
+              reduce (
+                fun event =>
+                  SetScrollTop (
+                    DomRe.Element.scrollTop (ReactEventRe.UI.target event),
+                    DomRe.Element.clientHeight (ReactEventRe.UI.target event)
+                  )
+              )
+            )>
             (
               switch state.containerHeight {
               | None => ReasonReact.nullElement

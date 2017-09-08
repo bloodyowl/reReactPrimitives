@@ -64,17 +64,20 @@ let draw ::size ::color {ReasonReact.state: state} =>
   };
 
 let make ::size ::color _children => {
-  let tick ({ReasonReact.reduce: reduce} as self) =>
+  let tick ({ReasonReact.reduce: reduce, ReasonReact.state: state} as self) =>
     Bs_webapi.requestAnimationFrame (
-      fun _ => {
-        draw ::size ::color self;
-        reduce (fun () => Draw) ()
-      }
+      fun _ =>
+        switch state.cancelNextFrame {
+        | {contents: false} =>
+          draw ::size ::color self;
+          reduce (fun () => Draw) ()
+        | _ => ()
+        }
     );
   {
     ...component,
     initialState: fun () => {context: ref None, cancelNextFrame: ref false},
-    didMount: fun {state, reduce} => {
+    didMount: fun {reduce} => {
       reduce (fun () => Draw) ();
       ReasonReact.NoUpdate
     },
