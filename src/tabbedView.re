@@ -44,7 +44,13 @@ let setRect state =>
 let measureRectAtNextFrame {ReasonReact.reduce: reduce} =>
   Bs_webapi.requestAnimationFrame (fun _ => reduce (fun () => MeasureRect) ());
 
-let make ::initiallyOpenTab=0 ::mode=Vertical ::tabs ::color="#4A90E2" _children => {
+let make
+    ::initiallyOpenTab=0
+    ::mode=Vertical
+    ::tabs
+    ::color="#4A90E2"
+    ::tabHeadingPadding="15px 20px"
+    _children => {
   ...component,
   initialState: fun () => {
     openTab: initiallyOpenTab,
@@ -108,7 +114,7 @@ let make ::initiallyOpenTab=0 ::mode=Vertical ::tabs ::color="#4A90E2" _children
                      style=(
                        ReactDOMRe.Style.make
                          color::(index === state.openTab ? color : "rgba(0, 0, 0, 0.6)")
-                         padding::"15px 20px"
+                         padding::tabHeadingPadding
                          ()
                      )
                      onPress=(reduce (fun _ => SetActiveTab index))>
