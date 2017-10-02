@@ -78,7 +78,11 @@ let make
           )
           ()
       )>
-      <div style=(ReactDOMRe.Style.make position::"relative" display::"flex" flexGrow::"0" ())>
+      <div
+        style=(
+          ReactDOMRe.Style.make
+            position::"relative" display::"flex" flexGrow::"0" flexShrink::"0" ()
+        )>
         <div
           ref=(handle setTabContainerRef)
           style=(
