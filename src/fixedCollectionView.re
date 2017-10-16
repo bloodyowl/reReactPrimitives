@@ -28,6 +28,16 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       ::scrollOffset
       ::rowHeight
       ::headerHeight
+      renderRow::
+        userRenderRow=(
+          fun _ item =>
+            <div
+              style=(
+                ReactDOMRe.Style.make display::"flex" flexDirection::"row" alignItems::"center" ()
+              )>
+              item
+            </div>
+        )
       ::renderFooter=?
       ::footerHeight=0
       columns::(columns: list (column t))
@@ -65,20 +75,25 @@ module Make (FixedCollectionViewRow: FixedCollectionViewRowType) => {
             top::(string_of_int ((rowIndex + startIndex) * rowHeight) ^ "px")
             boxShadow::"0 1px rgba(0, 0, 0, 0.1)"
             display::"flex"
-            flexDirection::"row"
-            alignItems::"center"
+            flexDirection::"column"
+            alignItems::"stretch"
+            justifyContent::"center"
             ()
         )>
         (
-          columns
-          |> List.mapi (
-               fun index column =>
-                 <div key=(string_of_int index) style=?column.style>
-                   (column.renderCell (startIndex + rowIndex) rowData)
-                 </div>
-             )
-          |> Array.of_list
-          |> ReasonReact.arrayToElement
+          userRenderRow
+            rowData
+            (
+              columns
+              |> List.mapi (
+                   fun index column =>
+                     <div key=(string_of_int index) style=?column.style>
+                       (column.renderCell (startIndex + rowIndex) rowData)
+                     </div>
+                 )
+              |> Array.of_list
+              |> ReasonReact.arrayToElement
+            )
         )
       </div>;
     {
