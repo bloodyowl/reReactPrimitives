@@ -21,6 +21,9 @@ let make
     ::multiline=false
     ::autoSize=false
     ::autoFocus=false
+    ::_type="text"
+    ::id=?
+    ::name=?
     ::value
     ::style=?
     ::onTextChange
@@ -83,6 +86,9 @@ let make
           ReactDOMRe.props
             ref::(handle setInputRef)
             ::rows
+            ::_type
+            ::?id
+            ::?name
             style::(
               ReactDOMRe.Style.combine
                 (
