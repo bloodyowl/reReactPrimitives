@@ -3,17 +3,18 @@ type item = {
   description: string
 };
 
-let renderItem item =>
-  <div style=(ReactDOMRe.Style.make padding::"10px" display::"flex" flexDirection::"column" ())>
-    <span style=(ReactDOMRe.Style.make fontWeight::"700" ())>
-      (ReasonReact.stringToElement item.label)
+let renderItem = (item) =>
+  <div
+    style=(ReactDOMRe.Style.make(~padding="10px", ~display="flex", ~flexDirection="column", ()))>
+    <span style=(ReactDOMRe.Style.make(~fontWeight="700", ()))>
+      (ReasonReact.stringToElement(item.label))
     </span>
-    <span style=(ReactDOMRe.Style.make fontSize::"12px" ())>
-      (ReasonReact.stringToElement item.description)
+    <span style=(ReactDOMRe.Style.make(~fontSize="12px", ()))>
+      (ReasonReact.stringToElement(item.description))
     </span>
   </div>;
 
-ReactDOMRe.renderToElementWithId
+ReactDOMRe.renderToElementWithId(
   <div>
     <ListView
       items=[
@@ -23,5 +24,6 @@ ReactDOMRe.renderToElementWithId
       ]
       renderItem
     />
-  </div>
-  "root";
+  </div>,
+  "root"
+);

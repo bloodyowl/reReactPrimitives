@@ -1,4 +1,4 @@
-ReactDOMRe.renderToElementWithId
+ReactDOMRe.renderToElementWithId(
   <div>
     <Image
       source="https://fakeimg.pl/400x450/?retina=true"
@@ -18,5 +18,6 @@ ReactDOMRe.renderToElementWithId
       round=true
       alternativeText="200 x 300 placeholder image"
     />
-  </div>
-  "root";
+  </div>,
+  "root"
+);

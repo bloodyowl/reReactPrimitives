@@ -1,21 +1,23 @@
-ReactDOMRe.renderToElementWithId
+ReactDOMRe.renderToElementWithId(
   <div>
-    <TouchableHighlight onPress=(fun () => Js.log "onPress")>
-      (ReasonReact.stringToElement "click me!")
+    <TouchableHighlight onPress=(() => Js.log("onPress"))>
+      (ReasonReact.stringToElement("click me!"))
     </TouchableHighlight>
     <br />
     <TouchableHighlight
       style=(
-        ReactDOMRe.Style.make
-          backgroundColor::"#4A90E2"
-          padding::"10px"
-          color::"#fff"
-          borderRadius::"3px"
-          overflow::"hidden"
+        ReactDOMRe.Style.make(
+          ~backgroundColor="#4A90E2",
+          ~padding="10px",
+          ~color="#fff",
+          ~borderRadius="3px",
+          ~overflow="hidden",
           ()
+        )
       )
-      onPress=(fun () => Js.log "onPress")>
-      (ReasonReact.stringToElement "click me!")
+      onPress=(() => Js.log("onPress"))>
+      (ReasonReact.stringToElement("click me!"))
     </TouchableHighlight>
-  </div>
-  "root";
+  </div>,
+  "root"
+);

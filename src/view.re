@@ -1,6 +1,6 @@
-let component = ReasonReact.statelessComponent "View";
+let component = ReasonReact.statelessComponent("View");
 
-let make ::style=? children => {
+let make = (~style=?, children) => {
   ...component,
-  render: fun _self => <div style=?style> (ReasonReact.arrayToElement children) </div>
+  render: (_self) => <div ?style> (ReasonReact.arrayToElement(children)) </div>
 };

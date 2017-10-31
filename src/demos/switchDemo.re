@@ -1,14 +1,15 @@
-let rec render firstValue =>
-  ReactDOMRe.renderToElementWithId
+let rec render = (firstValue) =>
+  ReactDOMRe.renderToElementWithId(
     <div>
       <Switch value=(Idle, firstValue) onValueChange=render />
       <br />
-      <Switch value=(Idle, false) onValueChange=(fun _ => ()) />
+      <Switch value=(Idle, false) onValueChange=((_) => ()) />
       <br />
-      <Switch value=(Updating, false) onValueChange=(fun _ => ()) />
+      <Switch value=(Updating, false) onValueChange=((_) => ()) />
       <br />
-      <Switch value=(Updating, true) onValueChange=(fun _ => ()) />
-    </div>
-    "root";
+      <Switch value=(Updating, true) onValueChange=((_) => ()) />
+    </div>,
+    "root"
+  );
 
-render true;
+render(true);

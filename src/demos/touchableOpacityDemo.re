@@ -1,16 +1,17 @@
-ReactDOMRe.renderToElementWithId
+ReactDOMRe.renderToElementWithId(
   <div>
-    <TouchableOpacity onPress=(fun () => Js.log "onPress")>
-      (ReasonReact.stringToElement "click me!")
+    <TouchableOpacity onPress=(() => Js.log("onPress"))>
+      (ReasonReact.stringToElement("click me!"))
     </TouchableOpacity>
     <br />
     <p>
-      (ReasonReact.stringToElement "Can be inlined")
+      (ReasonReact.stringToElement("Can be inlined"))
       <TouchableOpacity
-        style=(ReactDOMRe.Style.make display::"inline" ()) onPress=(fun () => Js.log "onPress")>
-        (ReasonReact.stringToElement "click me!")
+        style=(ReactDOMRe.Style.make(~display="inline", ())) onPress=(() => Js.log("onPress"))>
+        (ReasonReact.stringToElement("click me!"))
       </TouchableOpacity>
-      (ReasonReact.stringToElement "like this")
+      (ReasonReact.stringToElement("like this"))
     </p>
-  </div>
-  "root";
+  </div>,
+  "root"
+);

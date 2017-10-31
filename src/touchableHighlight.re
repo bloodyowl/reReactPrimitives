@@ -17,35 +17,37 @@ type action =
   | Blur
   | MouseDown
   | MouseUp
-  | KeyDown int
-  | KeyUp int
-  | KeyPress (int, int)
+  | KeyDown(int)
+  | KeyUp(int)
+  | KeyPress((int, int))
   | Click;
 
-let component = ReasonReact.reducerComponent "TouchableHighlight";
+let component = ReasonReact.reducerComponent("TouchableHighlight");
 
 module Styles = {
-  let container = ReactDOMRe.Style.make position::"relative" cursor::"pointer" ();
-  let contents = ReactDOMRe.Style.make position::"relative" ();
+  let container = ReactDOMRe.Style.make(~position="relative", ~cursor="pointer", ());
+  let contents = ReactDOMRe.Style.make(~position="relative", ());
 };
 
-let make
-    ::onPress
-    ::underlayColor="rgba(0, 0, 0, 0.2)"
-    ::onKeyPress=?
-    ::onKeyDown=?
-    ::onKeyUp=?
-    ::onFocus=?
-    ::onBlur=?
-    ::style=?
-    ::focusedFromKeyboardStyle=?
-    ::focusedFromMouseStyle=?
-    ::disabled=false
-    ::disabledStyle=?
-    children => {
+let make =
+    (
+      ~onPress,
+      ~underlayColor="rgba(0, 0, 0, 0.2)",
+      ~onKeyPress=?,
+      ~onKeyDown=?,
+      ~onKeyUp=?,
+      ~onFocus=?,
+      ~onBlur=?,
+      ~style=?,
+      ~focusedFromKeyboardStyle=?,
+      ~focusedFromMouseStyle=?,
+      ~disabled=false,
+      ~disabledStyle=?,
+      children
+    ) => {
   ...component,
-  initialState: fun _ => {pressed: Idle, focus: NotFocused},
-  reducer: fun action state =>
+  initialState: (_) => {pressed: Idle, focus: NotFocused},
+  reducer: (action, state) =>
     switch action {
     | Focus =>
       disabled ?
@@ -53,35 +55,35 @@ let make
         (
           switch state.focus {
           | FocusedFromMouse => ReasonReact.NoUpdate
-          | _ => ReasonReact.Update {...state, focus: FocusedFromKeyboard}
+          | _ => ReasonReact.Update({...state, focus: FocusedFromKeyboard})
           }
         )
-    | Blur => disabled ? ReasonReact.NoUpdate : ReasonReact.Update {...state, focus: NotFocused}
+    | Blur => disabled ? ReasonReact.NoUpdate : ReasonReact.Update({...state, focus: NotFocused})
     | MouseDown =>
       disabled ?
-        ReasonReact.NoUpdate : ReasonReact.Update {focus: FocusedFromMouse, pressed: Depressed}
-    | MouseUp => disabled ? ReasonReact.NoUpdate : ReasonReact.Update {...state, pressed: Idle}
-    | KeyDown key =>
+        ReasonReact.NoUpdate : ReasonReact.Update({focus: FocusedFromMouse, pressed: Depressed})
+    | MouseUp => disabled ? ReasonReact.NoUpdate : ReasonReact.Update({...state, pressed: Idle})
+    | KeyDown(key) =>
       disabled ?
         ReasonReact.NoUpdate :
         (
           switch key {
           | 13
-          | 32 => ReasonReact.Update {...state, pressed: Depressed}
+          | 32 => ReasonReact.Update({...state, pressed: Depressed})
           | _ => ReasonReact.NoUpdate
           }
         )
-    | KeyUp key =>
+    | KeyUp(key) =>
       disabled ?
         ReasonReact.NoUpdate :
         (
           switch key {
           | 13
-          | 32 => ReasonReact.Update {...state, pressed: Idle}
+          | 32 => ReasonReact.Update({...state, pressed: Idle})
           | _ => ReasonReact.NoUpdate
           }
         )
-    | KeyPress keys =>
+    | KeyPress(keys) =>
       disabled ?
         ReasonReact.NoUpdate :
         (
@@ -90,140 +92,135 @@ let make
           | (_, 13)
           | (32, _)
           | (_, 32) =>
-            onPress ();
+            onPress();
             ReasonReact.NoUpdate
           | _ => ReasonReact.NoUpdate
           }
         )
     | Click =>
-      disabled ? ReasonReact.NoUpdate : ReasonReact.SideEffects (fun _ => ignore (onPress ()))
+      disabled ? ReasonReact.NoUpdate : ReasonReact.SideEffects(((_) => ignore(onPress())))
     },
-  render: fun {state, reduce} =>
-    ReasonReact.cloneElement
+  render: ({state, reduce}) =>
+    ReasonReact.cloneElement(
       <div
         role="button"
         tabIndex=0
         style=(
-          ReactDOMRe.Style.combine
-            (
-              ReactDOMRe.Style.combine
-                (
-                  ReactDOMRe.Style.unsafeAddProp
-                    (
-                      ReactDOMRe.Style.combine
-                        (
-                          ReactDOMRe.Style.make
-                            outline::(
-                              switch state.focus {
-                              | FocusedFromMouse => "none"
-                              | _ => ""
-                              }
-                            )
-                            ()
-                        )
-                        (
-                          switch style {
-                          | None => Styles.container
-                          | Some style => ReactDOMRe.Style.combine Styles.container style
-                          }
-                        )
-                    )
-                    "WebkitTapHighlightColor"
-                    "rgba(0, 0, 0, 0)"
-                )
-                (
-                  switch (state.focus, focusedFromKeyboardStyle, focusedFromMouseStyle) {
-                  | (FocusedFromKeyboard, Some style, _) => style
-                  | (FocusedFromMouse, _, Some style) => style
-                  | _ => ReactDOMRe.Style.make ()
+          ReactDOMRe.Style.combine(
+            ReactDOMRe.Style.combine(
+              ReactDOMRe.Style.unsafeAddProp(
+                ReactDOMRe.Style.combine(
+                  ReactDOMRe.Style.make(
+                    ~outline=
+                      switch state.focus {
+                      | FocusedFromMouse => "none"
+                      | _ => ""
+                      },
+                    ()
+                  ),
+                  switch style {
+                  | None => Styles.container
+                  | Some(style) => ReactDOMRe.Style.combine(Styles.container, style)
                   }
-                )
-            )
-            (
-              switch (disabled, disabledStyle) {
-              | (true, Some style) => style
-              | _ => ReactDOMRe.Style.make ()
+                ),
+                "WebkitTapHighlightColor",
+                "rgba(0, 0, 0, 0)"
+              ),
+              switch (state.focus, focusedFromKeyboardStyle, focusedFromMouseStyle) {
+              | (FocusedFromKeyboard, Some(style), _) => style
+              | (FocusedFromMouse, _, Some(style)) => style
+              | _ => ReactDOMRe.Style.make()
               }
-            )
+            ),
+            switch (disabled, disabledStyle) {
+            | (true, Some(style)) => style
+            | _ => ReactDOMRe.Style.make()
+            }
+          )
         )
         onFocus=(
-          fun event => {
+          (event) => {
             switch onFocus {
-            | Some onFocus => onFocus event
+            | Some(onFocus) => onFocus(event)
             | None => ()
             };
-            reduce (fun () => Focus) ()
+            reduce(() => Focus, ())
           }
         )
         onBlur=(
-          fun event => {
+          (event) => {
             switch onBlur {
-            | Some onBlur => onBlur event
+            | Some(onBlur) => onBlur(event)
             | None => ()
             };
-            reduce (fun _ => Blur) ()
+            reduce((_) => Blur, ())
           }
         )
-        onMouseDown=(reduce (fun _ => MouseDown))
-        onMouseUp=(reduce (fun _ => MouseUp))
-        onTouchStart=(reduce (fun _ => MouseDown))
-        onTouchEnd=(reduce (fun _ => MouseUp))
+        onMouseDown=(reduce((_) => MouseDown))
+        onMouseUp=(reduce((_) => MouseUp))
+        onTouchStart=(reduce((_) => MouseDown))
+        onTouchEnd=(reduce((_) => MouseUp))
         onKeyDown=(
-          fun event => {
+          (event) => {
             switch onKeyDown {
-            | Some onKeyDown => onKeyDown event
+            | Some(onKeyDown) => onKeyDown(event)
             | None => ()
             };
-            reduce (fun event => KeyDown (ReactEventRe.Keyboard.keyCode event)) event
+            reduce((event) => KeyDown(ReactEventRe.Keyboard.keyCode(event)), event)
           }
         )
         onKeyUp=(
-          fun event => {
+          (event) => {
             switch onKeyUp {
-            | Some onKeyUp => onKeyUp event
+            | Some(onKeyUp) => onKeyUp(event)
             | None => ()
             };
-            reduce (fun event => KeyUp (ReactEventRe.Keyboard.keyCode event)) event
+            reduce((event) => KeyUp(ReactEventRe.Keyboard.keyCode(event)), event)
           }
         )
         onKeyPress=(
-          fun event => {
+          (event) => {
             switch onKeyPress {
-            | Some onKeyPress => onKeyPress event
+            | Some(onKeyPress) => onKeyPress(event)
             | None => ()
             };
-            let keys = (ReactEventRe.Keyboard.keyCode event, ReactEventRe.Keyboard.charCode event);
+            let keys = (
+              ReactEventRe.Keyboard.keyCode(event),
+              ReactEventRe.Keyboard.charCode(event)
+            );
             switch keys {
             | (13, _)
             | (_, 13)
             | (32, _)
-            | (_, 32) => ReactEventRe.Keyboard.preventDefault event
+            | (_, 32) => ReactEventRe.Keyboard.preventDefault(event)
             | _ => ()
             };
-            reduce (fun keys => KeyPress keys) keys
+            reduce((keys) => KeyPress(keys), keys)
           }
         )
-        onClick=(reduce (fun _ => Click))>
+        onClick=(reduce((_) => Click))>
         (
           switch state.pressed {
           | Depressed =>
             <div
               style=(
-                ReactDOMRe.Style.make
-                  position::"absolute"
-                  top::"0"
-                  left::"0"
-                  right::"0"
-                  bottom::"0"
-                  backgroundColor::underlayColor
+                ReactDOMRe.Style.make(
+                  ~position="absolute",
+                  ~top="0",
+                  ~left="0",
+                  ~right="0",
+                  ~bottom="0",
+                  ~backgroundColor=underlayColor,
                   ()
+                )
               )
             />
           | Idle => ReasonReact.nullElement
           }
         )
-        <div style=Styles.contents> children.(0) </div>
-      </div>
-      props::{"aria-disabled": Js.Boolean.to_js_boolean disabled}
+        <div style=Styles.contents> children[0] </div>
+      </div>,
+      ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},
       [||]
+    )
 };
