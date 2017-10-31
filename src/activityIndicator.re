@@ -39,7 +39,7 @@ let draw = (~size, ~color, {ReasonReact.state}) =>
     ReasonJs.Canvas2d.clearRect(~x=0.0, ~y=0.0, ~w=actualSize, ~h=actualSize, context);
     ReasonJs.Canvas2d.translate(~x=actualSize /. 2.0, ~y=actualSize /. 2.0, context);
     ReasonJs.Canvas2d.rotate(0.172665, context);
-    ReasonJs.Canvas2d.translate(~x=-. (actualSize /. 2.0), ~y=-. (actualSize /. 2.0), context);
+    ReasonJs.Canvas2d.translate(~x=0.0 -. (actualSize /. 2.0), ~y=0.0 -. (actualSize /. 2.0), context);
     let centeredArc = ReasonJs.Canvas2d.arc(~x=actualSize /. 2.0, ~y=actualSize /. 2.0);
     ReasonJs.Canvas2d.beginPath(context);
     centeredArc(
