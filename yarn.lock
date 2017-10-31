@@ -196,9 +196,9 @@ browserify-zlib@^0.1.4:
   dependencies:
     pako "~0.2.0"
 
-bs-platform@^1.7.5:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-1.8.2.tgz#2aba1cfc73e21feaa8902d67b5ddbec975938554"
+bs-platform@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-2.0.0.tgz#17ee607fa829f67b8b920438ebca5ec1deab3276"
 
 "bs-webapi@git://github.com/bloodyowl/bs-webapi-incubator.git":
   version "0.4.1"

@@ -13,105 +13,103 @@ type action =
   | Focus
   | Blur
   | MouseDown
-  | KeyPress (int, int);
+  | KeyPress((int, int));
 
-let component = ReasonReact.reducerComponent "Switch";
+let component = ReasonReact.reducerComponent("Switch");
 
-let make ::value ::onValueChange _children => {
-  let handleChange () => {
+let make = (~value, ~onValueChange, _children) => {
+  let handleChange = () => {
     let (_state, value) = value;
-    onValueChange (not value)
+    onValueChange(! value)
   };
   {
     ...component,
-    initialState: fun () => NotFocused,
-    reducer: fun action state =>
+    initialState: () => NotFocused,
+    reducer: (action, state) =>
       switch action {
       | Focus =>
         switch state {
         | FocusedFromMouse => ReasonReact.NoUpdate
-        | _ => ReasonReact.Update FocusedFromKeyboard
+        | _ => ReasonReact.Update(FocusedFromKeyboard)
         }
-      | Blur => ReasonReact.Update NotFocused
-      | MouseDown => ReasonReact.Update FocusedFromMouse
-      | KeyPress keys =>
+      | Blur => ReasonReact.Update(NotFocused)
+      | MouseDown => ReasonReact.Update(FocusedFromMouse)
+      | KeyPress(keys) =>
         switch keys {
         | (13, _)
         | (_, 13)
         | (32, _)
-        | (_, 32) => ReasonReact.SideEffects (fun _ => handleChange ())
+        | (_, 32) => ReasonReact.SideEffects(((_) => handleChange()))
         | _ => ReasonReact.NoUpdate
         }
       },
-    render: fun {state, reduce} =>
-      ReasonReact.cloneElement
+    render: ({state, reduce}) =>
+      ReasonReact.cloneElement(
         <div
           role="checkbox"
           tabIndex=0
-          onMouseDown=(reduce (fun _ => MouseDown))
+          onMouseDown=(reduce((_) => MouseDown))
           onKeyPress=(
-            reduce (
-              fun event =>
-                KeyPress (
-                  ReactEventRe.Keyboard.keyCode event,
-                  ReactEventRe.Keyboard.charCode event
-                )
+            reduce(
+              (event) =>
+                KeyPress((
+                  ReactEventRe.Keyboard.keyCode(event),
+                  ReactEventRe.Keyboard.charCode(event)
+                ))
             )
           )
-          onFocus=(reduce (fun _ => Focus))
-          onBlur=(reduce (fun _ => Blur))
-          onClick=(fun _ => handleChange ())
+          onFocus=(reduce((_) => Focus))
+          onBlur=(reduce((_) => Blur))
+          onClick=((_) => handleChange())
           style=(
-            ReactDOMRe.Style.unsafeAddProp
-              (
-                ReactDOMRe.Style.make
-                  width::"35px"
-                  height::"14px"
-                  borderRadius::"7px"
-                  boxShadow::"inset 0 0 0 1px rgba(0, 0, 0, 0.1)"
-                  position::"relative"
-                  cursor::"pointer"
-                  backgroundColor::(
-                    switch value {
-                    | (Idle, true) => "rgba(74, 144, 226, 1)"
-                    | (Idle, false) => "rgba(0, 0, 0, 0.2)"
-                    | (Updating, true) => "rgba(74, 144, 226, 0.5)"
-                    | (Updating, false) => "rgba(0, 0, 0, 0.1)"
-                    }
-                  )
-                  outline::(
-                    switch state {
-                    | FocusedFromMouse => "none"
-                    | _ => ""
-                    }
-                  )
-                  ()
-              )
-              "WebkitTapHighlightColor"
+            ReactDOMRe.Style.unsafeAddProp(
+              ReactDOMRe.Style.make(
+                ~width="35px",
+                ~height="14px",
+                ~borderRadius="7px",
+                ~boxShadow="inset 0 0 0 1px rgba(0, 0, 0, 0.1)",
+                ~position="relative",
+                ~cursor="pointer",
+                ~backgroundColor=
+                  switch value {
+                  | (Idle, true) => "rgba(74, 144, 226, 1)"
+                  | (Idle, false) => "rgba(0, 0, 0, 0.2)"
+                  | (Updating, true) => "rgba(74, 144, 226, 0.5)"
+                  | (Updating, false) => "rgba(0, 0, 0, 0.1)"
+                  },
+                ~outline=
+                  switch state {
+                  | FocusedFromMouse => "none"
+                  | _ => ""
+                  },
+                ()
+              ),
+              "WebkitTapHighlightColor",
               "rgba(0, 0, 0, 0)"
+            )
           )>
           <div
             style=(
-              ReactDOMRe.Style.make
-                width::"20px"
-                height::"20px"
-                backgroundColor::"#fff"
-                boxShadow::"0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)"
-                position::"absolute"
-                borderRadius::"10px"
-                top::"-3px"
-                transition::"200ms left ease-in-out"
-                display::"flex"
-                flexDirection::"row"
-                alignItems::"center"
-                justifyContent::"center"
-                left::(
+              ReactDOMRe.Style.make(
+                ~width="20px",
+                ~height="20px",
+                ~backgroundColor="#fff",
+                ~boxShadow="0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
+                ~position="absolute",
+                ~borderRadius="10px",
+                ~top="-3px",
+                ~transition="200ms left ease-in-out",
+                ~display="flex",
+                ~flexDirection="row",
+                ~alignItems="center",
+                ~justifyContent="center",
+                ~left=
                   switch value {
                   | (_, true) => "20px"
                   | (_, false) => "-5px"
-                  }
-                )
+                  },
                 ()
+              )
             )>
             (
               switch value {
@@ -120,8 +118,8 @@ let make ::value ::onValueChange _children => {
               }
             )
           </div>
-        </div>
-        props::{
+        </div>,
+        ~props={
           "aria-checked":
             switch value {
             | (Idle, true) => "true"
@@ -129,7 +127,8 @@ let make ::value ::onValueChange _children => {
             | (Updating, true) => "mixed"
             | (Updating, false) => "mixed"
             }
-        }
+        },
         [||]
+      )
   }
 };
