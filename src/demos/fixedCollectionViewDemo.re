@@ -66,6 +66,7 @@ let rec renderDemo = (loading, data) => {
         scrollOffset=200
         onEndReached=appendData
         headerHeight=30
+        headerRowStyle=(ReactDOMRe.Style.make(~borderBottom="1px solid rgba(0, 0, 0, 0.1)", ()))
         rowHeight=60
         footerHeight=(loading ? 200 : 0)
         renderFooter=(

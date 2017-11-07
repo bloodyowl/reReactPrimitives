@@ -29,6 +29,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         ~scrollOffset,
         ~rowHeight,
         ~headerHeight,
+        ~headerRowStyle=ReactDOMRe.Style.make(),
         ~renderRow as userRenderRow=(_, item) =>
                                       <div
                                         style=(
@@ -121,12 +122,15 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           ref=(handle(setContainerRef))>
           <div
             style=(
-              ReactDOMRe.Style.make(
-                ~display="flex",
-                ~flexDirection="row",
-                ~alignItems="center",
-                ~height=string_of_int(headerHeight) ++ "px",
-                ()
+              ReactDOMRe.Style.combine(
+                headerRowStyle,
+                ReactDOMRe.Style.make(
+                  ~display="flex",
+                  ~flexDirection="row",
+                  ~alignItems="center",
+                  ~height=string_of_int(headerHeight) ++ "px",
+                  ()
+                )
               )
             )>
             (
