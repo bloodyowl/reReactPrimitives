@@ -62,7 +62,13 @@ module Styles = {
   let close = ReactDOMRe.Style.make(~padding="10px", ());
   let closeIcon = ReactDOMRe.Style.make(~opacity="0.4", ());
   let contents =
-    ReactDOMRe.Style.make(~display="flex", ~flexDirection="column", ~flexGrow="1", ());
+    ReactDOMRe.Style.make(
+      ~display="flex",
+      ~flexDirection="column",
+      ~flexGrow="1",
+      ~overflow="auto",
+      ()
+    );
 };
 
 let defaultUnderlayColor = "rgba(0, 0, 0, 0.3)";
@@ -119,7 +125,9 @@ let make =
         )>
         <div style=Styles.header>
           <div style=Styles.headerText>
-            <Text style=Styles.headerTitle> (ReasonReact.stringToElement(title)) </Text>
+            <Text style=Styles.headerTitle>
+              (ReasonReact.stringToElement(title))
+            </Text>
             (
               switch description {
               | Some(description) =>
@@ -131,7 +139,9 @@ let make =
             )
           </div>
           <TouchableOpacity onPress=onPressClose style=Styles.close>
-            <span style=Styles.closeIcon> (ReasonReact.stringToElement({js|✖️|js})) </span>
+            <span style=Styles.closeIcon>
+              (ReasonReact.stringToElement({js|✖️|js}))
+            </span>
           </TouchableOpacity>
         </div>
         <div style=Styles.contents> children[0] </div>
