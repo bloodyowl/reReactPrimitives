@@ -12,11 +12,9 @@ type action =
 
 let component = ReasonReact.reducerComponent("TextInput");
 
-[@bs.get] external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration =
-  "style";
+[@bs.get] external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style";
 
-let setInputRef = (inputRef, {ReasonReact.state}) =>
-  state.inputRef := Js.Null.to_opt(inputRef);
+let setInputRef = (inputRef, {ReasonReact.state}) => state.inputRef := Js.Null.to_opt(inputRef);
 
 /* TODO: manage types and local validation */
 let make =
@@ -74,8 +72,7 @@ let make =
       | Focus => ReasonReact.Update({...state, focused: true})
       | Blur => ReasonReact.Update({...state, focused: false})
       | Change(value) => ReasonReact.SideEffects(handleChange(value))
-      | SetHeight(height) =>
-        ReasonReact.Update({...state, height: Some(height)})
+      | SetHeight(height) => ReasonReact.Update({...state, height: Some(height)})
       },
     render: ({reduce, state, handle}) => {
       let sizingStyle =
@@ -114,9 +111,7 @@ let make =
             ~onChange=
               reduce(
                 (event) =>
-                  Change(
-                    ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value
-                  )
+                  Change(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value)
               ),
             ~onKeyDown?,
             ~onPaste?,
