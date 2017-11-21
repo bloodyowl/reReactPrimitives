@@ -1,6 +1,6 @@
 {
   "name": "reason-react-primitives",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Primitive components to build UI on the web with ReasonReact",
   "main": "index.js",
   "scripts": {

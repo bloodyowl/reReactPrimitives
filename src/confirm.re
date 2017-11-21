@@ -33,6 +33,15 @@ module Styles = {
       ~zIndex="0",
       ()
     );
+  let icon =
+    ReactDOMRe.Style.make(
+      ~padding="10px",
+      ~display="flex",
+      ~flexDirection="row",
+      ~alignItems="center",
+      ~justifyContent="center",
+      ()
+    );
   let message =
     ReactDOMRe.Style.make(
       ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
@@ -53,7 +62,16 @@ module Styles = {
 };
 
 let make =
-    (~message, ~confirmWording, ~cancelWording, ~onConfirm, ~onCancel, ~maxWidth=?, _children) => {
+    (
+      ~icon=?,
+      ~message,
+      ~confirmWording,
+      ~cancelWording,
+      ~onConfirm,
+      ~onCancel,
+      ~maxWidth=?,
+      _children
+    ) => {
   ...component,
   render: (_self) =>
     <div style=Styles.root>
@@ -72,6 +90,12 @@ let make =
             )
           )
         )>
+        (
+          switch icon {
+          | Some(icon) => <div style=Styles.icon> icon </div>
+          | None => ReasonReact.nullElement
+          }
+        )
         <div style=Styles.message>
           <Text style=Styles.messageText> (ReasonReact.stringToElement(message)) </Text>
         </div>
