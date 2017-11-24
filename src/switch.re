@@ -17,7 +17,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("Switch");
 
-let make = (~value, ~onValueChange, _children) => {
+let make = (~value, ~onValueChange, ~disabled=false, _children) => {
   let handleChange = () => {
     let (_state, value) = value;
     onValueChange(! value)
@@ -50,17 +50,26 @@ let make = (~value, ~onValueChange, _children) => {
           tabIndex=0
           onMouseDown=(reduce((_) => MouseDown))
           onKeyPress=(
-            reduce(
-              (event) =>
-                KeyPress((
-                  ReactEventRe.Keyboard.keyCode(event),
-                  ReactEventRe.Keyboard.charCode(event)
-                ))
-            )
+            (event) =>
+              if (! disabled) {
+                reduce(
+                  (event) =>
+                    KeyPress((
+                      ReactEventRe.Keyboard.keyCode(event),
+                      ReactEventRe.Keyboard.charCode(event)
+                    )),
+                  event
+                )
+              }
           )
           onFocus=(reduce((_) => Focus))
           onBlur=(reduce((_) => Blur))
-          onClick=((_) => handleChange())
+          onClick=(
+            (_) =>
+              if (! disabled) {
+                handleChange()
+              }
+          )
           style=(
             ReactDOMRe.Style.unsafeAddProp(
               ReactDOMRe.Style.make(
@@ -69,7 +78,7 @@ let make = (~value, ~onValueChange, _children) => {
                 ~borderRadius="7px",
                 ~boxShadow="inset 0 0 0 1px rgba(0, 0, 0, 0.1)",
                 ~position="relative",
-                ~cursor="pointer",
+                ~cursor=disabled ? "default" : "pointer",
                 ~backgroundColor=
                   switch value {
                   | (Idle, true) => "rgba(74, 144, 226, 1)"
@@ -77,6 +86,7 @@ let make = (~value, ~onValueChange, _children) => {
                   | (Updating, true) => "rgba(74, 144, 226, 0.5)"
                   | (Updating, false) => "rgba(0, 0, 0, 0.1)"
                   },
+                ~opacity=disabled ? ".4" : "1",
                 ~outline=
                   switch state {
                   | FocusedFromMouse => "none"

@@ -3,3 +3,4 @@ node_modules
 .merlin
 npm-debug.log
 bundledOutputs
+.bsb.lock
