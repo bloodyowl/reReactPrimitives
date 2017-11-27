@@ -1,4 +1,11 @@
-[@bs.val] external devicePixelRatio : float = "devicePixelRatio";
+[@bs.get] external getDevicePixelRatio : DomRe.Window.t_window => Js.Null_undefined.t(float) =
+  "devicePixelRatio";
+
+let devicePixelRatio =
+  switch (Js.Null_undefined.to_opt(getDevicePixelRatio(DomRe.window))) {
+  | Some(value) => value
+  | None => 1.0
+  };
 
 type state = {
   context: ref(option(Webapi.Canvas.Canvas2d.t)),
