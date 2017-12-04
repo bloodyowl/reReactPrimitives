@@ -19,6 +19,7 @@ module.exports = {
     tooltipDemo : "./lib/js/src/demos/tooltipDemo",
     fixedCollectionViewDemo : "./lib/js/src/demos/fixedCollectionViewDemo",
     segmentedControlDemo : "./lib/js/src/demos/segmentedControlDemo",
+    tagDemo : "./lib/js/src/demos/tagDemo",
   },
   output : {
     path : path.join(__dirname, "demos/bundledOutputs"),
