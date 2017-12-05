@@ -10,30 +10,27 @@ let tupleToColor = ((r, g, b), ~alpha=1.0, ()) => {
 };
 
 module Styles = {
-  let root = (color) =>
+  let root =
     ReactDOMRe.Style.make(
       ~display="inline-flex",
       ~alignItems="center",
       ~boxSizing="borderBox",
-      ~border="1px solid " ++ tupleToColor(color, ()),
       ~maxWidth="100%",
       ~height="30px",
       ~paddingRight="7px",
-      ~backgroundColor=tupleToColor(color, ~alpha=0.17, ()),
       ~borderRadius="24px",
       ()
     );
-  let name = (color) =>
+  let name =
     ReactDOMRe.Style.make(
       ~padding="0 10px",
       ~overflow="hidden",
       ~whiteSpace="nowrap",
       ~textOverflow="ellipsis",
       ~fontSize="12px",
-      ~color=tupleToColor(color, ()),
       ()
     );
-  let button = (color) =>
+  let button =
     ReactDOMRe.Style.make(
       ~flexShrink="0",
       ~width="18px",
@@ -42,19 +39,44 @@ module Styles = {
       ~textAlign="center",
       ~fontSize="12px",
       ~color="#fff",
-      ~backgroundColor=tupleToColor(color, ()),
       ~borderRadius="9px",
       ()
     );
 };
 
 let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
-  ...component,
-  render: (_self) =>
-    <div style=(Styles.root(color))>
-      <span style=(Styles.name(color))> (ReasonReact.stringToElement(name)) </span>
-      <TouchableOpacity style=(Styles.button(color)) onPress>
-        (ReasonReact.stringToElement({js|✕|js}))
-      </TouchableOpacity>
-    </div>
+  let solidColor = tupleToColor(color, ());
+  let washedColor = tupleToColor(color, ~alpha=0.17, ());
+  {
+    ...component,
+    render: (_self) =>
+      <div
+        style=(
+          ReactDOMRe.Style.combine(
+            Styles.root,
+            ReactDOMRe.Style.make(
+              ~border="1px solid " ++ solidColor,
+              ~backgroundColor=washedColor,
+              ()
+            )
+          )
+        )>
+        <span
+          style=(
+            ReactDOMRe.Style.combine(Styles.name, ReactDOMRe.Style.make(~color=solidColor, ()))
+          )>
+          (ReasonReact.stringToElement(name))
+        </span>
+        <TouchableOpacity
+          style=(
+            ReactDOMRe.Style.combine(
+              Styles.button,
+              ReactDOMRe.Style.make(~backgroundColor=solidColor, ())
+            )
+          )
+          onPress>
+          (ReasonReact.stringToElement({js|✕|js}))
+        </TouchableOpacity>
+      </div>
+  }
 };
