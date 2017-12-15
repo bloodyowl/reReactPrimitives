@@ -110,7 +110,9 @@ let renderLayer = (~message, ~alignTo: LayerManager.align, {ReasonReact.state}) 
           )
         )>
         <div style=(getArrowStyle(alignTo)) />
-        (ReasonReact.stringToElement(message))
+        <div style=(ReactDOMRe.Style.make(~whiteSpace="pre-line", ()))>
+          (ReasonReact.stringToElement(message))
+        </div>
       </div>
     )
   | None => ()
