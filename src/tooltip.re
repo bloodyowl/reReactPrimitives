@@ -125,18 +125,18 @@ let make = (~style=?, ~message, ~alignTo: LayerManager.align, children) => {
     ignore(
       Js.Promise.then_(
         (layer) => {
-          self.ReasonReact.reduce((layer) => SetLayer(layer), layer);
+          self.ReasonReact.send(SetLayer(layer));
           Js.Promise.resolve()
         },
         layer
       )
     )
   };
-  let hideTooltip = (_event, {ReasonReact.state, ReasonReact.reduce}) =>
+  let hideTooltip = (_event, {ReasonReact.state, ReasonReact.send}) =>
     switch state {
     | Some(layer) =>
       TooltipLayerManager.remove(layer);
-      reduce(() => RemoveLayer, ())
+      send(RemoveLayer)
     | None => ()
     };
   {

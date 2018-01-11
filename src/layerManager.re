@@ -25,9 +25,11 @@ module type LayerManagerImpl = {
   let remove: layer => unit;
 };
 
-[@bs.get] external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style";
+[@bs.get]
+external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style";
 
-[@bs.get] external getActiveElement : DomRe.Document.t => Js.Null.t(DomRe.Element.t) =
+[@bs.get]
+external getActiveElement : DomRe.Document.t => Js.Null.t(DomRe.Element.t) =
   "activeElement";
 
 [@bs.send.pipe : DomRe.Element.t] external focus : unit = "";
@@ -37,14 +39,14 @@ module DefaultImpl = {
   let currentLayer = ref(0);
   let map = ref(LayerMap.empty);
   let activeElement = ref(None);
-  let make = (behavior) => {
+  let make = behavior => {
     let root = DomRe.Document.createElement("div", DomRe.document);
     DomRe.Element.setAttribute("role", "dialog", root);
     DomRe.Element.setAttribute("tabindex", "0", root);
     activeElement := Js.Null.to_opt(getActiveElement(DomRe.document));
     let style = getStyle(root);
     CssStyleDeclarationRe.setProperty("outline", "none", "", style);
-    switch behavior {
+    switch (behavior) {
     | FullViewport =>
       CssStyleDeclarationRe.setProperty("position", "absolute", "", style);
       CssStyleDeclarationRe.setProperty("z-index", "2147483647", "", style);
@@ -59,7 +61,7 @@ module DefaultImpl = {
         string_of_int(WindowRe.pageYOffset(DomRe.window)) ++ "px",
         "",
         style
-      )
+      );
     | Contextualized(element, align) =>
       let pageXOffset = WindowRe.pageXOffset(DomRe.window);
       let pageYOffset = WindowRe.pageYOffset(DomRe.window);
@@ -68,11 +70,12 @@ module DefaultImpl = {
       let boundaries = DomRe.Element.getBoundingClientRect(element);
       CssStyleDeclarationRe.setProperty("position", "absolute", "", style);
       CssStyleDeclarationRe.setProperty("z-index", "2147483647", "", style);
-      switch align {
+      switch (align) {
       | TopLeft =>
         CssStyleDeclarationRe.setProperty(
           "bottom",
-          string_of_int(innerHeight + pageYOffset - DomRectRe.top(boundaries)) ++ "px",
+          string_of_int(innerHeight + pageYOffset - DomRectRe.top(boundaries))
+          ++ "px",
           "",
           style
         );
@@ -81,20 +84,22 @@ module DefaultImpl = {
           string_of_int(pageXOffset + DomRectRe.left(boundaries)) ++ "px",
           "",
           style
-        )
+        );
       | TopRight =>
         CssStyleDeclarationRe.setProperty(
           "bottom",
-          string_of_int(innerHeight + pageYOffset - DomRectRe.top(boundaries)) ++ "px",
+          string_of_int(innerHeight + pageYOffset - DomRectRe.top(boundaries))
+          ++ "px",
           "",
           style
         );
         CssStyleDeclarationRe.setProperty(
           "right",
-          string_of_int(innerWidth + pageXOffset - DomRectRe.right(boundaries)) ++ "px",
+          string_of_int(innerWidth + pageXOffset - DomRectRe.right(boundaries))
+          ++ "px",
           "",
           style
-        )
+        );
       | BottomLeft =>
         CssStyleDeclarationRe.setProperty(
           "top",
@@ -107,7 +112,7 @@ module DefaultImpl = {
           string_of_int(pageXOffset + DomRectRe.left(boundaries)) ++ "px",
           "",
           style
-        )
+        );
       | BottomRight =>
         CssStyleDeclarationRe.setProperty(
           "top",
@@ -117,10 +122,11 @@ module DefaultImpl = {
         );
         CssStyleDeclarationRe.setProperty(
           "right",
-          string_of_int(innerWidth + pageXOffset - DomRectRe.right(boundaries)) ++ "px",
+          string_of_int(innerWidth + pageXOffset - DomRectRe.right(boundaries))
+          ++ "px",
           "",
           style
-        )
+        );
       | Left =>
         CssStyleDeclarationRe.setProperty(
           "top",
@@ -130,7 +136,8 @@ module DefaultImpl = {
         );
         CssStyleDeclarationRe.setProperty(
           "right",
-          string_of_int(innerWidth + pageXOffset - DomRectRe.left(boundaries)) ++ "px",
+          string_of_int(innerWidth + pageXOffset - DomRectRe.left(boundaries))
+          ++ "px",
           "",
           style
         );
@@ -139,7 +146,7 @@ module DefaultImpl = {
           string_of_int(DomRectRe.height(boundaries)) ++ "px",
           "",
           style
-        )
+        );
       | Right =>
         CssStyleDeclarationRe.setProperty(
           "top",
@@ -158,11 +165,12 @@ module DefaultImpl = {
           string_of_int(DomRectRe.height(boundaries)) ++ "px",
           "",
           style
-        )
+        );
       | Top =>
         CssStyleDeclarationRe.setProperty(
           "bottom",
-          string_of_int(innerHeight + pageYOffset - DomRectRe.top(boundaries)) ++ "px",
+          string_of_int(innerHeight + pageYOffset - DomRectRe.top(boundaries))
+          ++ "px",
           "",
           style
         );
@@ -177,7 +185,7 @@ module DefaultImpl = {
           string_of_int(DomRectRe.width(boundaries)) ++ "px",
           "",
           style
-        )
+        );
       | Bottom =>
         CssStyleDeclarationRe.setProperty(
           "top",
@@ -196,16 +204,16 @@ module DefaultImpl = {
           string_of_int(DomRectRe.width(boundaries)) ++ "px",
           "",
           style
-        )
-      }
+        );
+      };
     | Fixed =>
       CssStyleDeclarationRe.setProperty("position", "fixed", "", style);
       CssStyleDeclarationRe.setProperty("z-index", "2147483647", "", style);
       CssStyleDeclarationRe.setProperty("left", "0", "", style);
-      CssStyleDeclarationRe.setProperty("top", "0", "", style)
+      CssStyleDeclarationRe.setProperty("top", "0", "", style);
     };
     let body = DomRe.Document.querySelector("body", DomRe.document);
-    switch body {
+    switch (body) {
     | Some(body) => DomRe.Element.appendChild(root, body)
     | None => ()
     };
@@ -213,40 +221,42 @@ module DefaultImpl = {
     currentLayer := layer;
     map := LayerMap.add(string_of_int(currentLayer^), root, map^);
     Js.Promise.resolve(string_of_int(layer))
-    |> Js.Promise.then_(
-         (layer) => {
-           focus(root);
-           Js.Promise.resolve(layer)
-         }
-       )
+    |> Js.Promise.then_(layer => {
+         focus(root);
+         Js.Promise.resolve(layer);
+       });
   };
   let render = (layer, element) =>
-    try {
-      let layerNode = LayerMap.find(layer, map^);
-      ReactDOMRe.render(element, layerNode)
-    } {
+    try (
+      {
+        let layerNode = LayerMap.find(layer, map^);
+        ReactDOMRe.render(element, layerNode);
+      }
+    ) {
     | Not_found => ()
     };
-  let remove = (layer) =>
-    try {
-      let layerNode = LayerMap.find(layer, map^);
-      ReactDOMRe.unmountComponentAtNode(layerNode);
-      DomRe.Element.remove(layerNode);
-      map := LayerMap.remove(layer, map^);
-      switch activeElement^ {
-      | Some(element) => focus(element)
-      | None => ()
+  let remove = layer =>
+    try (
+      {
+        let layerNode = LayerMap.find(layer, map^);
+        ReactDOMRe.unmountComponentAtNode(layerNode);
+        DomRe.Element.remove(layerNode);
+        map := LayerMap.remove(layer, map^);
+        switch (activeElement^) {
+        | Some(element) => focus(element)
+        | None => ()
+        };
       }
-    } {
+    ) {
     | Not_found => ()
     };
 };
 
 module Make = (Impl: LayerManagerImpl) => {
   /* creates the layer */
-  let make = (behavior) => Impl.make(behavior);
+  let make = behavior => Impl.make(behavior);
   /* renders a reactElement in the layer */
   let render = (layer, element) => Impl.render(layer, element);
   /* unmounts the reactElement and deletes the layer */
-  let remove = (layer) => Impl.remove(layer);
+  let remove = layer => Impl.remove(layer);
 };

@@ -94,7 +94,7 @@ let make =
     | Click =>
       disabled ? ReasonReact.NoUpdate : ReasonReact.SideEffects(((_) => ignore(onPress())))
     },
-  render: ({state, reduce}) => {
+  render: ({state, send}) => {
     let opacityStyle =
       ReactDOMRe.Style.make(
         ~transition="100ms linear opacity",
@@ -150,7 +150,7 @@ let make =
             | Some(onFocus) => onFocus(event)
             | None => ()
             };
-            reduce(() => Focus, ())
+            send(Focus)
           }
         )
         onBlur=(
@@ -159,20 +159,20 @@ let make =
             | Some(onBlur) => onBlur(event)
             | None => ()
             };
-            reduce((_) => Blur, ())
+            send(Blur)
           }
         )
-        onMouseDown=(reduce((_) => MouseDown))
-        onMouseUp=(reduce((_) => MouseUp))
-        onTouchStart=(reduce((_) => MouseDown))
-        onTouchEnd=(reduce((_) => MouseUp))
+        onMouseDown=((_) => send(MouseDown))
+        onMouseUp=((_) => send(MouseUp))
+        onTouchStart=((_) => send(MouseDown))
+        onTouchEnd=((_) => send(MouseUp))
         onKeyDown=(
           (event) => {
             switch onKeyDown {
             | Some(onKeyDown) => onKeyDown(event)
             | None => ()
             };
-            reduce((event) => KeyDown(ReactEventRe.Keyboard.keyCode(event)), event)
+            send(KeyDown(ReactEventRe.Keyboard.keyCode(event)))
           }
         )
         onKeyUp=(
@@ -181,7 +181,7 @@ let make =
             | Some(onKeyUp) => onKeyUp(event)
             | None => ()
             };
-            reduce((event) => KeyUp(ReactEventRe.Keyboard.keyCode(event)), event)
+            send(KeyUp(ReactEventRe.Keyboard.keyCode(event)))
           }
         )
         onKeyPress=(
@@ -201,10 +201,10 @@ let make =
             | (_, 32) => ReactEventRe.Keyboard.preventDefault(event)
             | _ => ()
             };
-            reduce((keys) => KeyPress(keys), keys)
+            send(KeyPress(keys))
           }
         )
-        onClick=(reduce((_) => Click))>
+        onClick=((_) => send(Click))>
         children[0]
       </div>,
       ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},

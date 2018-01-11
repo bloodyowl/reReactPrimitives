@@ -19,9 +19,9 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
     | SetContainerHeight(int)
     | SetScrollTop((int, int));
   let component =
-    ReasonReact.reducerComponent("FixedCollectionView[" ++ (FixedCollectionViewRow.name ++ "]"));
+    ReasonReact.reducerComponent("FixedCollectionView[" ++ FixedCollectionViewRow.name ++ "]");
   let setContainerRef = (containerRef, {ReasonReact.state}) =>
-    state.containerRef := Js.Null.to_opt(containerRef);
+    state.containerRef := Js.Nullable.to_opt(containerRef);
   let make =
       (
         ~data: array(t),
@@ -47,15 +47,12 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         ~columns: list(column(t)),
         _children
       ) => {
-    let measureContainerAtNextFrame = ({ReasonReact.state, ReasonReact.reduce}) =>
+    let measureContainerAtNextFrame = ({ReasonReact.state, ReasonReact.send}) =>
       Bs_webapi.requestAnimationFrame(
         (_) =>
           switch state.containerRef {
           | {contents: Some(container)} =>
-            reduce(
-              (containerHeight) => SetContainerHeight(containerHeight),
-              DomRe.Element.clientHeight(container) - headerHeight
-            )
+            send(SetContainerHeight(DomRe.Element.clientHeight(container) - headerHeight))
           | _ => ()
           }
       );
@@ -112,11 +109,11 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
           ReasonReact.Update({...state, containerHeight: Some(containerHeight)})
         | SetScrollTop((scrollTop, clientHeight)) => setScrollTop((scrollTop, clientHeight), state)
         },
-      didMount: ({reduce}) => {
-        reduce(() => MeasureContainerAtNextFrame, ());
+      didMount: ({send}) => {
+        send(MeasureContainerAtNextFrame);
         ReasonReact.NoUpdate
       },
-      render: ({state, handle, reduce}) =>
+      render: ({state, handle, send}) =>
         <div
           style=(ReactDOMRe.Style.make(~flexGrow="1", ~width="100%", ()))
           ref=(handle(setContainerRef))>
@@ -161,13 +158,13 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
               )
             )
             onScroll=(
-              reduce(
-                (event) =>
+              (event) =>
+                send(
                   SetScrollTop((
                     DomRe.Element.scrollTop(ReactEventRe.UI.target(event)),
                     DomRe.Element.clientHeight(ReactEventRe.UI.target(event))
                   ))
-              )
+                )
             )>
             (
               switch state.containerHeight {

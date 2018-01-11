@@ -4,7 +4,7 @@ type segment('a) = (string, 'a);
 
 let make = (~segments, ~activeSegment, ~color, ~onSegmentPress, _children) => {
   ...component,
-  render: (_self) =>
+  render: _self =>
     <div
       style=(
         ReactDOMRe.Style.make(
@@ -18,28 +18,31 @@ let make = (~segments, ~activeSegment, ~color, ~onSegmentPress, _children) => {
       )>
       (
         segments
-        |> List.mapi(
-             (index, (title, value)) =>
-               <TouchableOpacity
-                 key=(string_of_int(index))
-                 style=(
-                   ReactDOMRe.Style.combine(
+        |> List.mapi((index, (title, value)) =>
+             <TouchableOpacity
+               key=(string_of_int(index))
+               style=(
+                 ReactDOMRe.Style.combine(
+                   ReactDOMRe.Style.make(
+                     ~flexGrow="1",
+                     ~textAlign="center",
+                     ~padding="5px",
+                     ~fontSize="14px",
+                     ~boxShadow="1px 0 " ++ color,
+                     ()
+                   ),
+                   value == activeSegment ?
                      ReactDOMRe.Style.make(
-                       ~flexGrow="1",
-                       ~textAlign="center",
-                       ~padding="5px",
-                       ~fontSize="14px",
-                       ~boxShadow="1px 0 " ++ color,
+                       ~backgroundColor=color,
+                       ~color="#fff",
                        ()
-                     ),
-                     value == activeSegment ?
-                       ReactDOMRe.Style.make(~backgroundColor=color, ~color="#fff", ()) :
-                       ReactDOMRe.Style.make(~color, ())
-                   )
+                     ) :
+                     ReactDOMRe.Style.make(~color, ())
                  )
-                 onPress=((_) => onSegmentPress(value))>
-                 (ReasonReact.stringToElement(title))
-               </TouchableOpacity>
+               )
+               onPress=((_) => onSegmentPress(value))>
+               (ReasonReact.stringToElement(title))
+             </TouchableOpacity>
            )
         |> Array.of_list
         |> ReasonReact.arrayToElement

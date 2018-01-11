@@ -65,6 +65,10 @@ let openDialog3 = (_) => {
                   (ReasonReact.stringToElement("This is a dialog"))
                 </div>
               )
+              |> Array.mapi(
+                   (index, item) =>
+                     ReasonReact.cloneElement(item, ~props={"key": string_of_int(index)}, [||])
+                 )
               |> ReasonReact.arrayToElement
             )
           </ScrollView>

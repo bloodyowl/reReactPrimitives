@@ -25,13 +25,13 @@ module PickerLayerManager = LayerManager.Make(LayerManager.DefaultImpl);
 [@bs.send.pipe : DomRe.Element.t] external focus : unit = "";
 
 let renderOptionWithEvent =
-    (~renderOption, ~onValueChange, ~value, {ReasonReact.reduce}, index, item) =>
+    (~renderOption, ~onValueChange, ~value, {ReasonReact.send}, index, item) =>
   <TouchableHighlight
     key=(string_of_int(index))
     ref=(
       index == 0 ?
         (item) =>
-          switch (Js.Null.to_opt(item)) {
+          switch (Js.Nullable.to_opt(item)) {
           | Some(item) =>
             Bs_webapi.requestAnimationFrame((_) => focus(ReactDOMRe.findDOMNode(item)))
           | None => ()
@@ -41,16 +41,16 @@ let renderOptionWithEvent =
     onPress=(
       (_) => {
         onValueChange(Some(item));
-        reduce(() => HideOptions, ())
+        send(HideOptions)
       }
     )
     onKeyUp=(
-      reduce(
-        (event) =>
+      (event) =>
+        send(
           MoveFocus((ReactEventRe.Keyboard.keyCode(event), ReactEventRe.Keyboard.target(event)))
-      )
+        )
     )
-    onBlur=(reduce((_) => Blur))
+    onBlur=((_) => send(Blur))
     style=(ReactDOMRe.Style.make(~cursor="pointer", ()))
     focusedFromKeyboardStyle=(
       ReactDOMRe.Style.make(
@@ -64,12 +64,12 @@ let renderOptionWithEvent =
     (renderOption(item, value))
   </TouchableHighlight>;
 
-let makeLayer = (~target, {ReasonReact.reduce}) =>
+let makeLayer = (~target, {ReasonReact.send}) =>
   ignore(
     PickerLayerManager.make(Contextualized(target, Bottom))
     |> Js.Promise.then_(
          (layer) => {
-           reduce((layer) => SetLayer(layer), layer);
+           send(SetLayer(layer));
            Js.Promise.resolve()
          }
        )
@@ -86,14 +86,14 @@ let make =
       ~disabled=false,
       _children
     ) => {
-  let whenLayerReady = ({ReasonReact.state, ReasonReact.reduce} as self) =>
+  let whenLayerReady = ({ReasonReact.state, ReasonReact.send} as self) =>
     switch state.layer {
     | Some(layer) =>
       PickerLayerManager.render(
         layer,
         <div>
           <div
-            onClick=(reduce((_) => HideOptions))
+            onClick=((_) => send(HideOptions))
             style=(
               ReactDOMRe.Style.make(
                 ~position="fixed",
@@ -208,7 +208,7 @@ let make =
       | SetLayer(layer) =>
         ReasonReact.SilentUpdateWithSideEffects({...state, layer: Some(layer)}, whenLayerReady)
       },
-    render: ({state, reduce}) =>
+    render: ({state, send}) =>
       ReasonReact.cloneElement(
         <div
           tabIndex=0
@@ -229,10 +229,10 @@ let make =
               "rgba(0, 0, 0, 0)"
             )
           )
-          onFocus=(reduce((_) => Focus))
-          onBlur=(reduce((_) => Blur))
-          onMouseDown=(reduce((_) => MouseDown))
-          onTouchStart=(reduce((_) => MouseDown))
+          onFocus=((_) => send(Focus))
+          onBlur=((_) => send(Blur))
+          onMouseDown=((_) => send(MouseDown))
+          onTouchStart=((_) => send(MouseDown))
           onKeyPress=(
             (event) => {
               let keys = (
@@ -246,10 +246,10 @@ let make =
               | (_, 32) => ReactEventRe.Keyboard.preventDefault(event)
               | _ => ()
               };
-              reduce((keys) => KeyPress(keys, ReactEventRe.Keyboard.target(event)), keys)
+              send(KeyPress(keys, ReactEventRe.Keyboard.target(event)))
             }
           )
-          onClick=(reduce((event) => ShowOptions(ReactEventRe.Mouse.target(event))))>
+          onClick=((event) => send(ShowOptions(ReactEventRe.Mouse.target(event))))>
           (renderPicker(value))
         </div>,
         ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},

@@ -85,7 +85,7 @@ let make =
       children
     ) => {
   ...component,
-  render: (_self) =>
+  render: _self =>
     <div style=Styles.root>
       <div
         onClick=((_) => onPressClose())
@@ -101,7 +101,7 @@ let make =
               ~transition="background-color .5s ease-in-out",
               ()
             ),
-            switch underlayStyle {
+            switch (underlayStyle) {
             | Some(style) => style
             | None => ReactDOMRe.Style.make()
             }
@@ -115,7 +115,7 @@ let make =
             ReactDOMRe.Style.make(
               ~minWidth=string_of_int(minWidth) ++ "px",
               ~maxWidth=
-                switch maxWidth {
+                switch (maxWidth) {
                 | Some(maxWidth) => string_of_int(maxWidth) ++ "px"
                 | None => ""
                 },
@@ -125,9 +125,11 @@ let make =
         )>
         <div style=Styles.header>
           <div style=Styles.headerText>
-            <Text style=Styles.headerTitle> (ReasonReact.stringToElement(title)) </Text>
+            <Text style=Styles.headerTitle>
+              (ReasonReact.stringToElement(title))
+            </Text>
             (
-              switch description {
+              switch (description) {
               | Some(description) =>
                 <Text style=Styles.headerDescription>
                   (ReasonReact.stringToElement(description))
@@ -137,7 +139,9 @@ let make =
             )
           </div>
           <TouchableOpacity onPress=onPressClose style=Styles.close>
-            <span style=Styles.closeIcon> (ReasonReact.stringToElement({js|✖️|js})) </span>
+            <span style=Styles.closeIcon>
+              (ReasonReact.stringToElement({js|✖️|js}))
+            </span>
           </TouchableOpacity>
         </div>
         <div style=Styles.contents> children[0] </div>

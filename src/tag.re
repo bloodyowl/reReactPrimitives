@@ -2,11 +2,17 @@ let component = ReasonReact.statelessComponent("Tag");
 
 let tupleToColor = ((r, g, b), ~alpha=1.0, ()) => {
   let (prefix, alphaValue) =
-    switch alpha {
+    switch (alpha) {
     | 1.0 => ("rgb(", ")")
     | _ => ("rgba(", "," ++ string_of_float(alpha) ++ ")")
     };
-  prefix ++ string_of_int(r) ++ "," ++ string_of_int(g) ++ "," ++ string_of_int(b) ++ alphaValue
+  prefix
+  ++ string_of_int(r)
+  ++ ","
+  ++ string_of_int(g)
+  ++ ","
+  ++ string_of_int(b)
+  ++ alphaValue;
 };
 
 module Styles = {
@@ -49,7 +55,7 @@ let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
   let washedColor = tupleToColor(color, ~alpha=0.17, ());
   {
     ...component,
-    render: (_self) =>
+    render: _self =>
       <div
         style=(
           ReactDOMRe.Style.combine(
@@ -63,7 +69,10 @@ let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
         )>
         <span
           style=(
-            ReactDOMRe.Style.combine(Styles.name, ReactDOMRe.Style.make(~color=solidColor, ()))
+            ReactDOMRe.Style.combine(
+              Styles.name,
+              ReactDOMRe.Style.make(~color=solidColor, ())
+            )
           )>
           (ReasonReact.stringToElement(name))
         </span>
@@ -78,5 +87,5 @@ let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
           (ReasonReact.stringToElement({js|✕|js}))
         </TouchableOpacity>
       </div>
-  }
+  };
 };

@@ -15,7 +15,7 @@ type action =
 let component = ReasonReact.reducerComponent("TabbedView");
 
 let setTabContainerRef = (tabContainerRef, {ReasonReact.state}) =>
-  state.tabContainerRef := Js.Null.to_opt(tabContainerRef);
+  state.tabContainerRef := Js.Nullable.to_opt(tabContainerRef);
 
 let setRect = (state) =>
   switch state.tabContainerRef {
@@ -41,8 +41,8 @@ let setRect = (state) =>
   | _ => ReasonReact.NoUpdate
   };
 
-let measureRectAtNextFrame = ({ReasonReact.reduce}) =>
-  Bs_webapi.requestAnimationFrame((_) => reduce(() => MeasureRect, ()));
+let measureRectAtNextFrame = ({ReasonReact.send}) =>
+  Bs_webapi.requestAnimationFrame((_) => send(MeasureRect));
 
 let make =
     (
@@ -66,7 +66,7 @@ let make =
       ReasonReact.UpdateWithSideEffects({...state, openTab}, measureRectAtNextFrame)
     | MeasureRect => setRect(state)
     },
-  render: ({state, reduce, handle}) =>
+  render: ({state, send, handle}) =>
     <div
       style=(
         ReactDOMRe.Style.make(
@@ -127,7 +127,7 @@ let make =
                          ()
                        )
                      )
-                     onPress=(reduce((_) => SetActiveTab(index)))>
+                     onPress=((_) => send(SetActiveTab(index)))>
                      tabTitle
                    </TouchableOpacity>
                )

@@ -2,7 +2,7 @@ let component = ReasonReact.statelessComponent("HorizontalSeparator");
 
 let make = (~color="rgba(0, 0, 0, 0.1)", ~verticalSpace=5, _) => {
   ...component,
-  render: (_self) =>
+  render: _self =>
     <div
       style=(
         ReactDOMRe.Style.make(

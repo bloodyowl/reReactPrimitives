@@ -14,10 +14,10 @@ let addKey = (index, item) => <div key=(string_of_int(index))> item </div>;
 
 let make = (~style=?, children) => {
   ...component,
-  render: (_self) =>
+  render: _self =>
     <div
       style=(
-        switch style {
+        switch (style) {
         | Some(style) => ReactDOMRe.Style.combine(buttonGroupStyle, style)
         | None => buttonGroupStyle
         }

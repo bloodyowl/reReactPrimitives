@@ -19,21 +19,19 @@ let component = ReasonReact.reducerComponent("ActivityIndicator");
 
 let tupleToColor = ((r, g, b), alpha) =>
   "rgba("
-  ++ (
-    string_of_int(r)
-    ++ (
-      ","
-      ++ (
-        string_of_int(g)
-        ++ ("," ++ (string_of_int(b) ++ ("," ++ (string_of_float(alpha) ++ "0)"))))
-      )
-    )
-  );
+  ++ string_of_int(r)
+  ++ ","
+  ++ string_of_int(g)
+  ++ ","
+  ++ string_of_int(b)
+  ++ ","
+  ++ string_of_float(alpha)
+  ++ "0)";
 
 let setCanvasRef = (canvasRef, {ReasonReact.state}) =>
   state.context :=
     (
-      switch (Js.Null.to_opt(canvasRef)) {
+      switch (Js.Nullable.to_opt(canvasRef)) {
       | Some(canvas) => Some(Webapi.Canvas.CanvasElement.getContext2d(canvas))
       | None => None
       }
@@ -102,21 +100,21 @@ let draw = (~size, ~color, {ReasonReact.state}) =>
   };
 
 let make = (~size, ~color, _children) => {
-  let tick = ({ReasonReact.reduce, ReasonReact.state} as self) =>
+  let tick = ({ReasonReact.send, ReasonReact.state} as self) =>
     Bs_webapi.requestAnimationFrame(
       (_) =>
         switch state.cancelNextFrame {
         | {contents: false} =>
           draw(~size, ~color, self);
-          reduce(() => Draw, ())
+          send(Draw)
         | _ => ()
         }
     );
   {
     ...component,
     initialState: () => {context: ref(None), cancelNextFrame: ref(false)},
-    didMount: ({reduce}) => {
-      reduce(() => Draw, ());
+    didMount: ({send}) => {
+      send(Draw);
       ReasonReact.NoUpdate
     },
     reducer: (action, state) =>

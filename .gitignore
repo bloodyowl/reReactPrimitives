@@ -4,3 +4,4 @@ node_modules
 npm-debug.log
 bundledOutputs
 .bsb.lock
+.DS_Store

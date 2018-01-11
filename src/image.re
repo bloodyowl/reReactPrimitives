@@ -21,7 +21,7 @@ let make =
   ...component,
   initialState: (_) => {isReady: false},
   reducer: ((), _state) => ReasonReact.NoUpdate,
-  didMount: (_self) => ReasonReact.Update({isReady: true}),
+  didMount: _self => ReasonReact.Update({isReady: true}),
   render: ({state}) =>
     <div
       style=(
@@ -29,7 +29,7 @@ let make =
           ~width=string_of_int(width) ++ "px",
           ~height=string_of_int(height) ++ "px",
           ~backgroundSize=
-            switch resizeMode {
+            switch (resizeMode) {
             | Cover => "cover"
             | Actual => "auto"
             | Contain => "contain"
@@ -37,13 +37,14 @@ let make =
           ~backgroundRepeat="no-repeat",
           ~backgroundPosition="50% 50%",
           ~backgroundColor,
-          ~backgroundImage=state.isReady ? "url(" ++ (source ++ ")") : "",
-          ~borderRadius=round ? string_of_int(min(width, height)) ++ "px" : "0px",
+          ~backgroundImage=state.isReady ? "url(" ++ source ++ ")" : "",
+          ~borderRadius=
+            round ? string_of_int(min(width, height)) ++ "px" : "0px",
           ()
         )
       )>
       (
-        switch alternativeText {
+        switch (alternativeText) {
         | Some(text) => <ScreenReaderContent text />
         | None => ReasonReact.nullElement
         }

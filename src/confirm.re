@@ -49,7 +49,8 @@ module Styles = {
       ~textAlign="center",
       ()
     );
-  let messageText = ReactDOMRe.Style.make(~fontSize="16px", ~color="rgba(0, 0, 0, 0.4)", ());
+  let messageText =
+    ReactDOMRe.Style.make(~fontSize="16px", ~color="rgba(0, 0, 0, 0.4)", ());
   let buttons =
     ReactDOMRe.Style.make(
       ~display="flex",
@@ -73,7 +74,7 @@ let make =
       _children
     ) => {
   ...component,
-  render: (_self) =>
+  render: _self =>
     <div style=Styles.root>
       <div style=Styles.layer />
       <div
@@ -82,7 +83,7 @@ let make =
             Styles.container,
             ReactDOMRe.Style.make(
               ~maxWidth=
-                switch maxWidth {
+                switch (maxWidth) {
                 | Some(maxWidth) => string_of_int(maxWidth) ++ "px"
                 | None => ""
                 },
@@ -91,17 +92,28 @@ let make =
           )
         )>
         (
-          switch icon {
+          switch (icon) {
           | Some(icon) => <div style=Styles.icon> icon </div>
           | None => ReasonReact.nullElement
           }
         )
         <div style=Styles.message>
-          <Text style=Styles.messageText> (ReasonReact.stringToElement(message)) </Text>
+          <Text style=Styles.messageText>
+            (ReasonReact.stringToElement(message))
+          </Text>
         </div>
         <div style=Styles.buttons>
           <Button onPress=onCancel color="#9B9B9B" title=cancelWording />
-          <div style=(ReactDOMRe.Style.make(~width="10px", ~height="10px", ~flexShrink="0", ())) />
+          <div
+            style=(
+              ReactDOMRe.Style.make(
+                ~width="10px",
+                ~height="10px",
+                ~flexShrink="0",
+                ()
+              )
+            )
+          />
           <Button onPress=onConfirm color="#fb5" title=confirmWording />
         </div>
       </div>

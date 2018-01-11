@@ -17,20 +17,36 @@ module Styles = {
 
 let addKey = (index, item) => <div key=(string_of_int(index))> item </div>;
 
-let renderSection = (~backgroundColor, ~sectionBackgroundColor, index, (section, contents)) =>
+let renderSection =
+    (~backgroundColor, ~sectionBackgroundColor, index, (section, contents)) =>
   <div
     key=(string_of_int(index))
     style=(ReactDOMRe.Style.make(~backgroundColor, ~paddingBottom="10px", ()))>
-    <div style=Styles.sectionTitle> (ReasonReact.stringToElement(section)) </div>
-    <div style=(ReactDOMRe.Style.make(~backgroundColor=sectionBackgroundColor, ()))>
-      (contents |> List.mapi(addKey) |> Array.of_list |> ReasonReact.arrayToElement)
+    <div style=Styles.sectionTitle>
+      (ReasonReact.stringToElement(section))
+    </div>
+    <div
+      style=(
+        ReactDOMRe.Style.make(~backgroundColor=sectionBackgroundColor, ())
+      )>
+      (
+        contents
+        |> List.mapi(addKey)
+        |> Array.of_list
+        |> ReasonReact.arrayToElement
+      )
     </div>
   </div>;
 
 let make =
-    (~sections, ~backgroundColor="rgb(248, 248, 248)", ~sectionBackgroundColor="#fff", _children) => {
+    (
+      ~sections,
+      ~backgroundColor="rgb(248, 248, 248)",
+      ~sectionBackgroundColor="#fff",
+      _children
+    ) => {
   ...component,
-  render: (_self) =>
+  render: _self =>
     <div style=Styles.container>
       (
         sections

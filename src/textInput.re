@@ -14,7 +14,8 @@ let component = ReasonReact.reducerComponent("TextInput");
 
 [@bs.get] external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style";
 
-let setInputRef = (inputRef, {ReasonReact.state}) => state.inputRef := Js.Null.to_opt(inputRef);
+let setInputRef = (inputRef, {ReasonReact.state}) =>
+  state.inputRef := Js.Nullable.to_opt(inputRef);
 
 /* TODO: manage types and local validation */
 let make =
@@ -38,7 +39,7 @@ let make =
       ~rows=1,
       _children
     ) => {
-  let measureAndSetHeight = ((), {ReasonReact.state, ReasonReact.reduce}) =>
+  let measureAndSetHeight = ((), {ReasonReact.state, ReasonReact.send}) =>
     switch state.inputRef {
     | {contents: Some(element)} =>
       CssStyleDeclarationRe.setProperty("height", "0", "", getStyle(element));
@@ -49,7 +50,7 @@ let make =
         "",
         getStyle(element)
       );
-      reduce((height) => SetHeight(height), height)
+      send(SetHeight(height))
     | _ => ()
     };
   let handleResize = ({ReasonReact.handle}) =>
@@ -74,7 +75,7 @@ let make =
       | Change(value) => ReasonReact.SideEffects(handleChange(value))
       | SetHeight(height) => ReasonReact.Update({...state, height: Some(height)})
       },
-    render: ({reduce, state, handle}) => {
+    render: ({send, state, handle}) => {
       let sizingStyle =
         ReactDOMRe.Style.make(
           ~resize="none",
@@ -109,10 +110,8 @@ let make =
                 }
               ),
             ~onChange=
-              reduce(
-                (event) =>
-                  Change(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value)
-              ),
+              (event) =>
+                send(Change(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value)),
             ~onKeyDown?,
             ~onPaste?,
             ~onFocus=
@@ -121,7 +120,7 @@ let make =
                 | Some(onFocus) => onFocus(event)
                 | None => ()
                 };
-                reduce(() => Focus, ())
+                send(Focus)
               },
             ~onBlur=
               (event) => {
@@ -129,7 +128,7 @@ let make =
                 | Some(onBlur) => onBlur(event)
                 | None => ()
                 };
-                reduce(() => Blur, ())
+                send(Blur)
               },
             ~value,
             ~placeholder,

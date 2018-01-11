@@ -43,27 +43,25 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
         | _ => ReasonReact.NoUpdate
         }
       },
-    render: ({state, reduce}) =>
+    render: ({state, send}) =>
       ReasonReact.cloneElement(
         <div
           role="checkbox"
           tabIndex=0
-          onMouseDown=(reduce((_) => MouseDown))
+          onMouseDown=((_) => send(MouseDown))
           onKeyPress=(
             (event) =>
               if (! disabled) {
-                reduce(
-                  (event) =>
-                    KeyPress((
-                      ReactEventRe.Keyboard.keyCode(event),
-                      ReactEventRe.Keyboard.charCode(event)
-                    )),
-                  event
+                send(
+                  KeyPress((
+                    ReactEventRe.Keyboard.keyCode(event),
+                    ReactEventRe.Keyboard.charCode(event)
+                  ))
                 )
               }
           )
-          onFocus=(reduce((_) => Focus))
-          onBlur=(reduce((_) => Blur))
+          onFocus=((_) => send(Focus))
+          onBlur=((_) => send(Blur))
           onClick=(
             (_) =>
               if (! disabled) {
