@@ -5,7 +5,7 @@ type state = {
 };
 
 type action =
-  | Change(string)
+  | Change
   | Focus
   | Blur
   | SetHeight(int);
@@ -49,29 +49,25 @@ let make =
         "",
         getStyle(element)
       );
-      reduce((height) => SetHeight(height), height)
+      reduce((height) => SetHeight(height), height);
     | _ => ()
     };
   let handleResize = ({ReasonReact.handle}) =>
     if (multiline && autoSize) {
-      Bs_webapi.requestAnimationFrame((_) => handle(measureAndSetHeight, ()))
+      Bs_webapi.requestAnimationFrame((_) => handle(measureAndSetHeight, ()));
     };
-  let handleChange = (value, self) => {
-    onTextChange(value);
-    handleResize(self)
-  };
   {
     ...component,
     initialState: () => {height: None, inputRef: ref(None), focused: false},
     didMount: (self) => {
       handleResize(self);
-      ReasonReact.NoUpdate
+      ReasonReact.NoUpdate;
     },
     reducer: (action, state) =>
       switch action {
       | Focus => ReasonReact.Update({...state, focused: true})
       | Blur => ReasonReact.Update({...state, focused: false})
-      | Change(value) => ReasonReact.SideEffects(handleChange(value))
+      | Change => ReasonReact.SideEffects(handleResize)
       | SetHeight(height) => ReasonReact.Update({...state, height: Some(height)})
       },
     render: ({reduce, state, handle}) => {
@@ -109,10 +105,10 @@ let make =
                 }
               ),
             ~onChange=
-              reduce(
-                (event) =>
-                  Change(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value)
-              ),
+              (event) => {
+                onTextChange(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value);
+                reduce(() => Change, ());
+              },
             ~onKeyDown?,
             ~onPaste?,
             ~onFocus=
@@ -121,7 +117,7 @@ let make =
                 | Some(onFocus) => onFocus(event)
                 | None => ()
                 };
-                reduce(() => Focus, ())
+                reduce(() => Focus, ());
               },
             ~onBlur=
               (event) => {
@@ -129,7 +125,7 @@ let make =
                 | Some(onBlur) => onBlur(event)
                 | None => ()
                 };
-                reduce(() => Blur, ())
+                reduce(() => Blur, ());
               },
             ~value,
             ~placeholder,
@@ -137,7 +133,7 @@ let make =
             ()
           ),
         [||]
-      )
+      );
     }
-  }
+  };
 };
