@@ -1,4 +1,5 @@
-[@bs.get] external getDevicePixelRatio : DomRe.Window.t_window => Js.Null_undefined.t(float) =
+[@bs.get]
+external getDevicePixelRatio : DomRe.Window.t_window => Js.Null_undefined.t(float) =
   "devicePixelRatio";
 
 let devicePixelRatio =
@@ -95,18 +96,18 @@ let draw = (~size, ~color, {ReasonReact.state}) =>
     Webapi.Canvas.Canvas2d.addColorStop(1.0, tupleToColor(color, 0.0), gradient);
     Webapi.Canvas.Canvas2d.setFillStyle(context, Gradient, gradient);
     Webapi.Canvas.Canvas2d.fill(context);
-    ()
+    ();
   | _ => ()
   };
 
 let make = (~size, ~color, _children) => {
   let tick = ({ReasonReact.send, ReasonReact.state} as self) =>
-    Bs_webapi.requestAnimationFrame(
+    Webapi.requestAnimationFrame(
       (_) =>
         switch state.cancelNextFrame {
         | {contents: false} =>
           draw(~size, ~color, self);
-          send(Draw)
+          send(Draw);
         | _ => ()
         }
     );
@@ -115,7 +116,7 @@ let make = (~size, ~color, _children) => {
     initialState: () => {context: ref(None), cancelNextFrame: ref(false)},
     didMount: ({send}) => {
       send(Draw);
-      ReasonReact.NoUpdate
+      ReasonReact.NoUpdate;
     },
     reducer: (action, state) =>
       switch action {
@@ -134,7 +135,7 @@ let make = (~size, ~color, _children) => {
         width=actualSize
         height=actualSize
         style=(ReactDOMRe.Style.make(~width=sizeAttr ++ "px", ~height=sizeAttr ++ "px", ()))
-      />
+      />;
     }
-  }
+  };
 };

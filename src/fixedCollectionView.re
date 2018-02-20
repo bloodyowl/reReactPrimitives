@@ -48,7 +48,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         _children
       ) => {
     let measureContainerAtNextFrame = ({ReasonReact.state, ReasonReact.send}) =>
-      Bs_webapi.requestAnimationFrame(
+      Webapi.requestAnimationFrame(
         (_) =>
           switch state.containerRef {
           | {contents: Some(container)} =>
@@ -60,11 +60,11 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
       switch onEndReached {
       | Some(onEndReached) =>
         if (Array.length(data) * rowHeight - (scrollTop + clientHeight) <= scrollOffset) {
-          onEndReached()
+          onEndReached();
         }
       | None => ()
       };
-      ReasonReact.Update({...state, scrollTop})
+      ReasonReact.Update({...state, scrollTop});
     };
     let renderRow = (startIndex, rowIndex, rowData: t) =>
       <div
@@ -111,7 +111,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         },
       didMount: ({send}) => {
         send(MeasureContainerAtNextFrame);
-        ReasonReact.NoUpdate
+        ReasonReact.NoUpdate;
       },
       render: ({state, handle, send}) =>
         <div
@@ -188,7 +188,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                       min(renderableCount + 1, Array.length(data) - startIndex)
                     )
                     |> Array.mapi(renderRow(startIndex))
-                    |> ReasonReact.arrayToElement
+                    |> ReasonReact.arrayToElement;
                   }
                   (
                     switch renderFooter {
@@ -218,6 +218,6 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
             )
           </div>
         </div>
-    }
+    };
   };
 };

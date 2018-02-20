@@ -126,17 +126,17 @@ let make = (~style=?, ~message, ~alignTo: LayerManager.align, children) => {
       Js.Promise.then_(
         (layer) => {
           self.ReasonReact.send(SetLayer(layer));
-          Js.Promise.resolve()
+          Js.Promise.resolve();
         },
         layer
       )
-    )
+    );
   };
   let hideTooltip = (_event, {ReasonReact.state, ReasonReact.send}) =>
     switch state {
     | Some(layer) =>
       TooltipLayerManager.remove(layer);
-      send(RemoveLayer)
+      send(RemoveLayer);
     | None => ()
     };
   {
@@ -152,5 +152,5 @@ let make = (~style=?, ~message, ~alignTo: LayerManager.align, children) => {
       <div ?style onMouseEnter=(handle(showTooltip)) onMouseLeave=(handle(hideTooltip))>
         children[0]
       </div>
-  }
+  };
 };

@@ -87,7 +87,7 @@ let make =
           | (32, _)
           | (_, 32) =>
             onPress();
-            ReasonReact.NoUpdate
+            ReasonReact.NoUpdate;
           | _ => ReasonReact.NoUpdate
           }
         )
@@ -150,7 +150,7 @@ let make =
             | Some(onFocus) => onFocus(event)
             | None => ()
             };
-            send(Focus)
+            send(Focus);
           }
         )
         onBlur=(
@@ -159,7 +159,7 @@ let make =
             | Some(onBlur) => onBlur(event)
             | None => ()
             };
-            send(Blur)
+            send(Blur);
           }
         )
         onMouseDown=((_) => send(MouseDown))
@@ -172,7 +172,7 @@ let make =
             | Some(onKeyDown) => onKeyDown(event)
             | None => ()
             };
-            send(KeyDown(ReactEventRe.Keyboard.keyCode(event)))
+            send(KeyDown(ReactEventRe.Keyboard.keyCode(event)));
           }
         )
         onKeyUp=(
@@ -181,7 +181,7 @@ let make =
             | Some(onKeyUp) => onKeyUp(event)
             | None => ()
             };
-            send(KeyUp(ReactEventRe.Keyboard.keyCode(event)))
+            send(KeyUp(ReactEventRe.Keyboard.keyCode(event)));
           }
         )
         onKeyPress=(
@@ -201,7 +201,7 @@ let make =
             | (_, 32) => ReactEventRe.Keyboard.preventDefault(event)
             | _ => ()
             };
-            send(KeyPress(keys))
+            send(KeyPress(keys));
           }
         )
         onClick=((_) => send(Click))>
@@ -209,6 +209,6 @@ let make =
       </div>,
       ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},
       [||]
-    )
+    );
   }
 };

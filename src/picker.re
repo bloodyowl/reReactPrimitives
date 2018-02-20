@@ -32,8 +32,7 @@ let renderOptionWithEvent =
       index == 0 ?
         (item) =>
           switch (Js.Nullable.to_opt(item)) {
-          | Some(item) =>
-            Bs_webapi.requestAnimationFrame((_) => focus(ReactDOMRe.findDOMNode(item)))
+          | Some(item) => Webapi.requestAnimationFrame((_) => focus(ReactDOMRe.findDOMNode(item)))
           | None => ()
           } :
         ((_) => ())
@@ -41,7 +40,7 @@ let renderOptionWithEvent =
     onPress=(
       (_) => {
         onValueChange(Some(item));
-        send(HideOptions)
+        send(HideOptions);
       }
     )
     onKeyUp=(
@@ -70,7 +69,7 @@ let makeLayer = (~target, {ReasonReact.send}) =>
     |> Js.Promise.then_(
          (layer) => {
            send(SetLayer(layer));
-           Js.Promise.resolve()
+           Js.Promise.resolve();
          }
        )
   );
@@ -166,7 +165,7 @@ let make =
           | Some(element) =>
             ReasonReact.UpdateWithSideEffects(
               {...state, focus: FocusedFromKeyboard},
-              ((_) => Bs_webapi.requestAnimationFrame((_) => focus(element)))
+              ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
             )
           | None =>
             switch (target |> DomRe.Element.parentElement) {
@@ -175,7 +174,7 @@ let make =
               | Some(element) =>
                 ReasonReact.UpdateWithSideEffects(
                   {...state, focus: FocusedFromKeyboard},
-                  ((_) => Bs_webapi.requestAnimationFrame((_) => focus(element)))
+                  ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
                 )
               | None => ReasonReact.NoUpdate
               }
@@ -187,7 +186,7 @@ let make =
           | Some(element) =>
             ReasonReact.UpdateWithSideEffects(
               {...state, focus: FocusedFromKeyboard},
-              ((_) => Bs_webapi.requestAnimationFrame((_) => focus(element)))
+              ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
             )
           | None =>
             switch (target |> DomRe.Element.parentElement) {
@@ -196,7 +195,7 @@ let make =
               | Some(element) =>
                 ReasonReact.UpdateWithSideEffects(
                   {...state, focus: FocusedFromKeyboard},
-                  ((_) => Bs_webapi.requestAnimationFrame((_) => focus(element)))
+                  ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
                 )
               | None => ReasonReact.NoUpdate
               }
@@ -246,7 +245,7 @@ let make =
               | (_, 32) => ReactEventRe.Keyboard.preventDefault(event)
               | _ => ()
               };
-              send(KeyPress(keys, ReactEventRe.Keyboard.target(event)))
+              send(KeyPress(keys, ReactEventRe.Keyboard.target(event)));
             }
           )
           onClick=((event) => send(ShowOptions(ReactEventRe.Mouse.target(event))))>
@@ -255,5 +254,5 @@ let make =
         ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},
         [||]
       )
-  }
+  };
 };

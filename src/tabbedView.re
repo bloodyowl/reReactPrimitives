@@ -35,14 +35,14 @@ let setRect = (state) =>
             DomRectRe.width(childRect),
             DomRectRe.height(childRect)
           ))
-      })
+      });
     | None => ReasonReact.NoUpdate
-    }
+    };
   | _ => ReasonReact.NoUpdate
   };
 
 let measureRectAtNextFrame = ({ReasonReact.send}) =>
-  Bs_webapi.requestAnimationFrame((_) => send(MeasureRect));
+  Webapi.requestAnimationFrame((_) => send(MeasureRect));
 
 let make =
     (
@@ -174,7 +174,7 @@ let make =
         style=(ReactDOMRe.Style.make(~flexGrow="1", ~display="flex", ~flexDirection="column", ()))>
         {
           let (_activeTab, renderActiveTab) = tabs[state.openTab];
-          renderActiveTab()
+          renderActiveTab();
         }
       </div>
     </div>

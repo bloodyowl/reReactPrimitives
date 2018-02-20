@@ -20,10 +20,10 @@ let make = (~onEndReached=?, ~offset=0, children) => {
         let scrollTop = DomRe.Element.scrollTop(element);
         let clientHeight = DomRe.Element.clientHeight(element);
         if (scrollTop + clientHeight >= scrollHeight - offset) {
-          ReasonReact.SideEffects(((_) => onEndReached()))
+          ReasonReact.SideEffects(((_) => onEndReached()));
         } else {
-          ReasonReact.NoUpdate
-        }
+          ReasonReact.NoUpdate;
+        };
       | _ => ReasonReact.NoUpdate
       }
     },

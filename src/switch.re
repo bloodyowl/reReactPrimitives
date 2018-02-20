@@ -20,7 +20,7 @@ let component = ReasonReact.reducerComponent("Switch");
 let make = (~value, ~onValueChange, ~disabled=false, _children) => {
   let handleChange = () => {
     let (_state, value) = value;
-    onValueChange(! value)
+    onValueChange(! value);
   };
   {
     ...component,
@@ -57,7 +57,7 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
                     ReactEventRe.Keyboard.keyCode(event),
                     ReactEventRe.Keyboard.charCode(event)
                   ))
-                )
+                );
               }
           )
           onFocus=((_) => send(Focus))
@@ -65,7 +65,7 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
           onClick=(
             (_) =>
               if (! disabled) {
-                handleChange()
+                handleChange();
               }
           )
           style=(
@@ -138,5 +138,5 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
         },
         [||]
       )
-  }
+  };
 };
