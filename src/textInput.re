@@ -108,8 +108,8 @@ let make =
               ),
             ~onChange=
               (event) => {
-                send(Change);
                 onTextChange(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value);
+                send(Change);
               },
             ~onKeyDown?,
             ~onPaste?,
