@@ -21,6 +21,7 @@ type behavior =
 
 module type LayerManagerImpl = {
   let make: behavior => Js.Promise.t(layer);
+  let get: layer => option(DomRe.Element.t);
   let render: (layer, ReasonReact.reactElement) => unit;
   let remove: layer => unit;
 };
@@ -220,6 +221,13 @@ module DefaultImpl = {
          }
        );
   };
+  let get = (layer) =>
+    try {
+      let layerNode = LayerMap.find(layer, map^);
+      Some(layerNode);
+    } {
+    | Not_found => None
+    };
   let render = (layer, element) =>
     try {
       let layerNode = LayerMap.find(layer, map^);
@@ -247,6 +255,8 @@ module Make = (Impl: LayerManagerImpl) => {
   let make = (behavior) => Impl.make(behavior);
   /* renders a reactElement in the layer */
   let render = (layer, element) => Impl.render(layer, element);
+  /* get the element matching the layer */
+  let get = (layer) => Impl.get(layer);
   /* unmounts the reactElement and deletes the layer */
   let remove = (layer) => Impl.remove(layer);
 };
