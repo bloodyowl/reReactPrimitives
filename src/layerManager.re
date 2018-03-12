@@ -24,6 +24,7 @@ module type LayerManagerImpl = {
   let get: layer => option(DomRe.Element.t);
   let render: (layer, ReasonReact.reactElement) => unit;
   let remove: layer => unit;
+  let removeNode: layer => unit;
 };
 
 [@bs.get] external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style";
@@ -248,6 +249,18 @@ module DefaultImpl = {
     } {
     | Not_found => ()
     };
+  let removeNode = (layer) =>
+    try {
+      let layerNode = LayerMap.find(layer, map^);
+      DomRe.Element.remove(layerNode);
+      map := LayerMap.remove(layer, map^);
+      switch activeElement^ {
+      | Some(element) => focus(element)
+      | None => ()
+      };
+    } {
+    | Not_found => ()
+    };
 };
 
 module Make = (Impl: LayerManagerImpl) => {
@@ -259,4 +272,6 @@ module Make = (Impl: LayerManagerImpl) => {
   let get = (layer) => Impl.get(layer);
   /* unmounts the reactElement and deletes the layer */
   let remove = (layer) => Impl.remove(layer);
+  /* deletes the layer */
+  let removeNode = (layer) => Impl.removeNode(layer);
 };
