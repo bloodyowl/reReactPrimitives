@@ -28,6 +28,7 @@ let make =
       ~id=?,
       ~name=?,
       ~value,
+      ~maxLength=?,
       ~style=?,
       ~onTextChange,
       ~onKeyDown=?,
@@ -130,6 +131,7 @@ let make =
                 send(Blur);
               },
             ~value,
+            ~maxLength?,
             ~placeholder,
             ~autoFocus=Js.Boolean.to_js_boolean(autoFocus),
             ()
