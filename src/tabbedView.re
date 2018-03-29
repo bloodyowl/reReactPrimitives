@@ -5,7 +5,7 @@ type mode =
 type state = {
   openTab: int,
   activeTabHandleRect: option((int, int, int, int)),
-  tabContainerRef: ref(option(DomRe.Element.t))
+  tabContainerRef: ref(option(DomRe.Element.t)),
 };
 
 type action =
@@ -15,14 +15,14 @@ type action =
 let component = ReasonReact.reducerComponent("TabbedView");
 
 let setTabContainerRef = (tabContainerRef, {ReasonReact.state}) =>
-  state.tabContainerRef := Js.Nullable.to_opt(tabContainerRef);
+  state.tabContainerRef := Js.Nullable.toOption(tabContainerRef);
 
-let setRect = (state) =>
-  switch state.tabContainerRef {
+let setRect = state =>
+  switch (state.tabContainerRef) {
   | {contents: Some(containerRef)} =>
     let children = DomRe.Element.children(containerRef);
     let item = DomRe.HtmlCollection.item(state.openTab, children);
-    switch item {
+    switch (item) {
     | Some(child) =>
       let parentRect = DomRe.Element.getBoundingClientRect(containerRef);
       let childRect = DomRe.Element.getBoundingClientRect(child);
@@ -33,8 +33,8 @@ let setRect = (state) =>
             DomRectRe.left(childRect) - DomRectRe.left(parentRect),
             DomRectRe.top(childRect) - DomRectRe.top(parentRect),
             DomRectRe.width(childRect),
-            DomRectRe.height(childRect)
-          ))
+            DomRectRe.height(childRect),
+          )),
       });
     | None => ReasonReact.NoUpdate
     };
@@ -51,19 +51,22 @@ let make =
       ~tabs,
       ~color="#4A90E2",
       ~tabHeadingPadding="15px 20px",
-      _children
+      _children,
     ) => {
   ...component,
   initialState: () => {
     openTab: initiallyOpenTab,
     activeTabHandleRect: None,
-    tabContainerRef: ref(None)
+    tabContainerRef: ref(None),
   },
   didMount: (_) => ReasonReact.SideEffects(measureRectAtNextFrame),
   reducer: (action, state) =>
-    switch action {
+    switch (action) {
     | SetActiveTab(openTab) =>
-      ReasonReact.UpdateWithSideEffects({...state, openTab}, measureRectAtNextFrame)
+      ReasonReact.UpdateWithSideEffects(
+        {...state, openTab},
+        measureRectAtNextFrame,
+      )
     | MeasureRect => setRect(state)
     },
   render: ({state, send, handle}) =>
@@ -73,11 +76,11 @@ let make =
           ~display="flex",
           ~flexGrow="1",
           ~flexDirection=
-            switch mode {
+            switch (mode) {
             | Horizontal => "row"
             | Vertical => "column"
             },
-          ()
+          (),
         )
       )>
       <div
@@ -87,7 +90,7 @@ let make =
             ~display="flex",
             ~flexGrow="0",
             ~flexShrink="0",
-            ()
+            (),
           )
         )>
         <div
@@ -97,39 +100,40 @@ let make =
               ~display="flex",
               ~flexGrow="1",
               ~flexDirection=
-                switch mode {
+                switch (mode) {
                 | Horizontal => "column"
                 | Vertical => "row"
                 },
               ~justifyContent=
-                switch mode {
+                switch (mode) {
                 | Horizontal => ""
                 | Vertical => "center"
                 },
               ~boxShadow=
-                switch mode {
+                switch (mode) {
                 | Vertical => "0 1px rgba(0, 0, 0, 0.1)"
                 | Horizontal => "1px 0 rgba(0, 0, 0, 0.1)"
                 },
-              ()
+              (),
             )
           )>
           (
             tabs
-            |> Array.mapi(
-                 (index, (tabTitle, _)) =>
-                   <TouchableOpacity
-                     key=(string_of_int(index))
-                     style=(
-                       ReactDOMRe.Style.make(
-                         ~color=index === state.openTab ? color : "rgba(0, 0, 0, 0.6)",
-                         ~padding=tabHeadingPadding,
-                         ()
-                       )
+            |> Array.mapi((index, (tabTitle, _)) =>
+                 <TouchableOpacity
+                   key=(string_of_int(index))
+                   style=(
+                     ReactDOMRe.Style.make(
+                       ~color=
+                         index === state.openTab ?
+                           color : "rgba(0, 0, 0, 0.6)",
+                       ~padding=tabHeadingPadding,
+                       (),
                      )
-                     onPress=((_) => send(SetActiveTab(index)))>
-                     tabTitle
-                   </TouchableOpacity>
+                   )
+                   onPress=((_) => send(SetActiveTab(index)))>
+                   tabTitle
+                 </TouchableOpacity>
                )
             |> ReasonReact.arrayToElement
           )
@@ -147,7 +151,7 @@ let make =
                   ~width=string_of_int(w) ++ "px",
                   ~height="2px",
                   ~backgroundColor=color,
-                  ()
+                  (),
                 )
               )
             />
@@ -162,7 +166,7 @@ let make =
                   ~height=string_of_int(h) ++ "px",
                   ~width="2px",
                   ~backgroundColor=color,
-                  ()
+                  (),
                 )
               )
             />
@@ -171,11 +175,18 @@ let make =
         )
       </div>
       <div
-        style=(ReactDOMRe.Style.make(~flexGrow="1", ~display="flex", ~flexDirection="column", ()))>
+        style=(
+          ReactDOMRe.Style.make(
+            ~flexGrow="1",
+            ~display="flex",
+            ~flexDirection="column",
+            (),
+          )
+        )>
         {
           let (_activeTab, renderActiveTab) = tabs[state.openTab];
           renderActiveTab();
         }
       </div>
-    </div>
+    </div>,
 };

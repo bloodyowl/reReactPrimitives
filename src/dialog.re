@@ -11,7 +11,7 @@ module Styles = {
       ~width="100vw",
       ~height="100vh",
       ~boxSizing="border-box",
-      ()
+      (),
     );
   let container =
     ReactDOMRe.Style.make(
@@ -23,7 +23,7 @@ module Styles = {
       ~position="relative",
       ~display="flex",
       ~flexDirection="column",
-      ()
+      (),
     );
   let header =
     ReactDOMRe.Style.make(
@@ -32,7 +32,7 @@ module Styles = {
       ~alignItems="center",
       ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
       ~flexShrink="0",
-      ()
+      (),
     );
   let headerText =
     ReactDOMRe.Style.make(
@@ -42,7 +42,7 @@ module Styles = {
       ~alignItems="flex-start",
       ~minWidth="0",
       ~padding="10px",
-      ()
+      (),
     );
   let headerTitle =
     ReactDOMRe.Style.make(
@@ -50,14 +50,14 @@ module Styles = {
       ~fontSize="16px",
       ~fontWeight="700",
       ~color="rgba(0, 0, 0, 0.4)",
-      ()
+      (),
     );
   let headerDescription =
     ReactDOMRe.Style.make(
       ~wordBreak="break-word",
       ~fontSize="12px",
       ~color="rgba(0, 0, 0, 0.4)",
-      ()
+      (),
     );
   let close = ReactDOMRe.Style.make(~padding="10px", ());
   let closeIcon = ReactDOMRe.Style.make(~opacity="0.4", ());
@@ -67,7 +67,7 @@ module Styles = {
       ~flexDirection="column",
       ~flexGrow="1",
       ~overflow="auto",
-      ()
+      (),
     );
 };
 
@@ -82,7 +82,7 @@ let make =
       ~maxWidth=?,
       ~underlayColor=defaultUnderlayColor,
       ~underlayStyle=?,
-      children
+      children,
     ) => {
   ...component,
   render: _self =>
@@ -99,12 +99,12 @@ let make =
               ~bottom="0",
               ~backgroundColor=underlayColor,
               ~transition="background-color .5s ease-in-out",
-              ()
+              (),
             ),
             switch (underlayStyle) {
             | Some(style) => style
             | None => ReactDOMRe.Style.make()
-            }
+            },
           )
         )
       />
@@ -119,8 +119,8 @@ let make =
                 | Some(maxWidth) => string_of_int(maxWidth) ++ "px"
                 | None => ""
                 },
-              ()
-            )
+              (),
+            ),
           )
         )>
         <div style=Styles.header>
@@ -146,5 +146,5 @@ let make =
         </div>
         <div style=Styles.contents> children[0] </div>
       </div>
-    </div>
+    </div>,
 };

@@ -4,5 +4,5 @@ ReactDOMRe.renderToElementWithId(
     <br />
     <ActivityIndicator size=64.0 color=(150, 200, 200) />
   </div>,
-  "root"
+  "root",
 );

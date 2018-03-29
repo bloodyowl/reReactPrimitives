@@ -12,12 +12,12 @@ ReactDOMRe.renderToElementWithId(
           ~color="#fff",
           ~borderRadius="3px",
           ~overflow="hidden",
-          ()
+          (),
         )
       )
       onPress=(() => Js.log("onPress"))>
       (ReasonReact.stringToElement("click me!"))
     </TouchableHighlight>
   </div>,
-  "root"
+  "root",
 );

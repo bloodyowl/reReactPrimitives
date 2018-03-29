@@ -7,7 +7,11 @@ module type SpriteSheetType = {
 module Make = (SpriteSheet: SpriteSheetType) => {
   let basename = {
     let index = String.rindex(SpriteSheet.url, '/') + 1;
-    String.sub(SpriteSheet.url, index, String.length(SpriteSheet.url) - index);
+    String.sub(
+      SpriteSheet.url,
+      index,
+      String.length(SpriteSheet.url) - index,
+    );
   };
   type state = {isReady: bool};
   let component = ReasonReact.reducerComponent("Sprite[" ++ basename ++ "]");
@@ -36,9 +40,9 @@ module Make = (SpriteSheet: SpriteSheetType) => {
               ++ "px",
             ~backgroundImage=
               state.isReady ? "url(" ++ SpriteSheet.url ++ ")" : "",
-            ()
+            (),
           )
         )
-      />
+      />,
   };
 };

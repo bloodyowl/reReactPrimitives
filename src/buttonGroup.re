@@ -7,7 +7,7 @@ let buttonGroupStyle =
     ~alignItems="center",
     ~borderRadius="3px",
     ~overflow="hidden",
-    ()
+    (),
   );
 
 let addKey = (index, item) => <div key=(string_of_int(index))> item </div>;
@@ -23,5 +23,5 @@ let make = (~style=?, children) => {
         }
       )>
       (children |> Array.mapi(addKey) |> ReasonReact.arrayToElement)
-    </div>
+    </div>,
 };

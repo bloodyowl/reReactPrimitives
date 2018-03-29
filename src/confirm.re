@@ -10,7 +10,7 @@ module Styles = {
       ~height="100vh",
       ~alignItems="center",
       ~boxSizing="border-box",
-      ()
+      (),
     );
   let layer =
     ReactDOMRe.Style.make(
@@ -21,7 +21,7 @@ module Styles = {
       ~bottom="0",
       ~backgroundColor="rgba(0, 0, 0, 0.3)",
       ~transition="background-color .5s ease-in-out",
-      ()
+      (),
     );
   let container =
     ReactDOMRe.Style.make(
@@ -31,7 +31,7 @@ module Styles = {
       ~position="relative",
       ~overflow="hidden",
       ~zIndex="0",
-      ()
+      (),
     );
   let icon =
     ReactDOMRe.Style.make(
@@ -40,14 +40,14 @@ module Styles = {
       ~flexDirection="row",
       ~alignItems="center",
       ~justifyContent="center",
-      ()
+      (),
     );
   let message =
     ReactDOMRe.Style.make(
       ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
       ~padding="20px 10px",
       ~textAlign="center",
-      ()
+      (),
     );
   let messageText =
     ReactDOMRe.Style.make(~fontSize="16px", ~color="rgba(0, 0, 0, 0.4)", ());
@@ -58,7 +58,7 @@ module Styles = {
       ~justifyContent="space-between",
       ~padding="10px",
       ~backgroundColor="#fafafa",
-      ()
+      (),
     );
 };
 
@@ -71,7 +71,7 @@ let make =
       ~onConfirm,
       ~onCancel,
       ~maxWidth=?,
-      _children
+      _children,
     ) => {
   ...component,
   render: _self =>
@@ -87,8 +87,8 @@ let make =
                 | Some(maxWidth) => string_of_int(maxWidth) ++ "px"
                 | None => ""
                 },
-              ()
-            )
+              (),
+            ),
           )
         )>
         (
@@ -110,12 +110,12 @@ let make =
                 ~width="10px",
                 ~height="10px",
                 ~flexShrink="0",
-                ()
+                (),
               )
             )
           />
           <Button onPress=onConfirm color="#fb5" title=confirmWording />
         </div>
       </div>
-    </div>
+    </div>,
 };

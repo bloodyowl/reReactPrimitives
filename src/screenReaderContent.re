@@ -13,9 +13,9 @@ let make = (~text, _children) => {
           ~height="1px",
           ~width="1px",
           ~overflow="hidden",
-          ()
+          (),
         )
       )>
       (ReasonReact.stringToElement(text))
-    </div>
+    </div>,
 };

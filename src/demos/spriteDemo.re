@@ -12,5 +12,5 @@ ReactDOMRe.renderToElementWithId(
     <br />
     <DemoSprite width=150 height=150 x=0 y=0 />
   </div>,
-  "root"
+  "root",
 );

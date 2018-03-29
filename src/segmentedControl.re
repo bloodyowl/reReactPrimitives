@@ -13,7 +13,7 @@ let make = (~segments, ~activeSegment, ~color, ~onSegmentPress, _children) => {
           ~border="1px solid " ++ color,
           ~display="flex",
           ~flexDirection="row",
-          ()
+          (),
         )
       )>
       (
@@ -29,15 +29,15 @@ let make = (~segments, ~activeSegment, ~color, ~onSegmentPress, _children) => {
                      ~padding="5px",
                      ~fontSize="14px",
                      ~boxShadow="1px 0 " ++ color,
-                     ()
+                     (),
                    ),
                    value == activeSegment ?
                      ReactDOMRe.Style.make(
                        ~backgroundColor=color,
                        ~color="#fff",
-                       ()
+                       (),
                      ) :
-                     ReactDOMRe.Style.make(~color, ())
+                     ReactDOMRe.Style.make(~color, ()),
                  )
                )
                onPress=((_) => onSegmentPress(value))>
@@ -47,5 +47,5 @@ let make = (~segments, ~activeSegment, ~color, ~onSegmentPress, _children) => {
         |> Array.of_list
         |> ReasonReact.arrayToElement
       )
-    </div>
+    </div>,
 };

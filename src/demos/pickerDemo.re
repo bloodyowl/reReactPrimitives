@@ -5,29 +5,29 @@ let renderOption = (option, value) =>
         ~padding="10px",
         ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
         ~backgroundColor=
-          switch value {
+          switch (value) {
           | Some(value) => value == option ? "#4A90E2" : ""
           | _ => ""
           },
         ~color=
-          switch value {
+          switch (value) {
           | Some(value) => value == option ? "#fff" : ""
           | _ => ""
           },
-        ()
+        (),
       )
     )>
     (ReasonReact.stringToElement(option))
   </div>;
 
-let rec render = (value) =>
+let rec render = value =>
   ReactDOMRe.renderToElementWithId(
     <div style=(ReactDOMRe.Style.make(~padding="10px", ()))>
       <Picker
         value
         renderPicker=(
-          (value) =>
-            switch value {
+          value =>
+            switch (value) {
             | Some(value) => ReasonReact.stringToElement(value)
             | None => ReasonReact.stringToElement({js|Select a value …|js})
             }
@@ -40,8 +40,8 @@ let rec render = (value) =>
         value
         disabled=true
         renderPicker=(
-          (value) =>
-            switch value {
+          value =>
+            switch (value) {
             | Some(value) => ReasonReact.stringToElement(value)
             | None => ReasonReact.stringToElement({js|Select a value …|js})
             }
@@ -51,7 +51,7 @@ let rec render = (value) =>
         onValueChange=render
       />
     </div>,
-    "root"
+    "root",
   );
 
 render(None);

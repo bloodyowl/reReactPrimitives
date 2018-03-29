@@ -13,7 +13,7 @@ let make =
       ~items,
       ~renderItem,
       ~renderSeparator=defaultRenderSeparator,
-      _children
+      _children,
     ) => {
   ...component,
   render: _self =>
@@ -23,7 +23,7 @@ let make =
         |> List.fold_left(
              (acc, item) =>
                List.append(acc, [renderSeparator(), renderItem(item)]),
-             []
+             [],
            )
         |> List.tl
         |> List.mapi((index, item) =>
@@ -32,5 +32,5 @@ let make =
         |> Array.of_list
         |> ReasonReact.arrayToElement
       )
-    </div>
+    </div>,
 };

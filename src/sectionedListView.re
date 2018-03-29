@@ -11,7 +11,7 @@ module Styles = {
       ~color="rgba(0, 0, 0, 0.5)",
       ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
       ~letterSpacing="1px",
-      ()
+      (),
     );
 };
 
@@ -43,16 +43,18 @@ let make =
       ~sections,
       ~backgroundColor="rgb(248, 248, 248)",
       ~sectionBackgroundColor="#fff",
-      _children
+      _children,
     ) => {
   ...component,
   render: _self =>
     <div style=Styles.container>
       (
         sections
-        |> List.mapi(renderSection(~backgroundColor, ~sectionBackgroundColor))
+        |> List.mapi(
+             renderSection(~backgroundColor, ~sectionBackgroundColor),
+           )
         |> Array.of_list
         |> ReasonReact.arrayToElement
       )
-    </div>
+    </div>,
 };

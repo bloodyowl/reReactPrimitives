@@ -16,7 +16,7 @@ let make =
       ~backgroundColor,
       ~round=false,
       ~alternativeText=?,
-      _children
+      _children,
     ) => {
   ...component,
   initialState: (_) => {isReady: false},
@@ -40,7 +40,7 @@ let make =
           ~backgroundImage=state.isReady ? "url(" ++ source ++ ")" : "",
           ~borderRadius=
             round ? string_of_int(min(width, height)) ++ "px" : "0px",
-          ()
+          (),
         )
       )>
       (
@@ -49,5 +49,5 @@ let make =
         | None => ReasonReact.nullElement
         }
       )
-    </div>
+    </div>,
 };

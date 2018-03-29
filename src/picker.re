@@ -5,7 +5,7 @@ type focus =
 
 type state = {
   layer: option(LayerManager.layer),
-  focus
+  focus,
 };
 
 type action =
@@ -22,7 +22,7 @@ let component = ReasonReact.reducerComponent("Picker");
 
 module PickerLayerManager = LayerManager.Make(LayerManager.DefaultImpl);
 
-[@bs.send.pipe : DomRe.Element.t] external focus : unit = "";
+[@bs.send.pipe: DomRe.Element.t] external focus : unit = "";
 
 let renderOptionWithEvent =
     (~renderOption, ~onValueChange, ~value, {ReasonReact.send}, index, item) =>
@@ -30,9 +30,12 @@ let renderOptionWithEvent =
     key=(string_of_int(index))
     ref=(
       index == 0 ?
-        (item) =>
-          switch (Js.Nullable.to_opt(item)) {
-          | Some(item) => Webapi.requestAnimationFrame((_) => focus(ReactDOMRe.findDOMNode(item)))
+        item =>
+          switch (Js.Nullable.toOption(item)) {
+          | Some(item) =>
+            Webapi.requestAnimationFrame((_) =>
+              focus(ReactDOMRe.findDOMNode(item))
+            )
           | None => ()
           } :
         ((_) => ())
@@ -44,19 +47,23 @@ let renderOptionWithEvent =
       }
     )
     onKeyUp=(
-      (event) =>
+      event =>
         send(
-          MoveFocus((ReactEventRe.Keyboard.keyCode(event), ReactEventRe.Keyboard.target(event)))
+          MoveFocus((
+            ReactEventRe.Keyboard.keyCode(event),
+            ReactEventRe.Keyboard.target(event),
+          )),
         )
     )
     onBlur=((_) => send(Blur))
     style=(ReactDOMRe.Style.make(~cursor="pointer", ()))
     focusedFromKeyboardStyle=(
       ReactDOMRe.Style.make(
-        ~backgroundImage="linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05))",
+        ~backgroundImage=
+          "linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05))",
         ~opacity="0.8",
         ~outline="none",
-        ()
+        (),
       )
     )
     underlayColor="rgba(0, 0, 0, 0.05)">
@@ -66,12 +73,10 @@ let renderOptionWithEvent =
 let makeLayer = (~target, {ReasonReact.send}) =>
   ignore(
     PickerLayerManager.make(Contextualized(target, Bottom))
-    |> Js.Promise.then_(
-         (layer) => {
-           send(SetLayer(layer));
-           Js.Promise.resolve();
-         }
-       )
+    |> Js.Promise.then_(layer => {
+         send(SetLayer(layer));
+         Js.Promise.resolve();
+       }),
   );
 
 let make =
@@ -83,10 +88,10 @@ let make =
       ~onValueChange,
       ~padding="10px",
       ~disabled=false,
-      _children
+      _children,
     ) => {
   let whenLayerReady = ({ReasonReact.state, ReasonReact.send} as self) =>
-    switch state.layer {
+    switch (state.layer) {
     | Some(layer) =>
       PickerLayerManager.render(
         layer,
@@ -100,7 +105,7 @@ let make =
                 ~left="0",
                 ~right="0",
                 ~bottom="0",
-                ()
+                (),
               )
             )
           />
@@ -113,18 +118,26 @@ let make =
                 ~borderBottomRightRadius="3px",
                 ~overflow="auto",
                 ~zIndex="1",
-                ~boxShadow="0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.16",
-                ()
+                ~boxShadow=
+                  "0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.16",
+                (),
               )
             )>
             (
               options
-              |> List.mapi(renderOptionWithEvent(~renderOption, ~onValueChange, ~value, self))
+              |> List.mapi(
+                   renderOptionWithEvent(
+                     ~renderOption,
+                     ~onValueChange,
+                     ~value,
+                     self,
+                   ),
+                 )
               |> Array.of_list
               |> ReasonReact.arrayToElement
             )
           </div>
-        </div>
+        </div>,
       )
     | None => ()
     };
@@ -132,16 +145,16 @@ let make =
     ...component,
     initialState: () => {focus: NotFocused, layer: None},
     reducer: (action, state) =>
-      switch action {
+      switch (action) {
       | Focus =>
-        switch state.focus {
+        switch (state.focus) {
         | FocusedFromMouse => ReasonReact.NoUpdate
         | _ => ReasonReact.Update({...state, focus: FocusedFromKeyboard})
         }
       | Blur => ReasonReact.Update({...state, focus: NotFocused})
       | MouseDown => ReasonReact.Update({...state, focus: FocusedFromMouse})
       | KeyPress(keys, target) =>
-        switch keys {
+        switch (keys) {
         | (13, _)
         | (_, 13)
         | (32, _)
@@ -150,22 +163,22 @@ let make =
         }
       | ShowOptions(target) => ReasonReact.SideEffects(makeLayer(~target))
       | HideOptions =>
-        switch state.layer {
+        switch (state.layer) {
         | Some(layer) =>
           ReasonReact.SilentUpdateWithSideEffects(
             {...state, layer: None},
-            ((_) => PickerLayerManager.remove(layer))
+            ((_) => PickerLayerManager.remove(layer)),
           )
         | None => ReasonReact.NoUpdate
         }
       | MoveFocus((key, target)) =>
-        switch key {
+        switch (key) {
         | 38 =>
           switch (target |> DomRe.Element.previousElementSibling) {
           | Some(element) =>
             ReasonReact.UpdateWithSideEffects(
               {...state, focus: FocusedFromKeyboard},
-              ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
+              ((_) => Webapi.requestAnimationFrame((_) => focus(element))),
             )
           | None =>
             switch (target |> DomRe.Element.parentElement) {
@@ -174,7 +187,10 @@ let make =
               | Some(element) =>
                 ReasonReact.UpdateWithSideEffects(
                   {...state, focus: FocusedFromKeyboard},
-                  ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
+                  (
+                    (_) =>
+                      Webapi.requestAnimationFrame((_) => focus(element))
+                  ),
                 )
               | None => ReasonReact.NoUpdate
               }
@@ -186,7 +202,7 @@ let make =
           | Some(element) =>
             ReasonReact.UpdateWithSideEffects(
               {...state, focus: FocusedFromKeyboard},
-              ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
+              ((_) => Webapi.requestAnimationFrame((_) => focus(element))),
             )
           | None =>
             switch (target |> DomRe.Element.parentElement) {
@@ -195,7 +211,10 @@ let make =
               | Some(element) =>
                 ReasonReact.UpdateWithSideEffects(
                   {...state, focus: FocusedFromKeyboard},
-                  ((_) => Webapi.requestAnimationFrame((_) => focus(element)))
+                  (
+                    (_) =>
+                      Webapi.requestAnimationFrame((_) => focus(element))
+                  ),
                 )
               | None => ReasonReact.NoUpdate
               }
@@ -205,7 +224,10 @@ let make =
         | _ => ReasonReact.NoUpdate
         }
       | SetLayer(layer) =>
-        ReasonReact.SilentUpdateWithSideEffects({...state, layer: Some(layer)}, whenLayerReady)
+        ReasonReact.SilentUpdateWithSideEffects(
+          {...state, layer: Some(layer)},
+          whenLayerReady,
+        )
       },
     render: ({state, send}) =>
       ReasonReact.cloneElement(
@@ -218,14 +240,14 @@ let make =
                 ~padding,
                 ~cursor=disabled ? "default" : "pointer",
                 ~outline=
-                  switch state.focus {
+                  switch (state.focus) {
                   | FocusedFromMouse => "none"
                   | _ => ""
                   },
-                ()
+                (),
               ),
               "WebkitTapHighlightColor",
-              "rgba(0, 0, 0, 0)"
+              "rgba(0, 0, 0, 0)",
             )
           )
           onFocus=((_) => send(Focus))
@@ -233,12 +255,12 @@ let make =
           onMouseDown=((_) => send(MouseDown))
           onTouchStart=((_) => send(MouseDown))
           onKeyPress=(
-            (event) => {
+            event => {
               let keys = (
                 ReactEventRe.Keyboard.keyCode(event),
-                ReactEventRe.Keyboard.charCode(event)
+                ReactEventRe.Keyboard.charCode(event),
               );
-              switch keys {
+              switch (keys) {
               | (13, _)
               | (_, 13)
               | (32, _)
@@ -248,11 +270,13 @@ let make =
               send(KeyPress(keys, ReactEventRe.Keyboard.target(event)));
             }
           )
-          onClick=((event) => send(ShowOptions(ReactEventRe.Mouse.target(event))))>
+          onClick=(
+            event => send(ShowOptions(ReactEventRe.Mouse.target(event)))
+          )>
           (renderPicker(value))
         </div>,
         ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},
-        [||]
-      )
+        [||],
+      ),
   };
 };

@@ -4,7 +4,12 @@ ReactDOMRe.renderToElementWithId(
     <br />
     <div
       style=(
-        ReactDOMRe.Style.make(~width="250px", ~padding="15px", ~backgroundColor="#fffee5", ())
+        ReactDOMRe.Style.make(
+          ~width="250px",
+          ~padding="15px",
+          ~backgroundColor="#fffee5",
+          (),
+        )
       )>
       <Tag
         name="Some really rather long tag name if you consider the horizontal available space"
@@ -14,5 +19,5 @@ ReactDOMRe.renderToElementWithId(
     </div>
     <br />
   </div>,
-  "root"
+  "root",
 );

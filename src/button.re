@@ -13,7 +13,7 @@ let make = (~onPress, ~color, ~title, ~disabled=false, ~round=true, _children) =
           ~backgroundColor=color,
           ~color="#fff",
           ~display="inline-flex",
-          ()
+          (),
         )
       )
       focusedFromKeyboardStyle=(
@@ -21,7 +21,7 @@ let make = (~onPress, ~color, ~title, ~disabled=false, ~round=true, _children) =
           ~outline="none",
           ~backgroundImage=
             "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1))",
-          ()
+          (),
         )
       )
       disabledStyle=(
@@ -29,10 +29,10 @@ let make = (~onPress, ~color, ~title, ~disabled=false, ~round=true, _children) =
           ~opacity="0.4",
           ~outline="none",
           ~cursor="default",
-          ()
+          (),
         )
       )
       disabled>
       (ReasonReact.stringToElement(title))
-    </TouchableOpacity>
+    </TouchableOpacity>,
 };

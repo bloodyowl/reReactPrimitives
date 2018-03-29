@@ -19,5 +19,5 @@ ReactDOMRe.renderToElementWithId(
       alternativeText="200 x 300 placeholder image"
     />
   </div>,
-  "root"
+  "root",
 );

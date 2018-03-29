@@ -1,7 +1,7 @@
 type state = {
   height: option(int),
   inputRef: ref(option(Dom.element)),
-  focused: bool
+  focused: bool,
 };
 
 type action =
@@ -12,10 +12,11 @@ type action =
 
 let component = ReasonReact.reducerComponent("TextInput");
 
-[@bs.get] external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style";
+[@bs.get]
+external getStyle : DomRe.Element.t => Dom.cssStyleDeclaration = "style";
 
 let setInputRef = (inputRef, {ReasonReact.state}) =>
-  state.inputRef := Js.Nullable.to_opt(inputRef);
+  state.inputRef := Js.Nullable.toOption(inputRef);
 
 /* TODO: manage types and local validation */
 let make =
@@ -38,18 +39,23 @@ let make =
       ~focusedStyle=?,
       ~placeholder="",
       ~rows=1,
-      _children
+      _children,
     ) => {
   let measureAndSetHeight = ((), {ReasonReact.state, ReasonReact.send}) =>
-    switch state.inputRef {
+    switch (state.inputRef) {
     | {contents: Some(element)} =>
-      CssStyleDeclarationRe.setProperty("height", "0", "", getStyle(element));
+      CssStyleDeclarationRe.setProperty(
+        "height",
+        "0",
+        "",
+        getStyle(element),
+      );
       let height = DomRe.Element.scrollHeight(element);
       CssStyleDeclarationRe.setProperty(
         "height",
         string_of_int(height) ++ "px",
         "",
-        getStyle(element)
+        getStyle(element),
       );
       send(SetHeight(height));
     | _ => ()
@@ -58,20 +64,21 @@ let make =
     if (multiline && autoSize) {
       Webapi.requestAnimationFrame((_) => handle(measureAndSetHeight, ()));
     };
-  let handleChange = (self) => handleResize(self);
+  let handleChange = self => handleResize(self);
   {
     ...component,
     initialState: () => {height: None, inputRef: ref(None), focused: false},
-    didMount: (self) => {
+    didMount: self => {
       handleResize(self);
       ReasonReact.NoUpdate;
     },
     reducer: (action, state) =>
-      switch action {
+      switch (action) {
       | Focus => ReasonReact.Update({...state, focused: true})
       | Blur => ReasonReact.Update({...state, focused: false})
       | Change => ReasonReact.SideEffects(handleChange)
-      | SetHeight(height) => ReasonReact.Update({...state, height: Some(height)})
+      | SetHeight(height) =>
+        ReasonReact.Update({...state, height: Some(height)})
       },
     render: ({send, state, handle}) => {
       let sizingStyle =
@@ -80,11 +87,11 @@ let make =
           ~boxSizing="content-box",
           ~fontSize="16px",
           ~height=
-            switch state.height {
+            switch (state.height) {
             | None => "auto"
             | Some(height) => string_of_int(height) ++ "px"
             },
-          ()
+          (),
         );
       ReactDOMRe.createElement(
         multiline ? "textarea" : "input",
@@ -98,33 +105,35 @@ let make =
             ~disabled=Js.Boolean.to_js_boolean(disabled),
             ~style=
               ReactDOMRe.Style.combine(
-                switch style {
+                switch (style) {
                 | Some(style) => ReactDOMRe.Style.combine(style, sizingStyle)
                 | None => sizingStyle
                 },
-                switch focusedStyle {
+                switch (focusedStyle) {
                 | Some(style) when state.focused == true => style
                 | _ => ReactDOMRe.Style.make()
-                }
+                },
               ),
             ~onChange=
-              (event) => {
-                onTextChange(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value);
+              event => {
+                onTextChange(
+                  ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value,
+                );
                 send(Change);
               },
             ~onKeyDown?,
             ~onPaste?,
             ~onFocus=
-              (event) => {
-                switch onFocus {
+              event => {
+                switch (onFocus) {
                 | Some(onFocus) => onFocus(event)
                 | None => ()
                 };
                 send(Focus);
               },
             ~onBlur=
-              (event) => {
-                switch onBlur {
+              event => {
+                switch (onBlur) {
                 | Some(onBlur) => onBlur(event)
                 | None => ()
                 };
@@ -134,10 +143,10 @@ let make =
             ~maxLength?,
             ~placeholder,
             ~autoFocus=Js.Boolean.to_js_boolean(autoFocus),
-            ()
+            (),
           ),
-        [||]
+        [||],
       );
-    }
+    },
   };
 };

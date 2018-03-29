@@ -7,7 +7,12 @@ ReactDOMRe.renderToElementWithId(
     (ReasonReact.stringToElement(" "))
     <Button onPress=(() => ()) title="click me!" color="#7ED321" />
     <br />
-    <Button onPress=(() => ()) title="click me! (disabled)" color="#C30" disabled=true />
+    <Button
+      onPress=(() => ())
+      title="click me! (disabled)"
+      color="#C30"
+      disabled=true
+    />
   </div>,
-  "root"
+  "root",
 );

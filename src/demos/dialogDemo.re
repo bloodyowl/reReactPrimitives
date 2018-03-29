@@ -3,7 +3,7 @@ module MyLayerManager = LayerManager.Make(LayerManager.DefaultImpl);
 let openDialog = (_) => {
   let layer = MyLayerManager.make(FullViewport);
   Js.Promise.then_(
-    (layer) => {
+    layer => {
       MyLayerManager.render(
         layer,
         <Dialog
@@ -15,18 +15,18 @@ let openDialog = (_) => {
           <div style=(ReactDOMRe.Style.make(~padding="10px", ()))>
             (ReasonReact.stringToElement("This is a dialog"))
           </div>
-        </Dialog>
+        </Dialog>,
       );
-      Js.Promise.resolve()
+      Js.Promise.resolve();
     },
-    layer
-  )
+    layer,
+  );
 };
 
 let openDialog2 = (_) => {
   let layer = MyLayerManager.make(FullViewport);
   Js.Promise.then_(
-    (layer) => {
+    layer => {
       MyLayerManager.render(
         layer,
         <Dialog
@@ -37,18 +37,18 @@ let openDialog2 = (_) => {
           <div style=(ReactDOMRe.Style.make(~padding="10px", ()))>
             (ReasonReact.stringToElement("This is a dialog"))
           </div>
-        </Dialog>
+        </Dialog>,
       );
-      Js.Promise.resolve()
+      Js.Promise.resolve();
     },
-    layer
-  )
+    layer,
+  );
 };
 
 let openDialog3 = (_) => {
   let layer = MyLayerManager.make(FullViewport);
   Js.Promise.then_(
-    (layer) => {
+    layer => {
       MyLayerManager.render(
         layer,
         <Dialog
@@ -63,32 +63,47 @@ let openDialog3 = (_) => {
                 100,
                 <div style=(ReactDOMRe.Style.make(~padding="10px", ()))>
                   (ReasonReact.stringToElement("This is a dialog"))
-                </div>
+                </div>,
               )
-              |> Array.mapi(
-                   (index, item) =>
-                     ReasonReact.cloneElement(item, ~props={"key": string_of_int(index)}, [||])
+              |> Array.mapi((index, item) =>
+                   ReasonReact.cloneElement(
+                     item,
+                     ~props={"key": string_of_int(index)},
+                     [||],
+                   )
                  )
               |> ReasonReact.arrayToElement
             )
           </ScrollView>
-        </Dialog>
+        </Dialog>,
       );
-      Js.Promise.resolve()
+      Js.Promise.resolve();
     },
-    layer
-  )
+    layer,
+  );
 };
 
 ReactDOMRe.renderToElementWithId(
   <div>
-    <Button title="Open dialog (max-width set)" color="#fb5" onPress=openDialog />
+    <Button
+      title="Open dialog (max-width set)"
+      color="#fb5"
+      onPress=openDialog
+    />
     <br />
     <br />
-    <Button title="Open dialog (too much text)" color="#fb5" onPress=openDialog2 />
+    <Button
+      title="Open dialog (too much text)"
+      color="#fb5"
+      onPress=openDialog2
+    />
     <br />
     <br />
-    <Button title="Open dialog (scrollView)" color="#fb5" onPress=openDialog3 />
+    <Button
+      title="Open dialog (scrollView)"
+      color="#fb5"
+      onPress=openDialog3
+    />
   </div>,
-  "root"
+  "root",
 );

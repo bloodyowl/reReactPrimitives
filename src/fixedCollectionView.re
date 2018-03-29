@@ -4,7 +4,7 @@ type column('t) = {
   headerLabel: string,
   style: option(ReactDOMRe.Style.t),
   renderHeader: column('t) => ReasonReact.reactElement,
-  renderCell: (int, 't) => ReasonReact.reactElement
+  renderCell: (int, 't) => ReasonReact.reactElement,
 };
 
 module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
@@ -12,16 +12,18 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
   type state = {
     containerHeight: option(int),
     scrollTop: int,
-    containerRef: ref(option(Dom.element))
+    containerRef: ref(option(Dom.element)),
   };
   type action =
     | MeasureContainerAtNextFrame
     | SetContainerHeight(int)
     | SetScrollTop((int, int));
   let component =
-    ReasonReact.reducerComponent("FixedCollectionView[" ++ FixedCollectionViewRow.name ++ "]");
+    ReasonReact.reducerComponent(
+      "FixedCollectionView[" ++ FixedCollectionViewRow.name ++ "]",
+    );
   let setContainerRef = (containerRef, {ReasonReact.state}) =>
-    state.containerRef := Js.Nullable.to_opt(containerRef);
+    state.containerRef := Js.Nullable.toOption(containerRef);
   let make =
       (
         ~data: array(t),
@@ -37,7 +39,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                                             ~display="flex",
                                             ~flexDirection="row",
                                             ~alignItems="center",
-                                            ()
+                                            (),
                                           )
                                         )>
                                         item
@@ -45,21 +47,26 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         ~renderFooter=?,
         ~footerHeight=0,
         ~columns: list(column(t)),
-        _children
+        _children,
       ) => {
     let measureContainerAtNextFrame = ({ReasonReact.state, ReasonReact.send}) =>
-      Webapi.requestAnimationFrame(
-        (_) =>
-          switch state.containerRef {
-          | {contents: Some(container)} =>
-            send(SetContainerHeight(DomRe.Element.clientHeight(container) - headerHeight))
-          | _ => ()
-          }
+      Webapi.requestAnimationFrame((_) =>
+        switch (state.containerRef) {
+        | {contents: Some(container)} =>
+          send(
+            SetContainerHeight(
+              DomRe.Element.clientHeight(container) - headerHeight,
+            ),
+          )
+        | _ => ()
+        }
       );
     let setScrollTop = ((scrollTop, clientHeight), state) => {
-      switch onEndReached {
+      switch (onEndReached) {
       | Some(onEndReached) =>
-        if (Array.length(data) * rowHeight - (scrollTop + clientHeight) <= scrollOffset) {
+        if (Array.length(data)
+            * rowHeight
+            - (scrollTop + clientHeight) <= scrollOffset) {
           onEndReached();
         }
       | None => ()
@@ -81,33 +88,41 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
             ~flexDirection="column",
             ~alignItems="stretch",
             ~justifyContent="center",
-            ()
+            (),
           )
         )>
         (
           userRenderRow(
             rowData,
             columns
-            |> List.mapi(
-                 (index, column) =>
-                   <div key=(string_of_int(index)) style=?column.style>
-                     (column.renderCell(startIndex + rowIndex, rowData))
-                   </div>
+            |> List.mapi((index, column) =>
+                 <div key=(string_of_int(index)) style=?column.style>
+                   (column.renderCell(startIndex + rowIndex, rowData))
+                 </div>
                )
             |> Array.of_list
-            |> ReasonReact.arrayToElement
+            |> ReasonReact.arrayToElement,
           )
         )
       </div>;
     {
       ...component,
-      initialState: () => {containerHeight: None, scrollTop: 0, containerRef: ref(None)},
+      initialState: () => {
+        containerHeight: None,
+        scrollTop: 0,
+        containerRef: ref(None),
+      },
       reducer: (action, state) =>
-        switch action {
-        | MeasureContainerAtNextFrame => ReasonReact.SideEffects(measureContainerAtNextFrame)
+        switch (action) {
+        | MeasureContainerAtNextFrame =>
+          ReasonReact.SideEffects(measureContainerAtNextFrame)
         | SetContainerHeight(containerHeight) =>
-          ReasonReact.Update({...state, containerHeight: Some(containerHeight)})
-        | SetScrollTop((scrollTop, clientHeight)) => setScrollTop((scrollTop, clientHeight), state)
+          ReasonReact.Update({
+            ...state,
+            containerHeight: Some(containerHeight),
+          })
+        | SetScrollTop((scrollTop, clientHeight)) =>
+          setScrollTop((scrollTop, clientHeight), state)
         },
       didMount: ({send}) => {
         send(MeasureContainerAtNextFrame);
@@ -126,17 +141,16 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                   ~flexDirection="row",
                   ~alignItems="center",
                   ~height=string_of_int(headerHeight) ++ "px",
-                  ()
-                )
+                  (),
+                ),
               )
             )>
             (
               columns
-              |> List.mapi(
-                   (index, column) =>
-                     <div key=(string_of_int(index)) style=?column.style>
-                       (column.renderHeader(column))
-                     </div>
+              |> List.mapi((index, column) =>
+                   <div key=(string_of_int(index)) style=?column.style>
+                     (column.renderHeader(column))
+                   </div>
                  )
               |> Array.of_list
               |> ReasonReact.arrayToElement
@@ -150,48 +164,62 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                 ~overflow="auto",
                 ~width="100%",
                 ~height=
-                  switch state.containerHeight {
+                  switch (state.containerHeight) {
                   | None => "auto"
-                  | Some(containerHeight) => string_of_int(containerHeight) ++ "px"
+                  | Some(containerHeight) =>
+                    string_of_int(containerHeight) ++ "px"
                   },
-                ()
+                (),
               )
             )
             onScroll=(
-              (event) =>
+              event =>
                 send(
                   SetScrollTop((
                     DomRe.Element.scrollTop(ReactEventRe.UI.target(event)),
-                    DomRe.Element.clientHeight(ReactEventRe.UI.target(event))
-                  ))
+                    DomRe.Element.clientHeight(
+                      ReactEventRe.UI.target(event),
+                    ),
+                  )),
                 )
             )>
             (
-              switch state.containerHeight {
+              switch (state.containerHeight) {
               | None => ReasonReact.nullElement
               | Some(containerHeight) =>
                 <div
                   style=(
                     ReactDOMRe.Style.make(
-                      ~height=string_of_int(Array.length(data) * rowHeight + footerHeight) ++ "px",
+                      ~height=
+                        string_of_int(
+                          Array.length(data) * rowHeight + footerHeight,
+                        )
+                        ++ "px",
                       ~position="relative",
-                      ()
+                      (),
                     )
                   )>
                   {
-                    let startIndex = max((state.scrollTop - scrollOffset) / rowHeight, 0);
+                    let startIndex =
+                      max((state.scrollTop - scrollOffset) / rowHeight, 0);
                     let renderableCount =
-                      min((containerHeight + scrollOffset * 2) / rowHeight, Array.length(data));
+                      min(
+                        (containerHeight + scrollOffset * 2) / rowHeight,
+                        Array.length(data),
+                      );
                     Array.sub(
                       data,
                       startIndex,
-                      min(renderableCount + 1, Array.length(data) - startIndex)
+                      min(
+                        renderableCount + 1,
+                        Array.length(data) - startIndex,
+                      ),
                     )
                     |> Array.mapi(renderRow(startIndex))
                     |> ReasonReact.arrayToElement;
                   }
                   (
-                    switch renderFooter {
+                    switch (renderFooter) {
                     | Some(renderFooter) =>
                       <div
                         style=(
@@ -205,7 +233,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                             ~flexDirection="row",
                             ~alignItems="center",
                             ~justifyContent="center",
-                            ()
+                            (),
                           )
                         )>
                         (renderFooter())
@@ -217,7 +245,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
               }
             )
           </div>
-        </div>
+        </div>,
     };
   };
 };

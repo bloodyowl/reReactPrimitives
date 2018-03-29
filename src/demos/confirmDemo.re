@@ -3,7 +3,7 @@ module MyLayerManager = LayerManager.Make(LayerManager.DefaultImpl);
 let openConfirm = (_) => {
   let layer = MyLayerManager.make(FullViewport);
   Js.Promise.then_(
-    (layer) => {
+    layer => {
       MyLayerManager.render(
         layer,
         <Confirm
@@ -12,15 +12,17 @@ let openConfirm = (_) => {
           cancelWording="Nay"
           onConfirm=((_) => Js.log("onConfirm"))
           onCancel=((_) => Js.log("onCancel"))
-        />
+        />,
       );
-      Js.Promise.resolve()
+      Js.Promise.resolve();
     },
-    layer
-  )
+    layer,
+  );
 };
 
 ReactDOMRe.renderToElementWithId(
-  <div> <Button title="Open confirm" color="#fb5" onPress=openConfirm /> </div>,
-  "root"
+  <div>
+    <Button title="Open confirm" color="#fb5" onPress=openConfirm />
+  </div>,
+  "root",
 );

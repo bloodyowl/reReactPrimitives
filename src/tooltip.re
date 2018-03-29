@@ -9,7 +9,7 @@ let component = ReasonReact.reducerComponent("Tooltip");
 module TooltipLayerManager = LayerManager.Make(LayerManager.DefaultImpl);
 
 let getArrowStyle = (alignTo: LayerManager.align) =>
-  switch alignTo {
+  switch (alignTo) {
   | TopLeft
   | Top =>
     ReactDOMRe.Style.make(
@@ -21,7 +21,7 @@ let getArrowStyle = (alignTo: LayerManager.align) =>
       ~borderBottomWidth="0",
       ~left="5px",
       ~top="100%",
-      ()
+      (),
     )
   | TopRight =>
     ReactDOMRe.Style.make(
@@ -33,7 +33,7 @@ let getArrowStyle = (alignTo: LayerManager.align) =>
       ~borderBottomWidth="0",
       ~right="5px",
       ~top="100%",
-      ()
+      (),
     )
   | Right =>
     ReactDOMRe.Style.make(
@@ -45,7 +45,7 @@ let getArrowStyle = (alignTo: LayerManager.align) =>
       ~borderLeftWidth="0",
       ~right="100%",
       ~top="5px",
-      ()
+      (),
     )
   | Bottom
   | BottomLeft =>
@@ -58,7 +58,7 @@ let getArrowStyle = (alignTo: LayerManager.align) =>
       ~borderTopWidth="0",
       ~left="5px",
       ~bottom="100%",
-      ()
+      (),
     )
   | BottomRight =>
     ReactDOMRe.Style.make(
@@ -70,7 +70,7 @@ let getArrowStyle = (alignTo: LayerManager.align) =>
       ~borderTopWidth="0",
       ~right="5px",
       ~bottom="100%",
-      ()
+      (),
     )
   | Left =>
     ReactDOMRe.Style.make(
@@ -82,12 +82,13 @@ let getArrowStyle = (alignTo: LayerManager.align) =>
       ~borderRightWidth="0",
       ~left="100%",
       ~top="5px",
-      ()
+      (),
     )
   };
 
-let renderLayer = (~message, ~alignTo: LayerManager.align, {ReasonReact.state}) =>
-  switch state {
+let renderLayer =
+    (~message, ~alignTo: LayerManager.align, {ReasonReact.state}) =>
+  switch (state) {
   | Some(layer) =>
     TooltipLayerManager.render(
       layer,
@@ -101,19 +102,19 @@ let renderLayer = (~message, ~alignTo: LayerManager.align, {ReasonReact.state}) 
             ~padding="10px",
             ~fontSize="12px",
             ~margin=
-              switch alignTo {
+              switch (alignTo) {
               | Left
               | Right => "0 10px"
               | _ => "10px 0"
               },
-            ()
+            (),
           )
         )>
         <div style=(getArrowStyle(alignTo)) />
         <div style=(ReactDOMRe.Style.make(~whiteSpace="pre-line", ()))>
           (ReasonReact.stringToElement(message))
         </div>
-      </div>
+      </div>,
     )
   | None => ()
   };
@@ -121,19 +122,21 @@ let renderLayer = (~message, ~alignTo: LayerManager.align, {ReasonReact.state}) 
 let make = (~style=?, ~message, ~alignTo: LayerManager.align, children) => {
   let showTooltip = (event, self) => {
     let layer =
-      TooltipLayerManager.make(Contextualized(ReactEventRe.Mouse.target(event), alignTo));
+      TooltipLayerManager.make(
+        Contextualized(ReactEventRe.Mouse.target(event), alignTo),
+      );
     ignore(
       Js.Promise.then_(
-        (layer) => {
+        layer => {
           self.ReasonReact.send(SetLayer(layer));
           Js.Promise.resolve();
         },
-        layer
-      )
+        layer,
+      ),
     );
   };
   let hideTooltip = (_event, {ReasonReact.state, ReasonReact.send}) =>
-    switch state {
+    switch (state) {
     | Some(layer) =>
       TooltipLayerManager.remove(layer);
       send(RemoveLayer);
@@ -143,14 +146,20 @@ let make = (~style=?, ~message, ~alignTo: LayerManager.align, children) => {
     ...component,
     initialState: () => None,
     reducer: (action, _state) =>
-      switch action {
+      switch (action) {
       | SetLayer(layer) =>
-        ReasonReact.SilentUpdateWithSideEffects(Some(layer), renderLayer(~message, ~alignTo))
+        ReasonReact.SilentUpdateWithSideEffects(
+          Some(layer),
+          renderLayer(~message, ~alignTo),
+        )
       | RemoveLayer => ReasonReact.SilentUpdate(None)
       },
     render: ({handle}) =>
-      <div ?style onMouseEnter=(handle(showTooltip)) onMouseLeave=(handle(hideTooltip))>
+      <div
+        ?style
+        onMouseEnter=(handle(showTooltip))
+        onMouseLeave=(handle(hideTooltip))>
         children[0]
-      </div>
+      </div>,
   };
 };

@@ -1,4 +1,4 @@
-let rec render = (firstValue) =>
+let rec render = firstValue =>
   ReactDOMRe.renderToElementWithId(
     <div>
       <Switch value=(Idle, firstValue) onValueChange=render />
@@ -12,7 +12,7 @@ let rec render = (firstValue) =>
       (ReasonReact.stringToElement("disabled:"))
       <Switch value=(Idle, firstValue) disabled=true onValueChange=render />
     </div>,
-    "root"
+    "root",
   );
 
 render(true);

@@ -25,7 +25,7 @@ module Styles = {
       ~height="30px",
       ~paddingRight="7px",
       ~borderRadius="24px",
-      ()
+      (),
     );
   let name =
     ReactDOMRe.Style.make(
@@ -34,7 +34,7 @@ module Styles = {
       ~whiteSpace="nowrap",
       ~textOverflow="ellipsis",
       ~fontSize="12px",
-      ()
+      (),
     );
   let button =
     ReactDOMRe.Style.make(
@@ -46,7 +46,7 @@ module Styles = {
       ~fontSize="12px",
       ~color="#fff",
       ~borderRadius="9px",
-      ()
+      (),
     );
 };
 
@@ -63,15 +63,15 @@ let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
             ReactDOMRe.Style.make(
               ~border="1px solid " ++ solidColor,
               ~backgroundColor=washedColor,
-              ()
-            )
+              (),
+            ),
           )
         )>
         <span
           style=(
             ReactDOMRe.Style.combine(
               Styles.name,
-              ReactDOMRe.Style.make(~color=solidColor, ())
+              ReactDOMRe.Style.make(~color=solidColor, ()),
             )
           )>
           (ReasonReact.stringToElement(name))
@@ -80,12 +80,12 @@ let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
           style=(
             ReactDOMRe.Style.combine(
               Styles.button,
-              ReactDOMRe.Style.make(~backgroundColor=solidColor, ())
+              ReactDOMRe.Style.make(~backgroundColor=solidColor, ()),
             )
           )
           onPress>
           (ReasonReact.stringToElement({js|✕|js}))
         </TouchableOpacity>
-      </div>
+      </div>,
   };
 };

@@ -1,6 +1,6 @@
 type user = {
   username: string,
-  avatar: string
+  avatar: string,
 };
 
 module User = {
@@ -10,10 +10,14 @@ module User = {
 
 module UserFixedCollectionView = FixedCollectionView.Make(User);
 
-let renderUsername = (_, rowData) => <div> (ReasonReact.stringToElement(rowData.username)) </div>;
+let renderUsername = (_, rowData) =>
+  <div> (ReasonReact.stringToElement(rowData.username)) </div>;
 
 let renderHeader = (row: FixedCollectionView.column('a)) =>
-  <div style=(ReactDOMRe.Style.make(~fontSize="12px", ~textTransform="uppercase", ()))>
+  <div
+    style=(
+      ReactDOMRe.Style.make(~fontSize="12px", ~textTransform="uppercase", ())
+    )>
     (ReasonReact.stringToElement(row.headerLabel))
   </div>;
 
@@ -22,7 +26,13 @@ let renderGoToProfile = (_, _row) =>
 
 let renderAvatar = (_, rowData) =>
   <div>
-    <Image width=40 height=40 source=rowData.avatar resizeMode=Contain backgroundColor="#eee" />
+    <Image
+      width=40
+      height=40
+      source=rowData.avatar
+      resizeMode=Contain
+      backgroundColor="#eee"
+    />
   </div>;
 
 let rec renderDemo = (loading, data) => {
@@ -37,16 +47,17 @@ let rec renderDemo = (loading, data) => {
               data,
               Array.mapi(
                 (index, _item) => {
-                  username: "username " ++ string_of_int(index + Array.length(data)),
-                  avatar: "https://fakeimg.pl/40x40/"
+                  username:
+                    "username " ++ string_of_int(index + Array.length(data)),
+                  avatar: "https://fakeimg.pl/40x40/",
                 },
-                Array.make(50, "")
-              )
-            )
+                Array.make(50, ""),
+              ),
+            ),
           ),
-        1000
-      )
-    )
+        1000,
+      ),
+    );
   };
   ReactDOMRe.renderToElementWithId(
     <div
@@ -58,7 +69,7 @@ let rec renderDemo = (loading, data) => {
           ~flexGrow="1",
           ~display="flex",
           ~boxShadow="0 2px 4px rgba(0, 0, 0, 0.16)",
-          ()
+          (),
         )
       )>
       <UserFixedCollectionView
@@ -66,38 +77,44 @@ let rec renderDemo = (loading, data) => {
         scrollOffset=200
         onEndReached=appendData
         headerHeight=30
-        headerRowStyle=(ReactDOMRe.Style.make(~borderBottom="1px solid rgba(0, 0, 0, 0.1)", ()))
+        headerRowStyle=(
+          ReactDOMRe.Style.make(
+            ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
+            (),
+          )
+        )
         rowHeight=60
         footerHeight=(loading ? 200 : 0)
         renderFooter=(
           () =>
             loading ?
-              <ActivityIndicator size=24.0 color=(200, 200, 200) /> : ReasonReact.nullElement
+              <ActivityIndicator size=24.0 color=(200, 200, 200) /> :
+              ReasonReact.nullElement
         )
         columns=[
           {
             headerLabel: "Avatar",
             style: Some(ReactDOMRe.Style.make(~padding="0 10px", ())),
             renderHeader,
-            renderCell: renderAvatar
+            renderCell: renderAvatar,
           },
           {
             headerLabel: "Name",
             style: Some(ReactDOMRe.Style.make(~flexGrow="1", ())),
             renderHeader,
-            renderCell: renderUsername
+            renderCell: renderUsername,
           },
           {
             headerLabel: "ViewMore",
             style: Some(ReactDOMRe.Style.make(~padding="0 10px", ())),
             renderHeader: (_) => ReasonReact.nullElement,
-            renderCell: renderGoToProfile
-          }
+            renderCell: renderGoToProfile,
+          },
         ]
       />
     </div>,
-    "root"
-  )
+    "root",
+  );
 };
 
 renderDemo(
@@ -105,8 +122,8 @@ renderDemo(
   Array.mapi(
     (index, _item) => {
       username: "username " ++ string_of_int(index),
-      avatar: "https://fakeimg.pl/40x40/"
+      avatar: "https://fakeimg.pl/40x40/",
     },
-    Array.make(50, "")
-  )
+    Array.make(50, ""),
+  ),
 );

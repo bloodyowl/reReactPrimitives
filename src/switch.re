@@ -26,16 +26,16 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
     ...component,
     initialState: () => NotFocused,
     reducer: (action, state) =>
-      switch action {
+      switch (action) {
       | Focus =>
-        switch state {
+        switch (state) {
         | FocusedFromMouse => ReasonReact.NoUpdate
         | _ => ReasonReact.Update(FocusedFromKeyboard)
         }
       | Blur => ReasonReact.Update(NotFocused)
       | MouseDown => ReasonReact.Update(FocusedFromMouse)
       | KeyPress(keys) =>
-        switch keys {
+        switch (keys) {
         | (13, _)
         | (_, 13)
         | (32, _)
@@ -50,13 +50,13 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
           tabIndex=0
           onMouseDown=((_) => send(MouseDown))
           onKeyPress=(
-            (event) =>
+            event =>
               if (! disabled) {
                 send(
                   KeyPress((
                     ReactEventRe.Keyboard.keyCode(event),
-                    ReactEventRe.Keyboard.charCode(event)
-                  ))
+                    ReactEventRe.Keyboard.charCode(event),
+                  )),
                 );
               }
           )
@@ -78,7 +78,7 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
                 ~position="relative",
                 ~cursor=disabled ? "default" : "pointer",
                 ~backgroundColor=
-                  switch value {
+                  switch (value) {
                   | (Idle, true) => "rgba(74, 144, 226, 1)"
                   | (Idle, false) => "rgba(0, 0, 0, 0.2)"
                   | (Updating, true) => "rgba(74, 144, 226, 0.5)"
@@ -86,14 +86,14 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
                   },
                 ~opacity=disabled ? ".4" : "1",
                 ~outline=
-                  switch state {
+                  switch (state) {
                   | FocusedFromMouse => "none"
                   | _ => ""
                   },
-                ()
+                (),
               ),
               "WebkitTapHighlightColor",
-              "rgba(0, 0, 0, 0)"
+              "rgba(0, 0, 0, 0)",
             )
           )>
           <div
@@ -102,7 +102,8 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
                 ~width="20px",
                 ~height="20px",
                 ~backgroundColor="#fff",
-                ~boxShadow="0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
+                ~boxShadow=
+                  "0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
                 ~position="absolute",
                 ~borderRadius="10px",
                 ~top="-3px",
@@ -112,31 +113,32 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
                 ~alignItems="center",
                 ~justifyContent="center",
                 ~left=
-                  switch value {
+                  switch (value) {
                   | (_, true) => "20px"
                   | (_, false) => "-5px"
                   },
-                ()
+                (),
               )
             )>
             (
-              switch value {
+              switch (value) {
               | (Idle, _) => ReasonReact.nullElement
-              | (Updating, _) => <ActivityIndicator size=14.0 color=(200, 200, 200) />
+              | (Updating, _) =>
+                <ActivityIndicator size=14.0 color=(200, 200, 200) />
               }
             )
           </div>
         </div>,
         ~props={
           "aria-checked":
-            switch value {
+            switch (value) {
             | (Idle, true) => "true"
             | (Idle, false) => "false"
             | (Updating, true) => "mixed"
             | (Updating, false) => "mixed"
-            }
+            },
         },
-        [||]
-      )
+        [||],
+      ),
   };
 };

@@ -11,8 +11,8 @@ let make = (~color="rgba(0, 0, 0, 0.1)", ~verticalSpace=5, _) => {
           ~marginTop=string_of_int(verticalSpace) ++ "px",
           ~marginBottom=string_of_int(verticalSpace) ++ "px",
           ~width="100%",
-          ()
+          (),
         )
       )
-    />
+    />,
 };

@@ -1,11 +1,18 @@
 type item = {
   label: string,
-  description: string
+  description: string,
 };
 
-let renderItem = (item) =>
+let renderItem = item =>
   <div
-    style=(ReactDOMRe.Style.make(~padding="10px", ~display="flex", ~flexDirection="column", ()))>
+    style=(
+      ReactDOMRe.Style.make(
+        ~padding="10px",
+        ~display="flex",
+        ~flexDirection="column",
+        (),
+      )
+    )>
     <span style=(ReactDOMRe.Style.make(~fontWeight="700", ()))>
       (ReasonReact.stringToElement(item.label))
     </span>
@@ -20,10 +27,10 @@ ReactDOMRe.renderToElementWithId(
       items=[
         {label: "One", description: "First"},
         {label: "Two", description: "Second"},
-        {label: "Three", description: "Third"}
+        {label: "Three", description: "Third"},
       ]
       renderItem
     />
   </div>,
-  "root"
+  "root",
 );
