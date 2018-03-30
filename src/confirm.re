@@ -29,6 +29,7 @@ module Styles = {
       ~borderRadius="4px",
       ~boxShadow="0 2px 4px rgba(0, 0, 0, 0.16)",
       ~position="relative",
+      ~margin="10px",
       ~overflow="hidden",
       ~zIndex="0",
       (),
