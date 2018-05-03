@@ -43,13 +43,6 @@ module Styles = {
       ~justifyContent="center",
       (),
     );
-  let message =
-    ReactDOMRe.Style.make(
-      ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
-      ~padding="20px 10px",
-      ~textAlign="center",
-      (),
-    );
   let messageText =
     ReactDOMRe.Style.make(~fontSize="16px", ~color="rgba(0, 0, 0, 0.4)", ());
   let buttons =
@@ -66,13 +59,13 @@ module Styles = {
 let make =
     (
       ~icon=?,
-      ~message,
+      ~message=?,
       ~confirmWording,
       ~cancelWording,
       ~onConfirm,
       ~onCancel,
       ~maxWidth=?,
-      _children,
+      children,
     ) => {
   ...component,
   render: _self =>
@@ -98,10 +91,28 @@ let make =
           | None => ReasonReact.nullElement
           }
         )
-        <div style=Styles.message>
-          <Text style=Styles.messageText>
-            (ReasonReact.stringToElement(message))
-          </Text>
+        <div
+          style=(
+            ReactDOMRe.Style.make(
+              ~borderBottom="1px solid rgba(0, 0, 0, 0.1)",
+              ~padding="20px 10px",
+              ~textAlign=Array.length(children) == 0 ? "center" : "left",
+              ~color="rgba(0, 0, 0, 0.4)",
+              (),
+            )
+          )>
+          (
+            switch (message) {
+            | Some(message) =>
+              <Text style=Styles.messageText>
+                (ReasonReact.stringToElement(message))
+              </Text>
+            | None => ReasonReact.nullElement
+            }
+          )
+          (
+            Array.length(children) != 0 ? children[0] : ReasonReact.nullElement
+          )
         </div>
         <div style=Styles.buttons>
           <Button onPress=onCancel color="#9B9B9B" title=cancelWording />
