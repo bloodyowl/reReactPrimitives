@@ -22,19 +22,12 @@ let renderSection =
   <div
     key=(string_of_int(index))
     style=(ReactDOMRe.Style.make(~backgroundColor, ~paddingBottom="10px", ()))>
-    <div style=Styles.sectionTitle>
-      (ReasonReact.stringToElement(section))
-    </div>
+    <div style=Styles.sectionTitle> (ReasonReact.string(section)) </div>
     <div
       style=(
         ReactDOMRe.Style.make(~backgroundColor=sectionBackgroundColor, ())
       )>
-      (
-        contents
-        |> List.mapi(addKey)
-        |> Array.of_list
-        |> ReasonReact.arrayToElement
-      )
+      (contents |> List.mapi(addKey) |> Array.of_list |> ReasonReact.array)
     </div>
   </div>;
 
@@ -54,7 +47,7 @@ let make =
              renderSection(~backgroundColor, ~sectionBackgroundColor),
            )
         |> Array.of_list
-        |> ReasonReact.arrayToElement
+        |> ReasonReact.array
       )
     </div>,
 };

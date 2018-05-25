@@ -229,7 +229,7 @@ let make =
                 )
               )
             />
-          | Idle => ReasonReact.nullElement
+          | Idle => ReasonReact.null
           }
         )
         <div style=Styles.contents> children[0] </div>

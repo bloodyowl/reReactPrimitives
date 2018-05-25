@@ -16,6 +16,6 @@ let make = (~text, _children) => {
           (),
         )
       )>
-      (ReasonReact.stringToElement(text))
+      (ReasonReact.string(text))
     </div>,
 };

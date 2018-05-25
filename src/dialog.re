@@ -126,21 +126,21 @@ let make =
         <div style=Styles.header>
           <div style=Styles.headerText>
             <Text style=Styles.headerTitle>
-              (ReasonReact.stringToElement(title))
+              (ReasonReact.string(title))
             </Text>
             (
               switch (description) {
               | Some(description) =>
                 <Text style=Styles.headerDescription>
-                  (ReasonReact.stringToElement(description))
+                  (ReasonReact.string(description))
                 </Text>
-              | None => ReasonReact.nullElement
+              | None => ReasonReact.null
               }
             )
           </div>
           <TouchableOpacity onPress=onPressClose style=Styles.close>
             <span style=Styles.closeIcon>
-              (ReasonReact.stringToElement({js|✖️|js}))
+              (ReasonReact.string({js|✖️|js}))
             </span>
           </TouchableOpacity>
         </div>

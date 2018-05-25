@@ -1,5 +1,8 @@
 type state = {isReady: bool};
 
+type action =
+  | Init;
+
 let component = ReasonReact.reducerComponent("Image");
 
 type resizeMode =
@@ -20,8 +23,11 @@ let make =
     ) => {
   ...component,
   initialState: (_) => {isReady: false},
-  reducer: ((), _state) => ReasonReact.NoUpdate,
-  didMount: _self => ReasonReact.Update({isReady: true}),
+  reducer: (action, _state) =>
+    switch (action) {
+    | Init => ReasonReact.Update({isReady: true})
+    },
+  didMount: ({send}) => send(Init),
   render: ({state}) =>
     <div
       style=(
@@ -46,7 +52,7 @@ let make =
       (
         switch (alternativeText) {
         | Some(text) => <ScreenReaderContent text />
-        | None => ReasonReact.nullElement
+        | None => ReasonReact.null
         }
       )
     </div>,

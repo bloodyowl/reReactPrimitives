@@ -74,7 +74,7 @@ let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
               ReactDOMRe.Style.make(~color=solidColor, ()),
             )
           )>
-          (ReasonReact.stringToElement(name))
+          (ReasonReact.string(name))
         </span>
         <TouchableOpacity
           style=(
@@ -84,7 +84,7 @@ let make = (~name, ~color=(74, 144, 226), ~onPress, _children) => {
             )
           )
           onPress>
-          (ReasonReact.stringToElement({js|✕|js}))
+          (ReasonReact.string({js|✕|js}))
         </TouchableOpacity>
       </div>,
   };

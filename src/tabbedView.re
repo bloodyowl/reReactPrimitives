@@ -9,6 +9,7 @@ type state = {
 };
 
 type action =
+  | InitialMeasure
   | SetActiveTab(int)
   | MeasureRect;
 
@@ -59,7 +60,7 @@ let make =
     activeTabHandleRect: None,
     tabContainerRef: ref(None),
   },
-  didMount: (_) => ReasonReact.SideEffects(measureRectAtNextFrame),
+  didMount: ({send}) => send(InitialMeasure),
   reducer: (action, state) =>
     switch (action) {
     | SetActiveTab(openTab) =>
@@ -67,6 +68,7 @@ let make =
         {...state, openTab},
         measureRectAtNextFrame,
       )
+    | InitialMeasure => ReasonReact.SideEffects(measureRectAtNextFrame)
     | MeasureRect => setRect(state)
     },
   render: ({state, send, handle}) =>
@@ -135,7 +137,7 @@ let make =
                    tabTitle
                  </TouchableOpacity>
                )
-            |> ReasonReact.arrayToElement
+            |> ReasonReact.array
           )
         </div>
         (
@@ -170,7 +172,7 @@ let make =
                 )
               )
             />
-          | _ => ReasonReact.nullElement
+          | _ => ReasonReact.null
           }
         )
       </div>

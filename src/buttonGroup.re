@@ -22,6 +22,6 @@ let make = (~style=?, children) => {
         | None => buttonGroupStyle
         }
       )>
-      (children |> Array.mapi(addKey) |> ReasonReact.arrayToElement)
+      (children |> Array.mapi(addKey) |> ReasonReact.array)
     </div>,
 };

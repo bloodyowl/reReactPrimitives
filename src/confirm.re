@@ -88,7 +88,7 @@ let make =
         (
           switch (icon) {
           | Some(icon) => <div style=Styles.icon> icon </div>
-          | None => ReasonReact.nullElement
+          | None => ReasonReact.null
           }
         )
         <div
@@ -105,14 +105,12 @@ let make =
             switch (message) {
             | Some(message) =>
               <Text style=Styles.messageText>
-                (ReasonReact.stringToElement(message))
+                (ReasonReact.string(message))
               </Text>
-            | None => ReasonReact.nullElement
+            | None => ReasonReact.null
             }
           )
-          (
-            Array.length(children) != 0 ? children[0] : ReasonReact.nullElement
-          )
+          (Array.length(children) != 0 ? children[0] : ReasonReact.null)
         </div>
         <div style=Styles.buttons>
           <Button onPress=onCancel color="#9B9B9B" title=cancelWording />

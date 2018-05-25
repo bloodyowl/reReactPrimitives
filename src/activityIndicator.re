@@ -69,14 +69,14 @@ let draw = (~size, ~color, {ReasonReact.state}) =>
       ~r=actualSize *. 0.5,
       ~startAngle=Js.Math._PI,
       ~endAngle=0.0,
-      ~anticw=Js.false_,
+      ~anticw=false,
       context,
     );
     centeredArc(
       ~r=actualSize *. 0.3,
       ~startAngle=0.0,
       ~endAngle=Js.Math._PI,
-      ~anticw=Js.true_,
+      ~anticw=true,
       context,
     );
     Webapi.Canvas.Canvas2d.setFillStyle(
@@ -91,14 +91,14 @@ let draw = (~size, ~color, {ReasonReact.state}) =>
       ~r=actualSize *. 0.5,
       ~startAngle=0.0,
       ~endAngle=Js.Math._PI,
-      ~anticw=Js.false_,
+      ~anticw=false,
       context,
     );
     centeredArc(
       ~r=actualSize *. 0.3,
       ~startAngle=Js.Math._PI,
       ~endAngle=0.0,
-      ~anticw=Js.true_,
+      ~anticw=true,
       context,
     );
     let gradient =
@@ -138,10 +138,7 @@ let make = (~size, ~color, _children) => {
   {
     ...component,
     initialState: () => {context: ref(None), cancelNextFrame: ref(false)},
-    didMount: ({send}) => {
-      send(Draw);
-      ReasonReact.NoUpdate;
-    },
+    didMount: ({send}) => send(Draw),
     reducer: (action, state) =>
       switch (action) {
       | Draw =>

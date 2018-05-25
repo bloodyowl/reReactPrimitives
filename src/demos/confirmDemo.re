@@ -52,19 +52,17 @@ let openConfirmChild = (_) => {
           confirmWording="Yay, confirmed!"
           cancelWording="Nay">
           <div>
-            (ReasonReact.stringToElement("First child"))
-            <strong> (ReasonReact.stringToElement(" (of three) ")) </strong>
-            (ReasonReact.stringToElement("with a list"))
+            (ReasonReact.string("First child"))
+            <strong> (ReasonReact.string(" (of three) ")) </strong>
+            (ReasonReact.string("with a list"))
             <ul>
-              <li> (ReasonReact.stringToElement("id ")) </li>
-              <li> (ReasonReact.stringToElement("ligula")) </li>
-              <li>
-                (ReasonReact.stringToElement("porta felis euismod semper"))
-              </li>
+              <li> (ReasonReact.string("id ")) </li>
+              <li> (ReasonReact.string("ligula")) </li>
+              <li> (ReasonReact.string("porta felis euismod semper")) </li>
             </ul>
           </div>
-          <div> (ReasonReact.stringToElement("Second child")) </div>
-          <div> (ReasonReact.stringToElement("Third child")) </div>
+          <div> (ReasonReact.string("Second child")) </div>
+          <div> (ReasonReact.string("Third child")) </div>
         </Confirm>,
       );
       Js.Promise.resolve();
@@ -96,8 +94,8 @@ let openConfirmAll = (_) => {
           cancelWording="Nay"
           message="Text from ~message">
           <div>
-            (ReasonReact.stringToElement("Text from "))
-            <strong> (ReasonReact.stringToElement("children")) </strong>
+            (ReasonReact.string("Text from "))
+            <strong> (ReasonReact.string("children")) </strong>
           </div>
         </Confirm>,
       );

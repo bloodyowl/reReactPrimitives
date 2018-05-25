@@ -101,7 +101,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                  </div>
                )
             |> Array.of_list
-            |> ReasonReact.arrayToElement,
+            |> ReasonReact.array,
           )
         )
       </div>;
@@ -124,10 +124,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
         | SetScrollTop((scrollTop, clientHeight)) =>
           setScrollTop((scrollTop, clientHeight), state)
         },
-      didMount: ({send}) => {
-        send(MeasureContainerAtNextFrame);
-        ReasonReact.NoUpdate;
-      },
+      didMount: ({send}) => send(MeasureContainerAtNextFrame),
       render: ({state, handle, send}) =>
         <div
           style=(ReactDOMRe.Style.make(~flexGrow="1", ~width="100%", ()))
@@ -153,7 +150,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                    </div>
                  )
               |> Array.of_list
-              |> ReasonReact.arrayToElement
+              |> ReasonReact.array
             )
           </div>
           <div
@@ -185,7 +182,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
             )>
             (
               switch (state.containerHeight) {
-              | None => ReasonReact.nullElement
+              | None => ReasonReact.null
               | Some(containerHeight) =>
                 <div
                   style=(
@@ -216,7 +213,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                       ),
                     )
                     |> Array.mapi(renderRow(startIndex))
-                    |> ReasonReact.arrayToElement;
+                    |> ReasonReact.array;
                   }
                   (
                     switch (renderFooter) {
@@ -238,7 +235,7 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
                         )>
                         (renderFooter())
                       </div>
-                    | None => ReasonReact.nullElement
+                    | None => ReasonReact.null
                     }
                   )
                 </div>

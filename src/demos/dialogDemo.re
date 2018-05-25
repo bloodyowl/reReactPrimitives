@@ -13,7 +13,7 @@ let openDialog = (_) => {
           minWidth=100
           maxWidth=200>
           <div style=(ReactDOMRe.Style.make(~padding="10px", ()))>
-            (ReasonReact.stringToElement("This is a dialog"))
+            (ReasonReact.string("This is a dialog"))
           </div>
         </Dialog>,
       );
@@ -35,7 +35,7 @@ let openDialog2 = (_) => {
           onPressClose=((_) => MyLayerManager.remove(layer))
           minWidth=100>
           <div style=(ReactDOMRe.Style.make(~padding="10px", ()))>
-            (ReasonReact.stringToElement("This is a dialog"))
+            (ReasonReact.string("This is a dialog"))
           </div>
         </Dialog>,
       );
@@ -62,7 +62,7 @@ let openDialog3 = (_) => {
               Array.make(
                 100,
                 <div style=(ReactDOMRe.Style.make(~padding="10px", ()))>
-                  (ReasonReact.stringToElement("This is a dialog"))
+                  (ReasonReact.string("This is a dialog"))
                 </div>,
               )
               |> Array.mapi((index, item) =>
@@ -72,7 +72,7 @@ let openDialog3 = (_) => {
                      [||],
                    )
                  )
-              |> ReasonReact.arrayToElement
+              |> ReasonReact.array
             )
           </ScrollView>
         </Dialog>,

@@ -1,7 +1,7 @@
 ReactDOMRe.renderToElementWithId(
   <div>
     <TouchableHighlight onPress=(() => Js.log("onPress"))>
-      (ReasonReact.stringToElement("click me!"))
+      (ReasonReact.string("click me!"))
     </TouchableHighlight>
     <br />
     <TouchableHighlight
@@ -16,7 +16,7 @@ ReactDOMRe.renderToElementWithId(
         )
       )
       onPress=(() => Js.log("onPress"))>
-      (ReasonReact.stringToElement("click me!"))
+      (ReasonReact.string("click me!"))
     </TouchableHighlight>
   </div>,
   "root",

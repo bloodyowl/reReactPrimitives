@@ -134,7 +134,7 @@ let make =
                    ),
                  )
               |> Array.of_list
-              |> ReasonReact.arrayToElement
+              |> ReasonReact.array
             )
           </div>
         </div>,
@@ -165,7 +165,7 @@ let make =
       | HideOptions =>
         switch (state.layer) {
         | Some(layer) =>
-          ReasonReact.SilentUpdateWithSideEffects(
+          ReasonReact.UpdateWithSideEffects(
             {...state, layer: None},
             ((_) => PickerLayerManager.remove(layer)),
           )
@@ -224,7 +224,7 @@ let make =
         | _ => ReasonReact.NoUpdate
         }
       | SetLayer(layer) =>
-        ReasonReact.SilentUpdateWithSideEffects(
+        ReasonReact.UpdateWithSideEffects(
           {...state, layer: Some(layer)},
           whenLayerReady,
         )

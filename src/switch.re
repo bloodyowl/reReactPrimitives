@@ -122,7 +122,7 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
             )>
             (
               switch (value) {
-              | (Idle, _) => ReasonReact.nullElement
+              | (Idle, _) => ReasonReact.null
               | (Updating, _) =>
                 <ActivityIndicator size=14.0 color=(200, 200, 200) />
               }

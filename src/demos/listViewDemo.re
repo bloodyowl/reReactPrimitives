@@ -14,10 +14,10 @@ let renderItem = item =>
       )
     )>
     <span style=(ReactDOMRe.Style.make(~fontWeight="700", ()))>
-      (ReasonReact.stringToElement(item.label))
+      (ReasonReact.string(item.label))
     </span>
     <span style=(ReactDOMRe.Style.make(~fontSize="12px", ()))>
-      (ReasonReact.stringToElement(item.description))
+      (ReasonReact.string(item.description))
     </span>
   </div>;
 

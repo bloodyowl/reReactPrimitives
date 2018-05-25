@@ -112,7 +112,7 @@ let renderLayer =
         )>
         <div style=(getArrowStyle(alignTo)) />
         <div style=(ReactDOMRe.Style.make(~whiteSpace="pre-line", ()))>
-          (ReasonReact.stringToElement(message))
+          (ReasonReact.string(message))
         </div>
       </div>,
     )
@@ -148,11 +148,11 @@ let make = (~style=?, ~message, ~alignTo: LayerManager.align, children) => {
     reducer: (action, _state) =>
       switch (action) {
       | SetLayer(layer) =>
-        ReasonReact.SilentUpdateWithSideEffects(
+        ReasonReact.UpdateWithSideEffects(
           Some(layer),
           renderLayer(~message, ~alignTo),
         )
-      | RemoveLayer => ReasonReact.SilentUpdate(None)
+      | RemoveLayer => ReasonReact.Update(None)
       },
     render: ({handle}) =>
       <div

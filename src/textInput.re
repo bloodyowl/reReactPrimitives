@@ -68,10 +68,7 @@ let make =
   {
     ...component,
     initialState: () => {height: None, inputRef: ref(None), focused: false},
-    didMount: self => {
-      handleResize(self);
-      ReasonReact.NoUpdate;
-    },
+    didMount: self => handleResize(self),
     reducer: (action, state) =>
       switch (action) {
       | Focus => ReasonReact.Update({...state, focused: true})

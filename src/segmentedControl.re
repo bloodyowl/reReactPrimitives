@@ -41,11 +41,11 @@ let make = (~segments, ~activeSegment, ~color, ~onSegmentPress, _children) => {
                  )
                )
                onPress=((_) => onSegmentPress(value))>
-               (ReasonReact.stringToElement(title))
+               (ReasonReact.string(title))
              </TouchableOpacity>
            )
         |> Array.of_list
-        |> ReasonReact.arrayToElement
+        |> ReasonReact.array
       )
     </div>,
 };

@@ -17,7 +17,7 @@ let renderOption = (option, value) =>
         (),
       )
     )>
-    (ReasonReact.stringToElement(option))
+    (ReasonReact.string(option))
   </div>;
 
 let rec render = value =>
@@ -28,8 +28,8 @@ let rec render = value =>
         renderPicker=(
           value =>
             switch (value) {
-            | Some(value) => ReasonReact.stringToElement(value)
-            | None => ReasonReact.stringToElement({js|Select a value …|js})
+            | Some(value) => ReasonReact.string(value)
+            | None => ReasonReact.string({js|Select a value …|js})
             }
         )
         renderOption
@@ -42,8 +42,8 @@ let rec render = value =>
         renderPicker=(
           value =>
             switch (value) {
-            | Some(value) => ReasonReact.stringToElement(value)
-            | None => ReasonReact.stringToElement({js|Select a value …|js})
+            | Some(value) => ReasonReact.string(value)
+            | None => ReasonReact.string({js|Select a value …|js})
             }
         )
         renderOption

@@ -33,6 +33,6 @@ let make = (~onPress, ~color, ~title, ~disabled=false, ~round=true, _children) =
         )
       )
       disabled>
-      (ReasonReact.stringToElement(title))
+      (ReasonReact.string(title))
     </TouchableOpacity>,
 };

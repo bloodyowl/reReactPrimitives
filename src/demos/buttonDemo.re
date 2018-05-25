@@ -4,7 +4,7 @@ ReactDOMRe.renderToElementWithId(
     <br />
     <br />
     <Button onPress=(() => ()) title="click me!" color="#4A90E2" />
-    (ReasonReact.stringToElement(" "))
+    (ReasonReact.string(" "))
     <Button onPress=(() => ()) title="click me!" color="#7ED321" />
     <br />
     <Button

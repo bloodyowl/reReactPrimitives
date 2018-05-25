@@ -6,7 +6,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=Right>
-      (ReasonReact.stringToElement("Right"))
+      (ReasonReact.string("Right"))
     </Tooltip>
     <Tooltip
       style=(
@@ -14,7 +14,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=Left>
-      (ReasonReact.stringToElement("Left"))
+      (ReasonReact.string("Left"))
     </Tooltip>
     <br />
     <Tooltip
@@ -23,7 +23,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=Top>
-      (ReasonReact.stringToElement("Top"))
+      (ReasonReact.string("Top"))
     </Tooltip>
     <Tooltip
       style=(
@@ -31,7 +31,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=Bottom>
-      (ReasonReact.stringToElement("Bottom"))
+      (ReasonReact.string("Bottom"))
     </Tooltip>
     <br />
     <Tooltip
@@ -40,7 +40,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=TopLeft>
-      (ReasonReact.stringToElement("TopLeft"))
+      (ReasonReact.string("TopLeft"))
     </Tooltip>
     <Tooltip
       style=(
@@ -48,7 +48,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=TopRight>
-      (ReasonReact.stringToElement("TopRight"))
+      (ReasonReact.string("TopRight"))
     </Tooltip>
     <Tooltip
       style=(
@@ -56,7 +56,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=BottomLeft>
-      (ReasonReact.stringToElement("BottomLeft"))
+      (ReasonReact.string("BottomLeft"))
     </Tooltip>
     <Tooltip
       style=(
@@ -64,7 +64,7 @@ ReactDOMRe.renderToElementWithId(
       )
       message="Helloworld"
       alignTo=BottomRight>
-      (ReasonReact.stringToElement("BottomRight"))
+      (ReasonReact.string("BottomRight"))
     </Tooltip>
   </div>,
   "root",

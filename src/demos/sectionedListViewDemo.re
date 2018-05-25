@@ -9,15 +9,15 @@ let sections = [
   (
     "Schedule",
     [
-      <div style=itemStyle> (ReasonReact.stringToElement("Foo")) </div>,
-      <div style=itemStyle> (ReasonReact.stringToElement("Bar")) </div>,
+      <div style=itemStyle> (ReasonReact.string("Foo")) </div>,
+      <div style=itemStyle> (ReasonReact.string("Bar")) </div>,
     ],
   ),
   (
     "Display",
     [
-      <div style=itemStyle> (ReasonReact.stringToElement("Baz")) </div>,
-      <div style=itemStyle> (ReasonReact.stringToElement("Quux")) </div>,
+      <div style=itemStyle> (ReasonReact.string("Baz")) </div>,
+      <div style=itemStyle> (ReasonReact.string("Quux")) </div>,
     ],
   ),
 ];

@@ -13,13 +13,18 @@ module Make = (SpriteSheet: SpriteSheetType) => {
       String.length(SpriteSheet.url) - index,
     );
   };
+  type action =
+    | Init;
   type state = {isReady: bool};
   let component = ReasonReact.reducerComponent("Sprite[" ++ basename ++ "]");
   let make = (~width, ~height, ~x, ~y, _children) => {
     ...component,
     initialState: (_) => {isReady: false},
-    reducer: ((), _state) => ReasonReact.NoUpdate,
-    didMount: _self => ReasonReact.Update({isReady: true}),
+    reducer: (action, _state) =>
+      switch (action) {
+      | Init => ReasonReact.Update({isReady: true})
+      },
+    didMount: ({send}) => send(Init),
     render: ({state}) =>
       <div
         style=(

@@ -30,7 +30,7 @@ let make =
              <div key=(string_of_int(index))> item </div>
            )
         |> Array.of_list
-        |> ReasonReact.arrayToElement
+        |> ReasonReact.array
       )
     </div>,
 };

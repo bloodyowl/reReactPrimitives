@@ -11,18 +11,18 @@ module User = {
 module UserFixedCollectionView = FixedCollectionView.Make(User);
 
 let renderUsername = (_, rowData) =>
-  <div> (ReasonReact.stringToElement(rowData.username)) </div>;
+  <div> (ReasonReact.string(rowData.username)) </div>;
 
 let renderHeader = (row: FixedCollectionView.column('a)) =>
   <div
     style=(
       ReactDOMRe.Style.make(~fontSize="12px", ~textTransform="uppercase", ())
     )>
-    (ReasonReact.stringToElement(row.headerLabel))
+    (ReasonReact.string(row.headerLabel))
   </div>;
 
 let renderGoToProfile = (_, _row) =>
-  <div> <a href="#"> (ReasonReact.stringToElement("View more")) </a> </div>;
+  <div> <a href="#"> (ReasonReact.string("View more")) </a> </div>;
 
 let renderAvatar = (_, rowData) =>
   <div>
@@ -89,7 +89,7 @@ let rec renderDemo = (loading, data) => {
           () =>
             loading ?
               <ActivityIndicator size=24.0 color=(200, 200, 200) /> :
-              ReasonReact.nullElement
+              ReasonReact.null
         )
         columns=[
           {
@@ -107,7 +107,7 @@ let rec renderDemo = (loading, data) => {
           {
             headerLabel: "ViewMore",
             style: Some(ReactDOMRe.Style.make(~padding="0 10px", ())),
-            renderHeader: (_) => ReasonReact.nullElement,
+            renderHeader: (_) => ReasonReact.null,
             renderCell: renderGoToProfile,
           },
         ]

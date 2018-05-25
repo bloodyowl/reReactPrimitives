@@ -9,7 +9,7 @@ let rec render = firstValue =>
       <br />
       <Switch value=(Updating, true) onValueChange=((_) => ()) />
       <br />
-      (ReasonReact.stringToElement("disabled:"))
+      (ReasonReact.string("disabled:"))
       <Switch value=(Idle, firstValue) disabled=true onValueChange=render />
     </div>,
     "root",
