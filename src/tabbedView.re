@@ -2,48 +2,12 @@ type mode =
   | Horizontal
   | Vertical;
 
-type state = {
-  openTab: int,
-  activeTabHandleRect: option((int, int, int, int)),
-  tabContainerRef: ref(option(DomRe.Element.t)),
-};
+type state = {openTab: int};
 
 type action =
-  | InitialMeasure
-  | SetActiveTab(int)
-  | MeasureRect;
+  | SetActiveTab(int);
 
 let component = ReasonReact.reducerComponent("TabbedView");
-
-let setTabContainerRef = (tabContainerRef, {ReasonReact.state}) =>
-  state.tabContainerRef := Js.Nullable.toOption(tabContainerRef);
-
-let setRect = state =>
-  switch (state.tabContainerRef) {
-  | {contents: Some(containerRef)} =>
-    let children = DomRe.Element.children(containerRef);
-    let item = DomRe.HtmlCollection.item(state.openTab, children);
-    switch (item) {
-    | Some(child) =>
-      let parentRect = DomRe.Element.getBoundingClientRect(containerRef);
-      let childRect = DomRe.Element.getBoundingClientRect(child);
-      ReasonReact.Update({
-        ...state,
-        activeTabHandleRect:
-          Some((
-            DomRectRe.left(childRect) - DomRectRe.left(parentRect),
-            DomRectRe.top(childRect) - DomRectRe.top(parentRect),
-            DomRectRe.width(childRect),
-            DomRectRe.height(childRect),
-          )),
-      });
-    | None => ReasonReact.NoUpdate
-    };
-  | _ => ReasonReact.NoUpdate
-  };
-
-let measureRectAtNextFrame = ({ReasonReact.send}) =>
-  Webapi.requestAnimationFrame((_) => send(MeasureRect));
 
 let make =
     (
@@ -55,23 +19,12 @@ let make =
       _children,
     ) => {
   ...component,
-  initialState: () => {
-    openTab: initiallyOpenTab,
-    activeTabHandleRect: None,
-    tabContainerRef: ref(None),
-  },
-  didMount: ({send}) => send(InitialMeasure),
-  reducer: (action, state) =>
+  initialState: () => {openTab: initiallyOpenTab},
+  reducer: (action, _) =>
     switch (action) {
-    | SetActiveTab(openTab) =>
-      ReasonReact.UpdateWithSideEffects(
-        {...state, openTab},
-        measureRectAtNextFrame,
-      )
-    | InitialMeasure => ReasonReact.SideEffects(measureRectAtNextFrame)
-    | MeasureRect => setRect(state)
+    | SetActiveTab(openTab) => ReasonReact.Update({openTab: openTab})
     },
-  render: ({state, send, handle}) =>
+  render: ({state, send}) =>
     <div
       style=(
         ReactDOMRe.Style.make(
@@ -96,7 +49,6 @@ let make =
           )
         )>
         <div
-          ref=(handle(setTabContainerRef))
           style=(
             ReactDOMRe.Style.make(
               ~display="flex",
@@ -129,52 +81,24 @@ let make =
                        ~color=
                          index === state.openTab ?
                            color : "rgba(0, 0, 0, 0.6)",
+                       ~boxShadow=
+                         index === state.openTab ?
+                           switch (mode) {
+                           | Horizontal => "3px 0 " ++ color
+                           | Vertical => "0 3px " ++ color
+                           } :
+                           "none",
                        ~padding=tabHeadingPadding,
                        (),
                      )
                    )
-                   onPress=((_) => send(SetActiveTab(index)))>
+                   onPress=(_ => send(SetActiveTab(index)))>
                    tabTitle
                  </TouchableOpacity>
                )
             |> ReasonReact.array
           )
         </div>
-        (
-          switch (mode, state.activeTabHandleRect) {
-          | (Vertical, Some((x, _y, w, _h))) =>
-            <div
-              style=(
-                ReactDOMRe.Style.make(
-                  ~position="absolute",
-                  ~transition="200ms ease-out all",
-                  ~bottom="-1px",
-                  ~left=string_of_int(x) ++ "px",
-                  ~width=string_of_int(w) ++ "px",
-                  ~height="2px",
-                  ~backgroundColor=color,
-                  (),
-                )
-              )
-            />
-          | (Horizontal, Some((_x, y, _w, h))) =>
-            <div
-              style=(
-                ReactDOMRe.Style.make(
-                  ~position="absolute",
-                  ~transition="200ms ease-out all",
-                  ~right="-1px",
-                  ~top=string_of_int(y) ++ "px",
-                  ~height=string_of_int(h) ++ "px",
-                  ~width="2px",
-                  ~backgroundColor=color,
-                  (),
-                )
-              )
-            />
-          | _ => ReasonReact.null
-          }
-        )
       </div>
       <div
         style=(
