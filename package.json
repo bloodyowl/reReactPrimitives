@@ -8,6 +8,7 @@
     "start": "bsb -make-world -w",
     "build": "webpack -w",
     "demos": "bsb -make-world && webpack -p && gh-pages -d demos",
+    "web": "bsb -make-world && webpack -p",
     "clean": "bsb -clean-world",
     "js-post-build": "node scripts/js-post-build"
   },
@@ -27,6 +28,7 @@
     "react": ">=16.7.0",
     "react-dom": ">=16.7.0",
     "reason-react": "^0.5.3",
-    "webpack": "^4.29.0"
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1"
   }
 }
