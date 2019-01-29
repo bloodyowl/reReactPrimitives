@@ -51,7 +51,7 @@ let renderOptionWithEvent =
         send(
           MoveFocus((
             ReactEvent.Keyboard.keyCode(event),
-            ReactEvent.Keyboard.target(event),
+            ReactEvent.Keyboard.target(event)##value,
           )),
         )
     )
@@ -267,11 +267,11 @@ let make =
               | (_, 32) => ReactEvent.Keyboard.preventDefault(event)
               | _ => ()
               };
-              send(KeyPress(keys, ReactEvent.Keyboard.target(event)));
+              send(KeyPress(keys, ReactEvent.Keyboard.target(event)##value));
             }
           )
           onClick=(
-            event => send(ShowOptions(ReactEventRe.Mouse.target(event)))
+            event => send(ShowOptions(ReactEvent.Mouse.target(event)##value))
           )>
           (renderPicker(value))
         </div>,

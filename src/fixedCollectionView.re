@@ -173,9 +173,9 @@ module Make = (FixedCollectionViewRow: FixedCollectionViewRowType) => {
               event =>
                 send(
                   SetScrollTop((
-                    DomRe.Element.scrollTop(ReactEvent.UI.target(event)),
+                    int_of_float(DomRe.Element.scrollTop(ReactEvent.UI.target(event)##value)),
                     DomRe.Element.clientHeight(
-                      ReactEventRe.UI.target(event),
+                      ReactEvent.UI.target(event)##value,
                     ),
                   )),
                 )
