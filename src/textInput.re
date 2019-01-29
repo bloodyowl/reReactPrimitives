@@ -25,7 +25,7 @@ let make =
       ~autoSize=false,
       ~autoFocus=false,
       ~disabled=false,
-      ~_type="text",
+      ~type_="text",
       ~id=?,
       ~name=?,
       ~value,
@@ -96,10 +96,10 @@ let make =
           ReactDOMRe.props(
             ~ref=handle(setInputRef),
             ~rows,
-            ~_type,
+            ~type_,
             ~id?,
             ~name?,
-            ~disabled=Js.Boolean.to_js_boolean(disabled),
+            ~disabled=disabled,
             ~style=
               ReactDOMRe.Style.combine(
                 switch (style) {
@@ -139,7 +139,7 @@ let make =
             ~value,
             ~maxLength?,
             ~placeholder,
-            ~autoFocus=Js.Boolean.to_js_boolean(autoFocus),
+            ~autoFocus=autoFocus,
             (),
           ),
         [||],

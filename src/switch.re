@@ -54,8 +54,8 @@ let make = (~value, ~onValueChange, ~disabled=false, _children) => {
               if (! disabled) {
                 send(
                   KeyPress((
-                    ReactEventRe.Keyboard.keyCode(event),
-                    ReactEventRe.Keyboard.charCode(event),
+                    ReactEvent.Keyboard.keyCode(event),
+                    ReactEvent.Keyboard.charCode(event),
                   )),
                 );
               }
