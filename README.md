@@ -32,3 +32,5 @@ $ npm install --save reason-react-primitives
 - `TouchableHighlight`
 - `TouchableOpacity`
 - `View`
+
+### This is a deps update of https://github.com/bloodyowl/reReactPrimitives
