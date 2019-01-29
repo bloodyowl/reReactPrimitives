@@ -19,7 +19,7 @@ let make = (~onEndReached=?, ~offset=0, children) => {
         let scrollHeight = DomRe.Element.scrollHeight(element);
         let scrollTop = DomRe.Element.scrollTop(element);
         let clientHeight = DomRe.Element.clientHeight(element);
-        if (scrollTop + clientHeight >= scrollHeight - offset) {
+        if (int_of_float(scrollTop) + clientHeight >= scrollHeight - offset) {
           ReasonReact.SideEffects(((_) => onEndReached()));
         } else {
           ReasonReact.NoUpdate;

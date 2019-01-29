@@ -54,13 +54,13 @@ module DefaultImpl = {
       CssStyleDeclarationRe.setProperty("z-index", "2147483647", "", style);
       CssStyleDeclarationRe.setProperty(
         "left",
-        string_of_int(WindowRe.pageXOffset(DomRe.window)) ++ "px",
+        string_of_float(WindowRe.pageXOffset(DomRe.window)) ++ "px",
         "",
         style,
       );
       CssStyleDeclarationRe.setProperty(
         "top",
-        string_of_int(WindowRe.pageYOffset(DomRe.window)) ++ "px",
+        string_of_float(WindowRe.pageYOffset(DomRe.window)) ++ "px",
         "",
         style,
       );
@@ -77,7 +77,7 @@ module DefaultImpl = {
         CssStyleDeclarationRe.setProperty(
           "bottom",
           string_of_int(
-            innerHeight + pageYOffset - DomRectRe.top(boundaries),
+            innerHeight + int_of_float(pageYOffset) - DomRectRe.top(boundaries),
           )
           ++ "px",
           "",
@@ -85,7 +85,7 @@ module DefaultImpl = {
         );
         CssStyleDeclarationRe.setProperty(
           "left",
-          string_of_int(pageXOffset + DomRectRe.left(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageXOffset) + DomRectRe.left(boundaries)) ++ "px",
           "",
           style,
         );
@@ -93,7 +93,7 @@ module DefaultImpl = {
         CssStyleDeclarationRe.setProperty(
           "bottom",
           string_of_int(
-            innerHeight + pageYOffset - DomRectRe.top(boundaries),
+            innerHeight + int_of_float(pageYOffset) - DomRectRe.top(boundaries),
           )
           ++ "px",
           "",
@@ -102,7 +102,7 @@ module DefaultImpl = {
         CssStyleDeclarationRe.setProperty(
           "right",
           string_of_int(
-            innerWidth + pageXOffset - DomRectRe.right(boundaries),
+            innerWidth + int_of_float(pageXOffset) - DomRectRe.right(boundaries),
           )
           ++ "px",
           "",
@@ -111,27 +111,27 @@ module DefaultImpl = {
       | BottomLeft =>
         CssStyleDeclarationRe.setProperty(
           "top",
-          string_of_int(pageYOffset + DomRectRe.bottom(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageYOffset) + DomRectRe.bottom(boundaries)) ++ "px",
           "",
           style,
         );
         CssStyleDeclarationRe.setProperty(
           "left",
-          string_of_int(pageXOffset + DomRectRe.left(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageXOffset) + DomRectRe.left(boundaries)) ++ "px",
           "",
           style,
         );
       | BottomRight =>
         CssStyleDeclarationRe.setProperty(
           "top",
-          string_of_int(pageYOffset + DomRectRe.bottom(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageYOffset) + DomRectRe.bottom(boundaries)) ++ "px",
           "",
           style,
         );
         CssStyleDeclarationRe.setProperty(
           "right",
           string_of_int(
-            innerWidth + pageXOffset - DomRectRe.right(boundaries),
+            innerWidth + int_of_float(pageXOffset) - DomRectRe.right(boundaries),
           )
           ++ "px",
           "",
@@ -140,14 +140,14 @@ module DefaultImpl = {
       | Left =>
         CssStyleDeclarationRe.setProperty(
           "top",
-          string_of_int(pageYOffset + DomRectRe.top(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageYOffset) + DomRectRe.top(boundaries)) ++ "px",
           "",
           style,
         );
         CssStyleDeclarationRe.setProperty(
           "right",
           string_of_int(
-            innerWidth + pageXOffset - DomRectRe.left(boundaries),
+            innerWidth + int_of_float(pageXOffset) - DomRectRe.left(boundaries),
           )
           ++ "px",
           "",
@@ -162,13 +162,13 @@ module DefaultImpl = {
       | Right =>
         CssStyleDeclarationRe.setProperty(
           "top",
-          string_of_int(pageYOffset + DomRectRe.top(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageYOffset) + DomRectRe.top(boundaries)) ++ "px",
           "",
           style,
         );
         CssStyleDeclarationRe.setProperty(
           "left",
-          string_of_int(pageXOffset + DomRectRe.right(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageXOffset) + DomRectRe.right(boundaries)) ++ "px",
           "",
           style,
         );
@@ -182,7 +182,7 @@ module DefaultImpl = {
         CssStyleDeclarationRe.setProperty(
           "bottom",
           string_of_int(
-            innerHeight + pageYOffset - DomRectRe.top(boundaries),
+            innerHeight + int_of_float(pageYOffset) - DomRectRe.top(boundaries),
           )
           ++ "px",
           "",
@@ -190,7 +190,7 @@ module DefaultImpl = {
         );
         CssStyleDeclarationRe.setProperty(
           "left",
-          string_of_int(pageXOffset + DomRectRe.left(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageXOffset) + DomRectRe.left(boundaries)) ++ "px",
           "",
           style,
         );
@@ -203,13 +203,13 @@ module DefaultImpl = {
       | Bottom =>
         CssStyleDeclarationRe.setProperty(
           "top",
-          string_of_int(pageYOffset + DomRectRe.bottom(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageYOffset) + DomRectRe.bottom(boundaries)) ++ "px",
           "",
           style,
         );
         CssStyleDeclarationRe.setProperty(
           "left",
-          string_of_int(pageXOffset + DomRectRe.left(boundaries)) ++ "px",
+          string_of_int(int_of_float(pageXOffset) + DomRectRe.left(boundaries)) ++ "px",
           "",
           style,
         );

@@ -185,7 +185,7 @@ let make =
             | Some(onKeyDown) => onKeyDown(event)
             | None => ()
             };
-            send(KeyDown(ReactEventRe.Keyboard.keyCode(event)));
+            send(KeyDown(ReactEvent.Keyboard.keyCode(event)));
           }
         )
         onKeyUp=(
@@ -194,7 +194,7 @@ let make =
             | Some(onKeyUp) => onKeyUp(event)
             | None => ()
             };
-            send(KeyUp(ReactEventRe.Keyboard.keyCode(event)));
+            send(KeyUp(ReactEvent.Keyboard.keyCode(event)));
           }
         )
         onKeyPress=(
@@ -204,14 +204,14 @@ let make =
             | None => ()
             };
             let keys = (
-              ReactEventRe.Keyboard.keyCode(event),
-              ReactEventRe.Keyboard.charCode(event),
+              ReactEvent.Keyboard.keyCode(event),
+              ReactEvent.Keyboard.charCode(event),
             );
             switch (keys) {
             | (13, _)
             | (_, 13)
             | (32, _)
-            | (_, 32) => ReactEventRe.Keyboard.preventDefault(event)
+            | (_, 32) => event->ReactEvent.Keyboard.preventDefault
             | _ => ()
             };
             send(KeyPress(keys));
@@ -220,7 +220,7 @@ let make =
         onClick=((_) => send(Click))>
         children[0]
       </div>,
-      ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},
+      ~props={"aria-disabled": disabled},
       [||],
     );
   },

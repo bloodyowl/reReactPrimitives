@@ -50,8 +50,8 @@ let renderOptionWithEvent =
       event =>
         send(
           MoveFocus((
-            ReactEventRe.Keyboard.keyCode(event),
-            ReactEventRe.Keyboard.target(event),
+            ReactEvent.Keyboard.keyCode(event),
+            ReactEvent.Keyboard.target(event),
           )),
         )
     )
@@ -257,17 +257,17 @@ let make =
           onKeyPress=(
             event => {
               let keys = (
-                ReactEventRe.Keyboard.keyCode(event),
-                ReactEventRe.Keyboard.charCode(event),
+                ReactEvent.Keyboard.keyCode(event),
+                ReactEvent.Keyboard.charCode(event),
               );
               switch (keys) {
               | (13, _)
               | (_, 13)
               | (32, _)
-              | (_, 32) => ReactEventRe.Keyboard.preventDefault(event)
+              | (_, 32) => ReactEvent.Keyboard.preventDefault(event)
               | _ => ()
               };
-              send(KeyPress(keys, ReactEventRe.Keyboard.target(event)));
+              send(KeyPress(keys, ReactEvent.Keyboard.target(event)));
             }
           )
           onClick=(
@@ -275,7 +275,7 @@ let make =
           )>
           (renderPicker(value))
         </div>,
-        ~props={"aria-disabled": Js.Boolean.to_js_boolean(disabled)},
+        ~props={"aria-disabled": disabled},
         [||],
       ),
   };
