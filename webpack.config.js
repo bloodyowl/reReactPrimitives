@@ -6,6 +6,7 @@ module.exports = {
     touchableOpacityDemo : "./lib/js/src/demos/touchableOpacityDemo",
     touchableHighlightDemo : "./lib/js/src/demos/touchableHighlightDemo",
     buttonDemo : "./lib/js/src/demos/buttonDemo",
+    // buttonGroup : "./lib/js/src/demos/buttonGroupDemo",
     pickerDemo : "./lib/js/src/demos/pickerDemo",
     imageDemo : "./lib/js/src/demos/imageDemo",
     spriteDemo : "./lib/js/src/demos/spriteDemo",
